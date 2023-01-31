@@ -1,0 +1,8 @@
+Description:
+    Generates a new phone tree and registers it.
+
+Example:
+    bin/rails generate twilio:rails:phone_tree SomeExample
+
+    This will create:
+        app/phone_trees/some_example_tree.rb

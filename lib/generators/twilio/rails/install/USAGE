@@ -1,0 +1,15 @@
+Description:
+    Installs the initializer, routes, models, and migrations for `twilio-rails`.
+
+Example:
+    bin/rails generate twilio:rails:install
+
+    This will create:
+        config/initializers/twilio_rails.rb
+        db/migrate/install_twilio_rails.rb
+        app/models/message.rb
+        app/models/phone_caller.rb
+        app/models/phone_call.rb
+        app/models/recording.rb
+        app/models/response.rb
+        app/models/sms_conversation.rb

@@ -1,0 +1,46 @@
+  [1m[35m (87.8ms)[0m  [1m[35mCREATE TABLE "schema_migrations" ("version" varchar NOT NULL PRIMARY KEY)[0m
+  [1m[35m (127.9ms)[0m  [1m[35mCREATE TABLE "ar_internal_metadata" ("key" varchar NOT NULL PRIMARY KEY, "value" varchar, "created_at" datetime(6) NOT NULL, "updated_at" datetime(6) NOT NULL)[0m
+  [1m[36mActiveRecord::SchemaMigration Pluck (0.1ms)[0m  [1m[34mSELECT "schema_migrations"."version" FROM "schema_migrations" ORDER BY "schema_migrations"."version" ASC[0m
+Migrating to InstallTwilioRails (20230130014442)
+  [1m[36mTRANSACTION (0.0ms)[0m  [1m[36mbegin transaction[0m
+  [1m[35m (0.0ms)[0m  [1m[35mDROP TABLE IF EXISTS "messages"[0m
+  [1m[35m (0.2ms)[0m  [1m[35mCREATE TABLE "messages" ("id" integer PRIMARY KEY AUTOINCREMENT NOT NULL, "sms_conversation_id" bigint NOT NULL, "sid" varchar, "body" text, "status" varchar, "direction" varchar, "created_at" datetime(6) NOT NULL, "updated_at" datetime(6) NOT NULL)[0m
+  [1m[35m (0.1ms)[0m  [1m[35mCREATE INDEX "index_messages_on_created_at" ON "messages" ("created_at")[0m
+  [1m[35m (0.1ms)[0m  [1m[35mCREATE INDEX "index_messages_on_direction" ON "messages" ("direction")[0m
+  [1m[35m (0.1ms)[0m  [1m[35mCREATE INDEX "index_messages_on_sms_conversation_id" ON "messages" ("sms_conversation_id")[0m
+  [1m[35m (0.0ms)[0m  [1m[35mDROP TABLE IF EXISTS "phone_callers"[0m
+  [1m[35m (0.1ms)[0m  [1m[35mCREATE TABLE "phone_callers" ("id" integer PRIMARY KEY AUTOINCREMENT NOT NULL, "phone_number" varchar, "created_at" datetime(6) NOT NULL, "updated_at" datetime(6) NOT NULL)[0m
+  [1m[35m (0.1ms)[0m  [1m[35mCREATE INDEX "index_phone_callers_on_phone_number" ON "phone_callers" ("phone_number")[0m
+  [1m[35m (0.0ms)[0m  [1m[35mDROP TABLE IF EXISTS "phone_calls"[0m
+  [1m[35m (0.1ms)[0m  [1m[35mCREATE TABLE "phone_calls" ("id" integer PRIMARY KEY AUTOINCREMENT NOT NULL, "phone_caller_id" integer, "sid" varchar, "number" varchar, "from_number" varchar, "from_city" varchar, "from_province" varchar, "from_country" varchar, "tree_name" varchar, "direction" varchar, "answered_by" varchar, "unanswered" boolean DEFAULT 0, "call_status" varchar, "length_seconds" integer, "created_at" datetime(6) NOT NULL, "updated_at" datetime(6) NOT NULL)[0m
+  [1m[35m (0.1ms)[0m  [1m[35mCREATE INDEX "index_phone_calls_on_created_at" ON "phone_calls" ("created_at")[0m
+  [1m[35m (0.1ms)[0m  [1m[35mCREATE INDEX "index_phone_calls_on_direction" ON "phone_calls" ("direction")[0m
+  [1m[35m (0.1ms)[0m  [1m[35mCREATE INDEX "index_phone_calls_on_phone_caller_id" ON "phone_calls" ("phone_caller_id")[0m
+  [1m[35m (0.1ms)[0m  [1m[35mCREATE INDEX "index_phone_calls_on_product_id" ON "phone_calls" ("product_id")[0m
+  [1m[35m (0.1ms)[0m  [1m[35mCREATE INDEX "index_calls_on_sid" ON "phone_calls" ("sid")[0m
+  [1m[35m (0.1ms)[0m  [1m[35mCREATE INDEX "index_phone_calls_on_tree_name" ON "phone_calls" ("tree_name")[0m
+  [1m[35m (0.0ms)[0m  [1m[35mDROP TABLE IF EXISTS "recordings"[0m
+  [1m[35m (0.2ms)[0m  [1m[35mCREATE TABLE "recordings" ("id" integer PRIMARY KEY AUTOINCREMENT NOT NULL, "phone_call_id" bigint NOT NULL, "recording_sid" varchar, "duration" varchar, "url" varchar, "created_at" datetime(6) NOT NULL, "updated_at" datetime(6) NOT NULL)[0m
+  [1m[35m (0.1ms)[0m  [1m[35mCREATE INDEX "index_recordings_on_call_id" ON "recordings" ("phone_call_id")[0m
+  [1m[35m (0.0ms)[0m  [1m[35mDROP TABLE IF EXISTS "responses"[0m
+  [1m[35m (0.1ms)[0m  [1m[35mCREATE TABLE "responses" ("id" integer PRIMARY KEY AUTOINCREMENT NOT NULL, "phone_call_id" bigint, "recording_id" bigint, "prompt_handle" varchar, "digits" varchar, "transcription" text, "transcribed" boolean DEFAULT 0, "timeout" boolean DEFAULT 0, "created_at" datetime(6) NOT NULL, "updated_at" datetime(6) NOT NULL)[0m
+  [1m[35m (0.1ms)[0m  [1m[35mCREATE INDEX "index_responses_on_created_at" ON "responses" ("created_at")[0m
+  [1m[35m (0.1ms)[0m  [1m[35mCREATE INDEX "index_responses_on_digits" ON "responses" ("digits")[0m
+  [1m[35m (16.3ms)[0m  [1m[35mCREATE INDEX "index_responses_on_moderation" ON "responses" ("moderation")[0m
+  [1m[35m (0.1ms)[0m  [1m[35mCREATE INDEX "index_responses_on_phone_call_id_and_prompt_handle" ON "responses" ("phone_call_id", "prompt_handle")[0m
+  [1m[35m (0.1ms)[0m  [1m[35mCREATE INDEX "index_responses_on_prompt_handle" ON "responses" ("prompt_handle")[0m
+  [1m[35m (0.1ms)[0m  [1m[35mCREATE INDEX "index_responses_on_recording_id" ON "responses" ("recording_id")[0m
+  [1m[35m (0.2ms)[0m  [1m[35mCREATE INDEX "index_responses_on_timeout" ON "responses" ("timeout")[0m
+  [1m[35m (0.1ms)[0m  [1m[35mCREATE INDEX "index_responses_on_transcribed" ON "responses" ("transcribed")[0m
+  [1m[35m (0.0ms)[0m  [1m[35mDROP TABLE IF EXISTS "sms_conversations"[0m
+  [1m[35m (0.1ms)[0m  [1m[35mCREATE TABLE "sms_conversations" ("id" integer PRIMARY KEY AUTOINCREMENT NOT NULL, "number" varchar, "from_number" varchar, "from_city" varchar, "from_province" varchar, "from_country" varchar, "created_at" datetime(6) NOT NULL, "updated_at" datetime(6) NOT NULL)[0m
+  [1m[35m (0.1ms)[0m  [1m[35mCREATE INDEX "index_sms_conversations_on_created_at" ON "sms_conversations" ("created_at")[0m
+  [1m[35m (0.1ms)[0m  [1m[35mCREATE INDEX "index_sms_conversations_on_from_number" ON "sms_conversations" ("from_number")[0m
+  [1m[35m (0.1ms)[0m  [1m[35mCREATE INDEX "index_sms_conversations_on_number" ON "sms_conversations" ("number")[0m
+  [1m[36mActiveRecord::SchemaMigration Create (0.1ms)[0m  [1m[32mINSERT INTO "schema_migrations" ("version") VALUES (?)[0m  [["version", "20230130014442"]]
+  [1m[36mTRANSACTION (150.7ms)[0m  [1m[36mcommit transaction[0m
+  [1m[36mActiveRecord::InternalMetadata Load (0.1ms)[0m  [1m[34mSELECT "ar_internal_metadata".* FROM "ar_internal_metadata" WHERE "ar_internal_metadata"."key" = ? LIMIT ?[0m  [["key", "environment"], ["LIMIT", 1]]
+  [1m[36mTRANSACTION (0.0ms)[0m  [1m[36mbegin transaction[0m
+  [1m[36mActiveRecord::InternalMetadata Create (0.1ms)[0m  [1m[32mINSERT INTO "ar_internal_metadata" ("key", "value", "created_at", "updated_at") VALUES (?, ?, ?, ?)[0m  [["key", "environment"], ["value", "development"], ["created_at", "2023-01-30 01:53:01.647564"], ["updated_at", "2023-01-30 01:53:01.647564"]]
+  [1m[36mTRANSACTION (61.9ms)[0m  [1m[36mcommit transaction[0m
+  [1m[36mActiveRecord::SchemaMigration Pluck (0.1ms)[0m  [1m[34mSELECT "schema_migrations"."version" FROM "schema_migrations" ORDER BY "schema_migrations"."version" ASC[0m

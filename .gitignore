@@ -3,6 +3,8 @@ capybara-*.html
 .rspec
 /db/*.sqlite3
 /db/*.sqlite3-journal
+/spec/dummy/db/*.sqlite3-journal
+/spec/dummy/db/*.sqlite3
 /db/*.sqlite3-[0-9]*
 /public/system
 /coverage/
@@ -10,10 +12,13 @@ capybara-*.html
 *.orig
 rerun.txt
 pickle-email-*.html
+/pkg
 
 # Ignore all logfiles and tempfiles.
 /log/*
 /tmp/*
+spec/dummy/tmp/*
+spec/dummy/log/*
 !/log/.keep
 !/tmp/.keep
 
@@ -34,6 +39,7 @@ config/master.key
 
 # these should all be checked in to normalize the environment:
 # Gemfile.lock, .ruby-version, .ruby-gemset
+Gemfile.lock
 
 # unless supporting rvm < 1.11.0 or doing something fancy, ignore this:
 .rvmrc
@@ -65,3 +71,7 @@ yarn-debug.log*
 # Ignore uploaded files in development
 /storage/*
 !/storage/.keep
+
+# YARD
+.yardoc
+doc/

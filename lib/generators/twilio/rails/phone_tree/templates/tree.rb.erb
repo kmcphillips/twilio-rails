@@ -1,0 +1,13 @@
+# frozen_string_literal: true
+class <%= class_name %>Tree < Twilio::Rails::Phone::BaseTree
+  # voice "male"
+  # final_timeout_message("Goodbye.")
+  # invalid_phone_number("Sorry, we cannot accept your call.")
+
+  greeting message: "Hello!",
+    prompt: :thanks_and_hangup
+
+  prompt :thanks_and_hangup,
+    message: "Thank you for calling!",
+    after: { hangup: true }
+end
