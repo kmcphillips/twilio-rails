@@ -1,5 +1,7 @@
 # Twilio Rails
 
+[![RSpec Tests](https://github.com/kmcphillips/twilio-rails/actions/workflows/ci.yml/badge.svg?branch=main)](https://github.com/kmcphillips/twilio-rails/actions/workflows/ci.yml)
+
 The `twilio-rails` gem is an opinionated Rails engine and a framework for building complex, realtime, stateful phone interactions in Rails without needing to directly interact with the Twilio API or use TwiML. It is not a replacement for the [`twilio-ruby` gem](https://github.com/twilio/twilio-ruby), but is rather built on top of it.
 
 The most powerful ability of this engine is to build phone trees (think of calling customer service and pressing 2 for account information or whatever) using a simple Ruby DSL.
