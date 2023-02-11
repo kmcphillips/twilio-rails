@@ -123,6 +123,30 @@ RSpec.describe Twilio::Rails::PhoneController, type: :controller do
       expect(response.body).to eq(twiml)
     end
 
+    context "with SpeechResult" do
+      let(:params) {
+        {
+          "AccountSid" => account_sid,
+          "CallSid" => call_sid,
+          "Called" => from_number,
+          "SpeechResult" => "What is your favourite number?",
+        }
+      }
+
+      it "saves the changes to the response if present" do
+        expect(Twilio::Rails::Phone::Twiml::PromptResponseOperation).to receive(:call).with(
+          phone_call_id: phone_call.id,
+          tree: tree,
+          response_id: phone_call_response.id,
+          params: params,
+        ).and_return(twiml)
+        expect(Twilio::Rails::Phone::UpdateOperation).to receive(:call).with(phone_call_id: phone_call.id, params: params).and_return(phone_call)
+        post :prompt_response, format: :xml, params: controller_params
+        expect(response.body).to eq(twiml)
+        expect(phone_call_response.reload.transcription).to eq("What is your favourite number?")
+      end
+    end
+
     it "renders error without valid account" do
       expect(Twilio::Rails::Phone::Twiml::PromptResponseOperation).to_not receive(:call)
       post :prompt_response, format: :xml, params: controller_params.merge("AccountSid" => "invalid")

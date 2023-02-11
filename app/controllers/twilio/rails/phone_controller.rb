@@ -39,6 +39,7 @@ module Twilio
           format.xml do
             phone_call = Twilio::Rails::Phone::FindOperation.call(params: params_hash)
             phone_call = Twilio::Rails::Phone::UpdateOperation.call(phone_call_id: phone_call.id, params: params_hash)
+            response = Twilio::Rails::Phone::UpdateResponseOperation.call(phone_call_id: phone_call.id, response_id: params[:response_id].to_i, params: params_hash)
             render xml: Twilio::Rails::Phone::Twiml::PromptResponseOperation.call(phone_call_id: phone_call.id, tree: tree, response_id: params[:response_id].to_i, params: params_hash)
           end
         end

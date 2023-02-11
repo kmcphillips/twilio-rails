@@ -392,18 +392,28 @@ RSpec.describe Twilio::Rails::Configuration do
     it "defaults to rails config" do
       config.finalize!
       expect(config.host).to eq("https://test.example.com")
+      expect(config.host_domain).to eq("test.example.com")
     end
 
-    it "allows an override" do
-      config.host = "http://example.com:3000"
+    it "allows an override that includes a port" do
+      config.host = "https://example.com:3000"
       config.finalize!
-      expect(config.host).to eq("http://example.com:3000")
+      expect(config.host).to eq("https://example.com:3000")
+      expect(config.host_domain).to eq("example.com")
+    end
+
+    it "allows an override uses http" do
+      config.host = "http://example.com"
+      config.finalize!
+      expect(config.host).to eq("http://example.com")
+      expect(config.host_domain).to eq("example.com")
     end
 
     it "allows an override and strips trailing slash" do
       config.host = "https://example.com/"
       config.finalize!
       expect(config.host).to eq("https://example.com")
+      expect(config.host_domain).to eq("example.com")
     end
 
     it "raises when an invalid host is set" do

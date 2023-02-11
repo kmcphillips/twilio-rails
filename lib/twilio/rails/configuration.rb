@@ -134,6 +134,16 @@ module Twilio
         end
       end
 
+      # The {#host} domain name with the protocol stripped, if the host is set.
+      #
+      # @return [String] the {#host} domain name.
+      def host_domain
+        return nil unless host.present?
+        value = host.gsub(/\Ahttps?:\/\//, "")
+        value = value.gsub(/:\d+\z/, "")
+        value
+      end
+
       # The HTTP methods that Twilio will use to call into the app. Defaults to `[:get, :post]` but can be restricted
       # to just `[:get]` or `[:post]`. This must match the configuration in the Twilio dashboard.
       #
