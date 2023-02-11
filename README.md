@@ -34,6 +34,12 @@ There is now a pending migration to create the tables needed for the framework. 
 
 Twilio will provide the phone number(s) you will use for your phone trees and SMS responders. Begin by creating an account and logging in at [https://console.twilio.com](https://console.twilio.com).
 
+You can get instructions on configuring Twilio for your app by running:
+
+```sh
+bin/rails twilio_rails:config
+```
+
 From the dashboard, find the "Account SID" and "Auth token" and copy them into the `config/initializers/twilio_rails.rb` file. Or better yet, use an environment variable or a secrets file to store them.
 
 Next, go to "Phone Numbers -> Manage -> Buy a Number" and buy a phone number. Enter this number into the `config/initializers/twilio_rails.rb` file as well as the `default_phone_number` option.

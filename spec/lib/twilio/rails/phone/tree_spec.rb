@@ -16,6 +16,12 @@ RSpec.describe Twilio::Rails::Phone::Tree, type: :model do
     end
   end
 
+  describe "#inbound_url" do
+    it "should create from the tree and the env" do
+      expect(tree.inbound_url).to eq("https://example.com/twilio_mount_location/phone/example/inbound.xml")
+    end
+  end
+
   describe Twilio::Rails::Phone::Tree::Prompt, type: :model do
     describe "#initialize" do
       let(:valid_attributes) { { name: "asdf", message: "hello", gather: { type: :digits }, after: :hangup } }

@@ -20,8 +20,18 @@ module Twilio
           @config[:final_timeout_attempts] = 3
         end
 
+        # The fully qualified URL for the tree used by Twilio to make outbound calls.
+        #
+        # @return [String] The outbound URL for the phone tree.
         def outbound_url
           "#{ ::Twilio::Rails.config.host }#{ ::Twilio::Rails::Engine.routes.url_helpers.phone_outbound_path(tree_name: name, format: :xml) }"
+        end
+
+        # The fully qualified URL for the tree used by Twilio to be configured in the dashboard.
+        #
+        # @return [String] The inbound URL for the phone tree.
+        def inbound_url
+          "#{ ::Twilio::Rails.config.host }#{ ::Twilio::Rails::Engine.routes.url_helpers.phone_inbound_path(tree_name: name, format: :xml) }"
         end
 
         class Prompt
