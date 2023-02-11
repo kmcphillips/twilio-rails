@@ -16,7 +16,7 @@ module Twilio
 
             if final_timeout?(response, count: tree.config[:final_timeout_attempts])
               twiml_response = Twilio::TwiML::VoiceResponse.new do |twiml|
-                add_messages(twiml, message_set: Twilio::Rails::Phone::Tree::MessageSet.new(tree.config[:final_timeout_message]), response: response)
+                add_messages(twiml, message_set: tree.config[:final_timeout_message], response: response)
                 twiml.hangup
               end
 
