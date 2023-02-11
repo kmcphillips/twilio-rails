@@ -1,4 +1,4 @@
-class InstallTwilioRails < ActiveRecord::Migration
+class InstallTwilioRails < ActiveRecord::Migration[7.0]
   def change
     create_table "messages", force: :cascade do |t|
       t.bigint "sms_conversation_id", null: false
