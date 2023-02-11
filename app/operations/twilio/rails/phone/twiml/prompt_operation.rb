@@ -50,6 +50,7 @@ module Twilio
                   max_length: prompt.gather.args[:length],
                   play_beep: prompt.gather.args[:beep],
                   # trim: "trim-silence",
+                  timeout: prompt.gather.args[:timeout],
                   action: ::Twilio::Rails::Engine.routes.url_helpers.phone_prompt_response_path(
                     format: :xml,
                     tree_name: tree.name,
@@ -65,9 +66,7 @@ module Twilio
                   args[:transcribe_callback] = ::Twilio::Rails::Engine.routes.url_helpers.phone_transcribe_path(response_id: response.id)
                 end
 
-                if prompt.gather.args[:profanity_filter]
-                  args[:profanity_filter] = true
-                end
+                args[:profanity_filter] = true if prompt.gather.args[:profanity_filter]
 
                 twiml.record(**args)
               when :speech
@@ -80,12 +79,13 @@ module Twilio
                   input: "speech",
                   timeout: prompt.gather.args[:timeout],
                   action_on_empty_result: true,
-                  language: prompt.gather.args[:language].presence || "en-CA",
+                  language: prompt.gather.args[:language].presence || "en-US",
                   enhanced: !!prompt.gather.args[:enhanced],
                 }
 
                 args[:speech_timeout] = prompt.gather.args[:speech_timeout] if prompt.gather.args[:speech_timeout]
                 args[:speech_model] = prompt.gather.args[:speech_model] if prompt.gather.args[:speech_model].present?
+                args[:profanity_filter] = true if prompt.gather.args[:profanity_filter]
 
                 twiml.gather(**args)
               when nil

@@ -15,7 +15,7 @@ module Twilio
         @auth_token = nil
         @spam_filter = nil
         @exception_notifier = nil
-        @yes_responses = [ "yes", "accept", "ya", "true", "ok", "okay" ]
+        @yes_responses = [ "yes", "accept", "ya", "yeah", "true", "ok", "okay" ]
         @no_responses = [ "no", "naw", "nah", "reject", "decline", "negative", "not", "false" ]
         @message_class_name = "Message"
         @message_class = nil

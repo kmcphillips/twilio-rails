@@ -125,9 +125,21 @@ module Twilio
           #   * `:transcribe`: A boolean if Twilio should attempt to transcribe the audio and send it back as text. The
           #     framework handles this all asynchronously and will update the `transcription` field. Default is `false`.
           #   * `:profanity_filter`: Replaces any profanity in the transcription with ***. Default is `false`.
-          # * `{ type: :speech }`: Collects speech from the caller using a specialzed model designed to better identify
-          #   utterances of digits, commands, conversations, etc.. This feature is not not fully tested or implemented
-          #   yet in the framework.
+          # * `{ type: :speech }`: Collects speech from the caller as text using a specialzed model designed to better
+          #   identify utterances of digits, commands, conversations, etc.. This does not collect audio files, and is
+          #   more expensive, but returns the `response.transcription` in realtime which can be immediately used in
+          #   the call flow. Speech accepts the following configuration keys:
+          #   * `:language`: The language of the caller. The default is "en-US".
+          #   * `:speech_model`: The model to use for the speech recognition. Accepts "default", "numbers_and_commands",
+          #     "phone_call", "experimental_conversations", and "experimental_utterances". The default is "default".
+          #     See the Twilio documentation for details. https://www.twilio.com/docs/voice/twiml/gather#speechmodel
+          #   * `:enhanced`: A boolean if the enhanced model should be used. Results are better but the cost is higher.
+          #      The default is `false`.
+          #   * `:timeout`: The number of seconds to wait for input before timing out and falling through to the
+          #     `after:`. The default is 5.
+          #   * `:speech_timeout`: Accepts an interger or "auto". If both this and `timeout` is set, Twilio will use
+          #     `timeout` for digits and this value for voice or speech.
+          #   * `:profanity_filter`: Replaces any profanity in the transcription with ***. Default is `false`.
           #
           # It accepts an required `after:` object which, will be used to determine the next prompt in the call flow.
           # The after object must be one of:

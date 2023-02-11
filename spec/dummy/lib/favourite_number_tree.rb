@@ -72,7 +72,12 @@ class FavouriteNumberTree < Twilio::Rails::Phone::BaseTree
     message: ->(response) { "Can you please state your favourite number after the tone?" },
     gather: {
       type: :speech,
-      # TODO
+      timeout: 5,
+      language: "en-CA",
+      enhanced: true,
+      speech_timeout: "auto",
+      speech_model: :phone_call,
+      profanity_filter: true,
     },
     after: {
       hangup: true,

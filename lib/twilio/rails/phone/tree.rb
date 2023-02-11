@@ -106,7 +106,7 @@ module Twilio
                 @args[:transcribe] = false unless @args.key?(:transcribe)
                 @args[:profanity_filter] = false unless @args.key?(:profanity_filter)
               elsif speech?
-                @args[:language] ||= "en-CA"
+                @args[:language] ||= "en-US"
               else
                 raise Twilio::Rails::Phone::InvalidTreeError, "gather :type must be :digits, :voice, or :speech but was #{@type.inspect}"
               end

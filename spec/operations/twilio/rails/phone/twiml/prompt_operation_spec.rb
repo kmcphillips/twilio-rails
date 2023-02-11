@@ -40,7 +40,7 @@ RSpec.describe Twilio::Rails::Phone::Twiml::PromptOperation, type: :operation do
         <?xml version="1.0" encoding="UTF-8"?>
         <Response>
         <Say voice="male">Can you please state your favourite number after the tone?</Say>
-        <Gather action="/twilio_mount_location/phone/favourite_number/prompt_response/#{ response.id }.xml" actionOnEmptyResult="true" enhanced="false" input="speech" language="en-CA"/>
+        <Gather action="/twilio_mount_location/phone/favourite_number/prompt_response/#{ response.id }.xml" actionOnEmptyResult="true" enhanced="true" input="speech" language="en-CA" profanityFilter="true" speechModel="phone_call" speechTimeout="auto" timeout="5"/>
         </Response>
       EXPECTED
       expect(described_class.call(phone_call_id: phone_call.id, tree: tree, response_id: response.id)).to eq(expected)
@@ -71,6 +71,18 @@ RSpec.describe Twilio::Rails::Phone::Twiml::PromptOperation, type: :operation do
         <Response>
         <Play>https://example.com/A440.wav</Play>
         <Redirect>/twilio_mount_location/phone/tone_rating/prompt_response/#{ response.id }.xml</Redirect>
+        </Response>
+      EXPECTED
+      expect(described_class.call(phone_call_id: phone_call.id, tree: tree, response_id: response.id)).to eq(expected)
+    end
+
+    it "outputs the prompt_twiml for speech" do
+      response.update(prompt_handle: "speech_with_defaults")
+      expected = <<~EXPECTED
+        <?xml version="1.0" encoding="UTF-8"?>
+        <Response>
+        <Say voice="female">Please say something</Say>
+        <Gather action="/twilio_mount_location/phone/tone_rating/prompt_response/#{ response.id }.xml" actionOnEmptyResult="true" enhanced="false" input="speech" language="en-US"/>
         </Response>
       EXPECTED
       expect(described_class.call(phone_call_id: phone_call.id, tree: tree, response_id: response.id)).to eq(expected)

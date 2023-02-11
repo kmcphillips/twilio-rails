@@ -11,8 +11,8 @@ module Twilio
       config.after_initialize do |application|
         Twilio::Rails.config.finalize!
 
-        # TODO: This should work but it does not. I think maybe it happens too late? The same line works if you add it directly to the application config.
-        application.config.hosts << Twilio::Rails.config.host_domain
+        # TODO: This should work but it does not. I think maybe it happens too late? The same line works if you add it directly to the application config. It is needed for dev mode.
+        # application.config.hosts << Twilio::Rails.config.host_domain
       end
     end
   end

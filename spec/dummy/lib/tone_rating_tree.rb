@@ -6,7 +6,7 @@ class ToneRatingTree < Twilio::Rails::Phone::BaseTree
     prompt: :play_first_tone
 
   prompt :play_first_tone,
-    message: ->(response) { macros.play_public_file("A440.wav") }, # TODO: this needs to map to the correct file in the dummy public folder
+    message: ->(response) { macros.play_public_file("A440.wav") },
     after: {
       prompt: :first_tone_feedback,
       message: "Thank you for listening to that tone.",
@@ -60,7 +60,16 @@ class ToneRatingTree < Twilio::Rails::Phone::BaseTree
     },
     after: {
       message: "Thank you!",
-      hangup: true,
+      prompt: :speech_with_defaults,
+    }
+
+  prompt :speech_with_defaults,
+    message: "Please say something",
+    gather: {
+      type: :speech,
+    },
+    after: {
+      hangup: true
     }
 
   unanswered_call ->(phone_call) {

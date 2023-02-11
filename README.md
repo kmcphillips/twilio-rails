@@ -47,7 +47,14 @@ Next, go to "Phone Numbers -> Manage -> Buy a Number" and buy a phone number. En
 
 ### Local development
 
-Twilio requires a publicly accessible URL to make requests to. When developing locally a tool such as [ngrok](https://ngrok.com/) can expose a local dev server via a publicly available SSL URL. Ngrok has a free tier and is easy to use. [See the install instructions for more information](https://ngrok.com/download). Other forwarding services exist and will work fine as well. Configure this URL in the `config/initializers/twilio_rails.rb` file as the `config.host` value, or in the Rails environment config file.
+Twilio requires a publicly accessible URL to make requests to. When developing locally a tool such as [ngrok](https://ngrok.com/) can expose a local dev server via a publicly available SSL URL. Ngrok has a free tier and is easy to use. [See the install instructions for more information](https://ngrok.com/download). Other forwarding services exist and will work fine as well.
+
+Whatever service, the public URL must be set in the `config/initializers/twilio_rails.rb` file as the `config.host` value. If this value is not set it will be inferred from `action_controller.default_url_options` if possible. Rails also requires the host to be added to the `config.hosts` list in `application.rb` or `development.rb`.
+
+```ruby
+# config/application.rb
+config.hosts << "my-ngrok-url.ngrok.io"
+```
 
 
 ### Example app
@@ -232,7 +239,39 @@ prompt :record_your_feedback,
 
 The above `gather:` with `type: :voice` example will finish reading the message, play a beep, and then record the phone caller's speech for 30 seconds or until they press the `#` pound key. The phone tree will then immediately execute the `after:`, while the framework continues to handle the audio recording asynchronously. When Twilio makes it available, the audio file of the recording will be downloaded and stored as an Active Storage attachment in a `Recording` model as `response.recording`. If the `transcribe:` option is set to `true`, the voice in the recording will also attempt to be transcribed as text and stored as `response.transcription`. Importantly though, **neither are guaranteed to arrive or will arrive immediately**. In practice they both usually arrive within a few seconds, but can sometimes be blank or missing if the caller is silent or garbled. There is a cost to transcription so it can be disabled, and the `profanity_filter:` defaults to false and will just *** out any profanity in the transcription.
 
-Finally, the `gather:` can also accept `type: :speech` which is a specialzed model designed to better identify utterances of digits, commands, conversations, etc.. See the [Twilio documentation for more](https://www.twilio.com/docs/voice/twiml/gather#speechmodel). This feature is not not fully tested or implemented yet. PRs welcome!
+Finally, the `gather:` can also accept `type: :speech` which is a specialzed model designed to identify voice in realtime. It will provide the `response.transcription` field immediately, making it available in the `after:` proc or in the next prompt. But the tradeoffs are that it does not provide a recording, there is a time gap of a few seconds between prompts, and it is more expensive. See the [Twilio documentation for specifics](https://www.twilio.com/docs/voice/twiml/gather#speechmodel). The keys it expects match the documentation, `speech_model:`, `speech_timeout:`, `language:` (defaults to "en-US"), and `encanced:` (defaults to false).
+
+```ruby
+prompt :what_direction_should_we_go,
+  message: "Which cardinal direction should we go?",
+  gather: {
+    type: :speech,
+    language: "en-US",
+    enhanced: true,
+    speech_model: "numbers_and_commands",
+    speech_timeout: "auto",
+  },
+  after: ->(response) {
+    if response.transcription.blank?
+      {
+        message: "Sorry, we did not get your response. Please try again.",
+        prompt: :what_direction_should_we_go,
+      }
+    elsif response.transcription_matches?("north", "south", "east", "west")
+      MyCommandObject.move(response.transcription)
+
+      {
+        message: "Moving #{ response.transcription }.",
+        hangup: true
+      }
+    else
+      {
+        message: "Sorry, we did not understand your response.",
+        prompt: :what_direction_should_we_go,
+      }
+    end
+  }
+```
 
 To inspect the implementation and get further detail, most of the magic happens in [`Twilio::Rails::Phone::Tree`](lib/twilio/rails/phone/tree.rb) and the operations under [`Twilio::Rails::Phone::Twiml`](app/operations/twilio/rails/phone/twiml/) where the DSL is defined and then converted inbot [TwiML](https://www.twilio.com/docs/voice/twiml).
 
@@ -254,11 +293,12 @@ This framework was extracted from a larger project. There are some assumptions b
 
 * Only North American phone numbers are supported, 1 plus 10 digits (`+155566677777`).
 * Some North American assumptions of "day" are hidden in a couple places.
-* Not all Twilio TwiML features are supported, such as `gather: { type: :speech }`. Many though are easy to add flags that are just passed through, and are easy to add.
 * Only production tested with MySQL and SQLite, but should work with Postgres. Assumes `utf8mb4` encoding in MySQL, but the migration does not specify it in order to support other DBs.
 * Only production tested with Sidekiq, but any ActiveJob provider should work.
 * SMS handling is pretty simple and pattern matching based. This is not an implementation of a full chat bot. Other better frameworks exist for that.
 * Generators do not generate tests, but should look at the generator `test_framework` config and produce tests or specs for the created classes.
+* Not all Twilio TwiML features are supported. Many though are easy to add flags that are just passed through, and are easy to add.
+  * The `gather:` should support `hints:` and some other config options.
 
 
 ## Contributing
