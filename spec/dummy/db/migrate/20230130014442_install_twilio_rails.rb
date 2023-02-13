@@ -39,7 +39,6 @@ class InstallTwilioRails < ActiveRecord::Migration[7.0]
       t.index ["created_at"], name: "index_phone_calls_on_created_at"
       t.index ["direction"], name: "index_phone_calls_on_direction"
       t.index ["phone_caller_id"], name: "index_phone_calls_on_phone_caller_id"
-      t.index ["product_id"], name: "index_phone_calls_on_product_id"
       t.index ["sid"], name: "index_calls_on_sid"
       t.index ["tree_name"], name: "index_phone_calls_on_tree_name"
     end
@@ -66,7 +65,6 @@ class InstallTwilioRails < ActiveRecord::Migration[7.0]
       t.datetime "updated_at", null: false
       t.index ["created_at"], name: "index_responses_on_created_at"
       t.index ["digits"], name: "index_responses_on_digits"
-      t.index ["moderation"], name: "index_responses_on_moderation"
       t.index ["phone_call_id", "prompt_handle"], name: "index_responses_on_phone_call_id_and_prompt_handle"
       t.index ["prompt_handle"], name: "index_responses_on_prompt_handle"
       t.index ["recording_id"], name: "index_responses_on_recording_id"
