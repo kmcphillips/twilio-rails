@@ -11,6 +11,12 @@ What does this mean in practice? **Call and find out!**
 * In the US: 📞 **(631) 800-7772**
 
 
+## Quick start TL;DR
+
+
+
+
+
 ## Getting started
 
 ### Installation
@@ -37,7 +43,7 @@ Twilio will provide the phone number(s) you will use for your phone trees and SM
 You can get instructions on configuring Twilio for your app by running:
 
 ```sh
-bin/rails twilio_rails:config
+bin/rails twilio:rails:config
 ```
 
 From the dashboard, find the "Account SID" and "Auth token" and copy them into the `config/initializers/twilio_rails.rb` file. Or better yet, use an environment variable or a secrets file to store them.
