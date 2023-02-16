@@ -29,7 +29,9 @@ module Twilio
               if message.say?
                 value = message.value
                 value = message.value.call(response) if message.value.is_a?(Proc)
-                twiml.say(voice: message.voice || tree.config[:voice], message: value)
+                twiml.say(voice: message.voice || tree.config[:voice], message: value) do |say|
+                  message.block.call(say) if message.block
+                end
               elsif message.play?
                 value = message.value
                 value = message.value.call(response) if message.value.is_a?(Proc)
@@ -37,7 +39,7 @@ module Twilio
               elsif message.pause?
                 twiml.pause(length: message.value)
               else
-                raise Twilio::Rails::Phone::InvalidTreeError "unknown message #{ message }"
+                raise Twilio::Rails::Phone::InvalidTreeError, "unknown message #{ message }"
               end
             end
           end

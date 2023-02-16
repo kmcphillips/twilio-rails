@@ -122,6 +122,24 @@ module Twilio
         def play_public_file(filename)
           { play: public_file(filename) }
         end
+
+        # Expose a {Twilio::TwiML::Say} node to be used in a `message:` block. This can be used to form Speech Synthesis
+        # Markup Language (SSML) to be used with Amazon Polly. Note that SSML is only available with some Polly voices,
+        # and Twilio will return server errors if used incorrectly. See the Twilio docs for more information:
+        # https://www.twilio.com/docs/voice/twiml/say/text-speech#ssml-with-amazon-polly
+        #
+        # @example
+        #   prompt :with_ssml,
+        #     message: macros.say { |say|
+        #       say.emphasis(words: "with emphasis.", level: 'moderate')
+        #       say.w(words: "A message.")
+        #       say.prosody(words: 'Thank you for calling.', pitch: '-10%', rate: '110%')
+        #     }
+        #
+        # @return [Twilio::Rails::Phone::Tree::Message] A message object passed the block that will yield a {Twilio::TwiML::Say} node
+        def say(&block)
+          Twilio::Rails::Phone::Tree::Message.new(&block)
+        end
       end
     end
   end

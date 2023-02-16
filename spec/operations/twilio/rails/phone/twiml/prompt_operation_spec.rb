@@ -119,5 +119,17 @@ RSpec.describe Twilio::Rails::Phone::Twiml::PromptOperation, type: :operation do
       EXPECTED
       expect(described_class.call(phone_call_id: phone_call.id, tree: tree, response_id: response.id)).to eq(expected)
     end
+
+    it "outputs twiml with SSML block" do
+      response.update(prompt_handle: "with_ssml_block")
+      expected = <<~EXPECTED
+        <?xml version="1.0" encoding="UTF-8"?>
+        <Response>
+        <Say voice="female"><break strength="x-weak" time="100ms"/><emphasis level="moderate">Words to emphasize</emphasis><p>Words to speak</p>aaaaaa<phoneme alphabet="x-sampa" ph="pɪˈkɑːn">Words to speak</phoneme>bbbbbbb<prosody pitch="-10%" rate="85%" volume="-6dB">Words to speak</prosody><s>Words to speak</s><say-as interpret-as="spell-out">Words to speak</say-as><sub alias="alias">Words to be substituted</sub><w>Words to speak</w></Say>
+        <Redirect>/twilio_mount_location/phone/tone_rating/prompt_response/#{ response.id }.xml</Redirect>
+        </Response>
+      EXPECTED
+      expect(described_class.call(phone_call_id: phone_call.id, tree: tree, response_id: response.id)).to eq(expected)
+    end
   end
 end

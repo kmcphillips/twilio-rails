@@ -137,24 +137,26 @@ module Twilio
         end
 
         class Message
-          attr_reader :value, :voice
+          attr_reader :value, :voice, :block
 
-          def initialize(say: nil, play: nil, pause: nil, voice: nil)
+          def initialize(say: nil, play: nil, pause: nil, voice: nil, &block)
             @say = say.presence
             @play = play.presence
             @pause = pause.presence.to_i
             @pause = nil if @pause == 0
             @voice = voice.presence
+            @block = block if block_given?
 
             raise Twilio::Rails::Phone::InvalidTreeError, "must only have one of say: play: pause:" if (@say && @play) || (@say && @pause) || (@play && @pause)
             raise Twilio::Rails::Phone::InvalidTreeError, "say: must be a string or proc" if @say && !(@say.is_a?(String) || @say.is_a?(Proc))
             raise Twilio::Rails::Phone::InvalidTreeError, "play: must be a string or proc" if @play && !(@play.is_a?(String) || @play.is_a?(Proc))
             raise Twilio::Rails::Phone::InvalidTreeError, "play: be a valid url but is #{ @play }" if @play && @play.is_a?(String) && !@play.match(/^https?:\/\/.+/)
             raise Twilio::Rails::Phone::InvalidTreeError, "pause: must be over zero but is #{ @pause }" if @pause && @pause <= 0
+            raise Twilio::Rails::Phone::InvalidTreeError, "block is only valid for say:" if block_given? && (@play || @pause)
           end
 
           def say?
-            !!@say
+            !!(@say || @block)
           end
 
           def play?
@@ -191,7 +193,9 @@ module Twilio
             set.each do |message|
               next nil if message.blank?
 
-              if message.is_a?(Proc)
+              if message.is_a?(Twilio::Rails::Phone::Tree::Message)
+                @messages << message
+              elsif message.is_a?(Proc)
                 @messages << message
               elsif message.is_a?(String)
                 @messages << Twilio::Rails::Phone::Tree::Message.new(say: message)

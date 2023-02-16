@@ -225,6 +225,47 @@ RSpec.describe Twilio::Rails::Phone::Tree, type: :model do
     end
   end
 
+  describe Twilio::Rails::Phone::Tree::Message, type: :model do
+    it "accepts only one of say/play/pause" do
+      expect{ described_class.new(say: "a", play: "a") }.to raise_error(Twilio::Rails::Phone::InvalidTreeError)
+      expect{ described_class.new(say: "a", pause: 1) }.to raise_error(Twilio::Rails::Phone::InvalidTreeError)
+      expect{ described_class.new(pause: 1, play: "a") }.to raise_error(Twilio::Rails::Phone::InvalidTreeError)
+      expect{ described_class.new(say: "a", pause: 1, play: "a") }.to raise_error(Twilio::Rails::Phone::InvalidTreeError)
+    end
+
+    it "accepts a block for say and no params" do
+      message = described_class.new() { }
+      expect(message.value).to be_nil
+      expect(message.say?).to be_truthy
+    end
+
+    it "accepts a block for say and say keyword" do
+      message = described_class.new(say: "hello") { }
+      expect(message.value).to eq("hello")
+      expect(message.say?).to be_truthy
+    end
+
+    it "does not accept a block for play" do
+      expect{ described_class.new(play: "a") { } }.to raise_error(Twilio::Rails::Phone::InvalidTreeError)
+    end
+
+    it "does not accept a block for pause" do
+      expect{ described_class.new(pause: 1) { } }.to raise_error(Twilio::Rails::Phone::InvalidTreeError)
+    end
+
+    it "accepts play as a string URL" do
+      message = described_class.new(play: "http://example.com/audio.wav")
+      expect(message.value).to eq("http://example.com/audio.wav")
+      expect(message.play?).to be_truthy
+    end
+
+    it "doest not accept play as an invalid string URL" do
+      expect {
+        described_class.new(play: "not_a_url")
+      }.to raise_error(Twilio::Rails::Phone::InvalidTreeError)
+    end
+  end
+
   describe Twilio::Rails::Phone::Tree::MessageSet, type: :model do
     it "accepts message hash as a string" do
       expect(described_class.new(message: "hello").first.value).to eq("hello")
@@ -262,6 +303,12 @@ RSpec.describe Twilio::Rails::Phone::Tree, type: :model do
       expect(described_class.new(message: [""]).length).to eq(0)
     end
 
+    it "accepts a message as Twilio::Rails::Phone::Tree::Message" do
+      expect(
+        described_class.new(message: Twilio::Rails::Phone::Tree::Message.new(say: "hello")).first.value
+      ).to eq("hello")
+    end
+
     it "does not accept message as an array of other things" do
       expect {
         described_class.new(message: [ Object.new ])
@@ -295,8 +342,8 @@ RSpec.describe Twilio::Rails::Phone::Tree, type: :model do
     end
 
     it "accepts play as a string URL" do
-      value = described_class.new(play: "http://example.com/whatever.wav")
-      expect(value.first.value).to eq("http://example.com/whatever.wav")
+      value = described_class.new(play: "http://example.com/audio.wav")
+      expect(value.first.value).to eq("http://example.com/audio.wav")
       expect(value.first.play?).to be_truthy
     end
 
