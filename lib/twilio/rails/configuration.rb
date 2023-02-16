@@ -201,7 +201,8 @@ module Twilio
       end
 
       # Finalizes the configuration and makes it ready for use. This is called by the railtie after initialization. It
-      # constantizes and performs the final steps that assumes the whole app has been initalized.
+      # constantizes and performs the final steps that assumes the whole app has been initalized. Called in `to_prepare`
+      # in the engine, so this is called on every code reload in development mode.
       #
       # @return [true]
       def finalize!
@@ -242,14 +243,16 @@ module Twilio
         def initialize
           @finalized = false
           @registry = {}.with_indifferent_access
-          @unfinalized = []
+          @values = []
         end
 
         # Finalizes the registry and makes it ready for use. It evaluates the blocks and constantizes the class names.
+        # Looks up the constants each time `to_prepare` is called, so frequently in dev but only once in production.
+        #
         # @return [true]
         def finalize!
-          @unfinalized.each { |value| add_to_registry(value) }
-          @unfinalized = []
+          @registry = {}.with_indifferent_access
+          @values.each { |value| add_to_registry(value) }
           @finalized = true
         end
 
@@ -265,11 +268,8 @@ module Twilio
           raise Error, "Must pass either a param or a block" unless klass_or_proc.present? ^ block.present?
           value = klass_or_proc || block
 
-          if @finalized
-            add_to_registry(value)
-          else
-            @unfinalized << value
-          end
+          @values << value
+          add_to_registry(value) if @finalized
 
           nil
         end
