@@ -43,24 +43,33 @@ module Twilio
           phone_calls.outbound.tree(tree)
         end
 
-        # @return [Integer] The number of inbound phone calls for the given phone tree or tree name.
-        def call_count(tree)
-          inbound_calls_for(tree).count
-        end
-
         # @return [Array<Twilio::Rails::Models::SmsConversation>] All SMS conversations for the phone caller.
         def sms_conversations
           Twilio::Rails.config.sms_conversation_class.phone_number(self.phone_number)
         end
 
-        # Returns the digits as entered through the keypad during a phone call as `gather:`. Returns `nil` if the
-        # response is not found, if the response has no digits, or if the response was a timeout. Useful for doing
-        # branching logic within a phone tree, such as "Press 2 for sales..." etc..
+        # Returns the digits as a `String` as entered through the keypad during a phone call as `gather:`. Returns
+        #`nil` if the response is not found, if the response has no digits, or if the response was a timeout. Can
+        # include both `*` and `#` characters if the caller pressed them.
+        #
+        # @param prompt [String, Symbol] The prompt handle to query.
+        # @param tree [String, Symbol, Twilio::Rails::Phone::Tree] The tree or name of the tree to query.
+        # @return [String, nil] The digits as entered by the caller or `nil` if not found or not present.
+        def response_digits(prompt:, tree:)
+          response = responses.tree(tree).where(prompt_handle: prompt, timeout: false).last
+          return nil unless response
+          response.digits
+        end
+
+        # Returns the digits as an `Integer` entered through the keypad during a phone call as `gather:`. Returns `nil`
+        # if the response is not found, if the response has no digits, if the response was a timeout, or if the response
+        # contains `*` or `#` characters. Useful for doing branching logic within a phone tree, such as "Press 2 for
+        # sales..." etc..
         #
         # @param prompt [String, Symbol] The prompt handle to query.
         # @param tree [String, Symbol, Twilio::Rails::Phone::Tree] The tree or name of the tree to query.
         # @return [Integer, nil] The digits as entered by the caller or `nil` if not found or not present.
-        def response_digits(prompt:, tree:)
+        def response_integer_digits(prompt:, tree:)
           response = responses.tree(tree).where(prompt_handle: prompt, timeout: false).last
           return nil unless response
           response.integer_digits
