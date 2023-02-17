@@ -14,6 +14,7 @@ module Twilio
           scope :phone_number, ->(number) { where(from_number: number) }
         end
 
+        # @return [Twilio::Rails::Models::PhoneCaller] The phone caller associated with this conversation.
         def phone_caller
           Twilio::Rails.config.phone_caller_class.for(from_number)
         end

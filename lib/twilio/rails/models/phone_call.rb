@@ -2,6 +2,8 @@
 module Twilio
   module Rails
     module Models
+      # The record of a phone call. Can be inbound or outbound. The associated {Twilio::Rails::Models::Response} objects
+      # in order track the progress of the call.
       module PhoneCall
         extend ActiveSupport::Concern
 
@@ -25,54 +27,71 @@ module Twilio
           after_save :unanswered_callback
         end
 
+        # All possible call statuses:
+        # "queued", "ringing", "in-progress", "canceled", "completed", "busy", "no-answer", "failed"
+
         class_methods do
+          # Returns the number of unique callers for a given tree.
+          #
+          # @param tree [String, Twilio::Rails::Phone::Tree, String, Symbol] The tree or name of the tree.
+          # @return [Integer] The number of unique callers for the tree.
           def caller_count_for_tree(tree)
             tree = tree.is_a?(Twilio::Rails::Phone::Tree) ? tree.name : tree
             tree(tree).pluck(:phone_caller_id).uniq.count
           end
         end
 
+        # Indicates if the call was answered by an answering machine. Only will return true if answering machine
+        # detection is enabled. Is always false for inbound calls.
+        #
+        # @return [Boolean] true if the call was answered by an answering machine.
         def answering_machine?
           outbound? && answered_by == "machine_start"
         end
 
-        # possible call statuses: "queued", "ringing", "in-progress", "canceled", "completed", "busy", "no-answer", "failed"
+        # Indicates if the call was not answered, busy, or failed. Is always false for inbound calls.
+        #
+        # @return [Boolean] true if the call was not answered by a person.
         def no_answer?
           outbound? && call_status.in?(["busy", "failed", "no-answer"])
         end
 
+        # @return [Boolean] true if the call was completed.
         def completed?
           call_status.in?(["completed"])
         end
 
+        # @return [Boolean] true if the call is currently ringing, queued, or in progress.
         def in_progress?
           call_status.blank? || call_status.in?(["queued", "ringing", "in-progress"])
         end
 
+        # A formatted string for the location data of the caller provided by Twilio, if any is available.
+        #
+        # @return [String] The location of the caller.
         def location
           Twilio::Rails::Formatter.location(city: from_city, country: from_country, province: from_province)
         end
 
+        # @return [String] The {Twilio::Rails::Phone::Tree} for the call.
         def tree
           @tree ||= Twilio::Rails.config.phone_trees.for(tree_name)
         end
 
+        # Checks if the call is for a given tree or trees, by class or by name.
+        #
+        # @param tree [Twilio::Rails::Phone::Tree, String, Symbol, Array] The tree or name of the tree, or an array of either.
+        # @return [Boolean] true if the call is for the given tree or trees.
         def for?(tree:)
           trees = Array(tree).map { |t| t.is_a?(Twilio::Rails::Phone::Tree) ? t.name : t.to_s }
 
           trees.include?(tree_name)
         end
 
-        def metadata
-          result = []
-
-          result << "#{responses.count} response".pluralize(responses.count) if responses.count > 0
-          result << "#{recordings.count} recording".pluralize(recordings.count) if recordings.count > 0
-          result << "#{artifacts.count} artifact".pluralize(artifacts.count) if artifacts.count > 0
-
-          result.reject(&:blank?).join(", ")
-        end
-
+        # Updates the `length_seconds` attribute based on the time difference between the first and most recent
+        # responses in the phone call. Called by {Twilio::Rails::Phone::Response} when it is updated.
+        #
+        # @return [Integer] The length of the call in seconds.
         def recalculate_length
           first_response = responses.in_order.first
           last_response = responses.in_order.last
