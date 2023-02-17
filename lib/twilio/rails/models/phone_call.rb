@@ -44,24 +44,24 @@ module Twilio
         # Indicates if the call was answered by an answering machine. Only will return true if answering machine
         # detection is enabled. Is always false for inbound calls.
         #
-        # @return [Boolean] true if the call was answered by an answering machine.
+        # @return [true, false] true if the call was answered by an answering machine.
         def answering_machine?
           outbound? && answered_by == "machine_start"
         end
 
         # Indicates if the call was not answered, busy, or failed. Is always false for inbound calls.
         #
-        # @return [Boolean] true if the call was not answered by a person.
+        # @return [true, false] true if the call was not answered by a person.
         def no_answer?
           outbound? && call_status.in?(["busy", "failed", "no-answer"])
         end
 
-        # @return [Boolean] true if the call was completed.
+        # @return [true, false] true if the call was completed.
         def completed?
           call_status.in?(["completed"])
         end
 
-        # @return [Boolean] true if the call is currently ringing, queued, or in progress.
+        # @return [true, false] true if the call is currently ringing, queued, or in progress.
         def in_progress?
           call_status.blank? || call_status.in?(["queued", "ringing", "in-progress"])
         end
@@ -81,7 +81,7 @@ module Twilio
         # Checks if the call is for a given tree or trees, by class or by name.
         #
         # @param tree [Twilio::Rails::Phone::Tree, String, Symbol, Array] The tree or name of the tree, or an array of either.
-        # @return [Boolean] true if the call is for the given tree or trees.
+        # @return [true, false] true if the call is for the given tree or trees.
         def for?(tree:)
           trees = Array(tree).map { |t| t.is_a?(Twilio::Rails::Phone::Tree) ? t.name : t.to_s }
 
