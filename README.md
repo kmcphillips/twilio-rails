@@ -305,6 +305,8 @@ This framework was extracted from a larger project. There are some assumptions b
 * Generators do not generate tests, but should look at the generator `test_framework` config and produce tests or specs for the created classes.
 * Not all Twilio TwiML features are supported. Many though are easy to add flags that are just passed through, and are easy to add.
   * The `gather:` should support `hints:` and some other config options.
+* Some documentation is missing.
+  * The controller actions.
 
 
 ## Contributing
