@@ -1,0 +1,8 @@
+Description:
+    Generates a new SMS responder and registers it.
+
+Example:
+    bin/rails generate twilio:rails:sms_responder SomeExample
+
+    This will create:
+        app/sms_responders/some_example_responder.rb

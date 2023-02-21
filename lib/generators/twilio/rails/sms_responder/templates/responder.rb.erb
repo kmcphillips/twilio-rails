@@ -1,0 +1,10 @@
+# frozen_string_literal: true
+class <%= class_name %>Responder < Twilio::Rails::SMS::DelegatedResponder
+  def handle?
+    raise NotImplementedError, "Implement #{ self.class }#handle?"
+  end
+
+  def reply
+    raise NotImplementedError, "Implement #{ self.class }#reply"
+  end
+end
