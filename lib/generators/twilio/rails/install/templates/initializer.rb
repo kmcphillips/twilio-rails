@@ -53,6 +53,11 @@ Twilio::Rails.setup do |config|
   #   MyChatClient.send_message("Error: #{ message } #{ exception.message } #{ context }")
   # }
 
+  # Controls if recordings will be downloaded and attached to the `Recording` model in an ActiveStorage attachment.
+  # This is `true` by default, but can be set to `false` to disable all downloads. It can also be set to a `Proc` or
+  # callable that will receive the `Recording` instance and return a boolean for this specific instance. if reordings will be downloaded.
+  # config.attach_recordings = true
+
   # A list of strings to be interpreted as yes or acceptance to a question, when the response is transcribed. Used in
   # the phone macros. Defaults to a list of common responses.
   # config.yes_responses = ["yes"]

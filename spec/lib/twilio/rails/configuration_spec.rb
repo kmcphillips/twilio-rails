@@ -140,6 +140,14 @@ RSpec.describe Twilio::Rails::Configuration do
         expect(config.exception_notifier).to eq(exception_notifier)
       end
     end
+
+    context "attach_recordings" do
+      it "sets the value" do
+        expect(config.attach_recordings).to eq(true)
+        config.attach_recordings = "asdf"
+        expect(config.attach_recordings).to eq("asdf")
+      end
+    end
   end
 
   describe "#include_phone_macros" do
@@ -429,6 +437,29 @@ RSpec.describe Twilio::Rails::Configuration do
     it "defaults to both get and post" do
       config.finalize!
       expect(config.controller_http_methods).to eq([ :get, :post ])
+    end
+  end
+
+  describe "#attach_recording?" do
+    let(:recording) { create(:recording, duration: 10) }
+
+    it "returns the value as a boolean" do
+      expect(config.attach_recording?(recording)).to eq(true)
+      config.attach_recordings = true
+      expect(config.attach_recording?(recording)).to eq(true)
+      config.attach_recordings = "yes"
+      expect(config.attach_recording?(recording)).to eq(true)
+      config.attach_recordings = false
+      expect(config.attach_recording?(recording)).to eq(false)
+      config.attach_recordings = nil
+      expect(config.attach_recording?(recording)).to eq(false)
+    end
+
+    it "returns the proc value as a boolean" do
+      config.attach_recordings = ->(recording) { recording.duration == "10" }
+      expect(config.attach_recording?(recording)).to eq(true)
+      recording.update!(duration: "20")
+      expect(config.attach_recording?(recording)).to eq(false)
     end
   end
 

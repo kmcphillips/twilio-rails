@@ -75,6 +75,7 @@ TODO
 TODO generators
 TODO models/tables
 TODO twilio configuration
+TODO sessions enabled for SMS
 ![Twilio phone tree config](https://user-images.githubusercontent.com/84159/217126826-5873e8fc-f8b9-4693-a2df-e62d04699fdb.png)
 ![Twilio sms config](https://user-images.githubusercontent.com/84159/217126828-9c77ab34-9826-4e7c-bac3-2b893b08d39d.png)
 TODO start a call

@@ -32,5 +32,27 @@ RSpec.describe Twilio::Rails::Phone::ReceiveRecordingOperation, type: :operation
       }.to change{ phone_call.reload.recordings.count }.by(1)
       expect(response.reload.recording).to eq(recording)
     end
+
+    it "enqueues the attach recording job" do
+      recording = nil
+      expect {
+        recording = described_class.call(phone_call_id: phone_call.id, response_id: response.id, params: params)
+      }.to have_enqueued_job(Twilio::Rails::Phone::AttachRecordingJob).with{ { recording_id: recording.id } }
+    end
+
+    context "with attach disabled" do
+      around do |example|
+        original = Twilio::Rails.config.attach_recordings
+        Twilio::Rails.config.attach_recordings = false
+        example.run
+        Twilio::Rails.config.attach_recordings = original
+      end
+
+      it "does not enqueue the attach recording job if config says not to" do
+        expect {
+          described_class.call(phone_call_id: phone_call.id, response_id: response.id, params: params)
+        }.to_not have_enqueued_job(Twilio::Rails::Phone::AttachRecordingJob)
+      end
+    end
   end
 end

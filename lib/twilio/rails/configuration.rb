@@ -15,6 +15,7 @@ module Twilio
         @auth_token = nil
         @spam_filter = nil
         @exception_notifier = nil
+        @attach_recordings = true
         @yes_responses = [ "yes", "accept", "ya", "yeah", "true", "ok", "okay" ]
         @no_responses = [ "no", "naw", "nah", "reject", "decline", "negative", "not", "false" ]
         @message_class_name = "Message"
@@ -81,6 +82,18 @@ module Twilio
       #
       # @return [Proc] a proc that will be called when an exception is raised in certain key points in the framework.
       attr_accessor :exception_notifier
+
+      # Controls if recordings will be downloaded and attached to the `Recording` model in an ActiveStorage attachment.
+      # This is `true` by default, but can be set to `false` to disable all downloads. It can also be set to a `Proc` or
+      # callable that will receive the `Recording` instance and return a boolean for this specific instance. A typical
+      # usage would be to delegate to the model or a business logic process to determine if the recording should be
+      # downloaded.
+      #
+      # @example
+      #   Twilio::Rails.config.attach_recordings = ->(recording) { recording.should_attach_audio? }
+      #
+      # @return [true, false, Proc] a boolean or a proc that will be called to return a boolean to determine if reordings will be downloaded.
+      attr_accessor :attach_recordings
 
       # A list of strings to be interpreted as yes or acceptance to a question.
       #
@@ -167,6 +180,17 @@ module Twilio
         end
 
         nil
+      end
+
+      # Uses the {#attach_recordings} configuration to determine if the recording should be downloaded and attached.
+      #
+      # @return [true, false] If this recording should be downloaded and attached.
+      def attach_recording?(recording)
+        if attach_recordings.is_a?(Proc) || attach_recordings.respond_to?(:call)
+          !!attach_recordings.call(recording)
+        else
+          !!attach_recordings
+        end
       end
 
       # Flags that the configuration has been setup and should be validated and finalized.

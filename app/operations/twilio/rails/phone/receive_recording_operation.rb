@@ -22,7 +22,9 @@ module Twilio
             response.recording = recording
             response.save!
 
-            Twilio::Rails::Phone::AttachRecordingJob.set(wait: 5.seconds).perform_later(recording_id: recording.id)
+            if Twilio::Rails.config.attach_recording?(recording)
+              Twilio::Rails::Phone::AttachRecordingJob.set(wait: 5.seconds).perform_later(recording_id: recording.id)
+            end
 
             recording
           end
