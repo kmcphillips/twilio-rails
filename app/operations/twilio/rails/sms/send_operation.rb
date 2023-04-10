@@ -56,7 +56,7 @@ module Twilio
                   context: {
                     to: calculated_to_number,
                     from: calculated_from_number,
-                    phone_call_id: phone_call.id,
+                    phone_call_id: phone_call&.id,
                   },
                   exception_binding: binding
                 )
