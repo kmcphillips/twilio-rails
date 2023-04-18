@@ -35,9 +35,9 @@ module Twilio
         end
 
         class Prompt
-          attr_reader :name, :messages, :gather, :after
+          attr_reader :name, :messages, :gather, :triggers, :after
 
-          def initialize(name:, message:, gather:, after:)
+          def initialize(name:, message:, gather:, triggers:, after:)
             @name = name&.to_sym
             raise Twilio::Rails::Phone::InvalidTreeError, "prompt name cannot be blank" if @name.blank?
 
@@ -49,6 +49,7 @@ module Twilio
 
             @gather = Twilio::Rails::Phone::Tree::Gather.new(gather) if gather.present?
             @after = Twilio::Rails::Phone::Tree::After.new(after)
+            @triggers = Twilio::Rails::Phone::Tree::Triggers.new(triggers)
           end
         end
 
@@ -81,6 +82,27 @@ module Twilio
 
           def hangup?
             !!@hangup
+          end
+        end
+
+        class Triggers
+          attr_reader :triggers
+
+          def initialize(args)
+            case args
+            when NilClass
+              @triggers = []
+            when Array
+              @triggers = args.reject(&:blank?)
+            when Hash
+              @triggers = [args]
+            else
+              raise Twilio::Rails::Phone::InvalidTreeError, "cannot parse :triggers from #{args.inspect}"
+            end
+
+            @triggers = @triggers.map do |trigger|
+              trigger # TODO
+            end
           end
         end
 

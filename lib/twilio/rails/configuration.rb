@@ -255,6 +255,8 @@ module Twilio
           Twilio::Rails::Phone::TreeMacros.include(@include_phone_macros.pop)
         end
 
+        Twilio::Rails::Events.clear!
+
         @phone_trees.finalize!
         @sms_responders.finalize!
 
@@ -369,6 +371,14 @@ module Twilio
           raise(error_class, "Tree name '#{ name }' is already registered") if @registry[name]
           klass = klass.constantize if klass.is_a?(String)
           @registry[name] = value.tree
+
+          value.tree.prompts.each do |prompt_handle, prompt|
+            prompt.triggers.each do |trigger_name, trigger|
+              Twilio::Rails::Events.register(trigger_name, *trigger.merge(tree: name, prompt: prompt_handle))
+            end
+          end
+
+          @registry[name]
         end
 
         def error_class

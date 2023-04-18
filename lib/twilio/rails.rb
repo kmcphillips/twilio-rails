@@ -17,6 +17,7 @@ require "twilio/rails/configuration"
 require "twilio/rails/formatter"
 require "twilio/rails/phone_number"
 require "twilio/rails/client"
+require "twilio/rails/events"
 
 require "twilio/rails/phone"
 require "twilio/rails/phone/tree"

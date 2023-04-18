@@ -154,8 +154,14 @@ module Twilio
           # * `Proc`: A proc that will be called after the message and gather have been called. The proc will receive
           #   the current {Twilio::Rails::Models::Response} instance as an argument. The proc must return one of the
           #   above.
-          def prompt(prompt_name, message: nil, gather: nil, after:)
-            tree.prompts[prompt_name] = Twilio::Rails::Phone::Tree::Prompt.new(name: prompt_name, message: message, gather: gather, after: after)
+          def prompt(prompt_name, message: nil, gather: nil, triggers: nil, after:)
+            tree.prompts[prompt_name] = Twilio::Rails::Phone::Tree::Prompt.new(
+              name: prompt_name,
+              message: message,
+              gather: gather,
+              triggers: triggers,
+              after: after
+            )
             nil
           end
 

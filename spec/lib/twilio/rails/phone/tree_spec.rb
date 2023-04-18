@@ -169,6 +169,19 @@ RSpec.describe Twilio::Rails::Phone::Tree, type: :model do
     end
   end
 
+  describe Twilio::Rails::Phone::Tree::Triggers, type: :model do
+    describe "#initialize" do
+      it "accepts nil"
+
+      it "accepts a hash"
+
+      it "accepts an array"
+
+      it "raises on unknown"
+
+    end
+  end
+
   describe Twilio::Rails::Phone::Tree::Gather, type: :model do
     describe "#initialize" do
       context "accepts a hash" do
