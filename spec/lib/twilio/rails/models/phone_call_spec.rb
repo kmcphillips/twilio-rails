@@ -27,31 +27,31 @@ RSpec.describe PhoneCall, type: :model do
       it "does not enqueue when there is no change" do
         phone_call.length_seconds = 123
         phone_call.save!
-        expect(Twilio::Rails::Phone::UnansweredJob).to_not have_been_enqueued
+        expect(Twilio::Rails::Phone::UnansweredCallJob).to_not have_been_enqueued
       end
 
       it "does not enqueue when answered by a human" do
         phone_call.answered_by = "human"
         phone_call.save!
-        expect(Twilio::Rails::Phone::UnansweredJob).to_not have_been_enqueued
+        expect(Twilio::Rails::Phone::UnansweredCallJob).to_not have_been_enqueued
       end
 
       it "does not enqueue when call is completed" do
         phone_call.call_status = "completed"
         phone_call.save!
-        expect(Twilio::Rails::Phone::UnansweredJob).to_not have_been_enqueued
+        expect(Twilio::Rails::Phone::UnansweredCallJob).to_not have_been_enqueued
       end
 
       it "enqueues when answered by a machine" do
         phone_call.answered_by = "machine_start"
         phone_call.save!
-        expect(Twilio::Rails::Phone::UnansweredJob).to have_been_enqueued
+        expect(Twilio::Rails::Phone::UnansweredCallJob).to have_been_enqueued
       end
 
       it "enqueues when call status is no-answer" do
         phone_call.call_status = "no-answer"
         phone_call.save!
-        expect(Twilio::Rails::Phone::UnansweredJob).to have_been_enqueued
+        expect(Twilio::Rails::Phone::UnansweredCallJob).to have_been_enqueued
       end
     end
   end

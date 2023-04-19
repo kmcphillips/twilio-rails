@@ -75,6 +75,10 @@ RSpec.describe Twilio::Rails::Phone::BaseTree, type: :model do
     it "sets the unanswered_prompt" do
       expect(tree.unanswered_call).to be_nil
     end
+
+    it "sets the finished_prompt" do
+      expect(tree.finished_call).to be_nil
+    end
   end
 
   context "with ToneRatingTree" do
@@ -92,6 +96,10 @@ RSpec.describe Twilio::Rails::Phone::BaseTree, type: :model do
 
     it "sets the unanswered_prompt" do
       expect(tree.unanswered_call).to be_a(Proc)
+    end
+
+    it "sets the finished_prompt" do
+      expect(tree.finished_call).to be_a(Proc)
     end
   end
 end

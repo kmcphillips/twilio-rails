@@ -70,16 +70,17 @@ An example Rails app demonstrating the framework is available at [`twilio-rails-
 * In Canada: 📞 **(204) 800-7772**
 * In the US: 📞 **(631) 800-7772**
 
+## TODO write this documentation
 
-TODO
-TODO generators
-TODO models/tables
-TODO twilio configuration
-TODO sessions enabled for SMS
-![Twilio phone tree config](https://user-images.githubusercontent.com/84159/217126826-5873e8fc-f8b9-4693-a2df-e62d04699fdb.png)
+* TODO generators
+* TODO models/tables
+* TODO twilio configuration
+* TODO sessions enabled for SMS
+* TODO start an outbound call via operation
+* TODO send an SMS
+* TODO configuration examples:
+![Twilio phone tree config](https://user-images.githubusercontent.com/84159/233141680-78fde504-583c-44d1-bf42-bb4058e0e523.png)
 ![Twilio sms config](https://user-images.githubusercontent.com/84159/217126828-9c77ab34-9826-4e7c-bac3-2b893b08d39d.png)
-TODO start a call
-TODO send an SMS
 
 
 ## How it works

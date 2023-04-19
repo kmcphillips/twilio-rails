@@ -32,6 +32,7 @@ class InstallTwilioRails < ActiveRecord::Migration[7.0]
       t.string "direction"
       t.string "answered_by"
       t.boolean "unanswered", default: false
+      t.boolean "finished", default: false
       t.string "call_status"
       t.integer "length_seconds"
       t.datetime "created_at", null: false

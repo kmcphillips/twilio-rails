@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 require 'rails_helper'
 
-RSpec.describe Twilio::Rails::Phone::UnansweredOperation, type: :operation do
+RSpec.describe Twilio::Rails::Phone::UnansweredCallOperation, type: :operation do
   let(:phone_call) { create(:phone_call, :outbound, tree_name: "tone_rating") }
 
   describe "#execute" do

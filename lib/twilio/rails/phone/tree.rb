@@ -5,7 +5,7 @@ module Twilio
       # Implementation class for a phone tree. See {Twilio::Rails::Phone::BaseTree} for detailed documentation.
       class Tree
         attr_reader :name, :prompts, :config
-        attr_accessor :greeting, :unanswered_call
+        attr_accessor :greeting, :unanswered_call, :finished_call
 
         def initialize(tree_name)
           @name = tree_name.to_s

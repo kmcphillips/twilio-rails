@@ -71,6 +71,7 @@ ActiveRecord::Schema[7.0].define(version: 2023_01_30_014442) do
     t.string "direction"
     t.string "answered_by"
     t.boolean "unanswered", default: false
+    t.boolean "finished", default: false
     t.string "call_status"
     t.integer "length_seconds"
     t.datetime "created_at", null: false

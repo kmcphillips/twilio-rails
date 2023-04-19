@@ -19,6 +19,7 @@ module Twilio
       #       voice "Polly.Matthew-Neural"
       #       final_timeout_message "Sorry, you don't appear to be there. Goodbye."
       #       unanswered_call ->(phone_call) { MyMailer.send_followup(phone_call).deliver_later }
+      #       finished_call ->(phone_call) { MyMailer.send_followup(phone_call).deliver_later }
       #       invalid_phone_number "Sorry, we can only accept calls from North America. Goodbye."
       #
       #       greeting message: "Hello, and thank you for calling.",
@@ -168,6 +169,19 @@ module Twilio
           # @return [nil]
           def unanswered_call(proc)
             tree.unanswered_call = proc
+            nil
+          end
+
+          # Accepts a proc which will be called when a call is completed, unanswered, or any state not in progress.
+          # The proc will be called asynchronously in a job. The proc will be passed the
+          # {Twilio::Rails::Models::PhoneCall} instance for the call. It is called after the call has been completed
+          # so cannot control the flow of the call. It is intended to be used as a hook to handle application logic for
+          # when a call finishes and is no longer in progress. The default is `nil` and no action is taken.
+          #
+          # @param proc [Proc] the proc to call when a call is finished, must accept a phone call instance.
+          # @return [nil]
+          def finished_call(proc)
+            tree.finished_call = proc
             nil
           end
 

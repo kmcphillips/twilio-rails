@@ -24,7 +24,7 @@ module Twilio
           scope :called_today, -> { where("created_at > ?", Time.now - 1.day).includes(:phone_caller).order(created_at: :asc) }
           scope :in_progress, -> { where(call_status: "in-progress") }
 
-          after_save :unanswered_callback
+          after_save :status_callback
         end
 
         # All possible call statuses:
@@ -111,13 +111,17 @@ module Twilio
 
         private
 
-        def unanswered_callback
+        def status_callback
           if saved_changes.key?("call_status") && no_answer?
-            Twilio::Rails::Phone::UnansweredJob.set(wait: 10.seconds).perform_later(phone_call_id: id)
+            Twilio::Rails::Phone::UnansweredCallJob.perform_later(phone_call_id: id)
+          end
+
+          if saved_changes.key?("call_status") && !in_progress?
+            Twilio::Rails::Phone::FinishedCallJob.perform_later(phone_call_id: id)
           end
 
           if saved_changes.key?("answered_by") && answering_machine?
-            Twilio::Rails::Phone::UnansweredJob.set(wait: 10.seconds).perform_later(phone_call_id: id)
+            Twilio::Rails::Phone::UnansweredCallJob.perform_later(phone_call_id: id)
           end
         end
       end

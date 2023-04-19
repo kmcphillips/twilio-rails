@@ -26,6 +26,9 @@ namespace :twilio do
           Twilio::Rails.config.phone_trees.all.each do |name, tree|
             puts "  #{tree.inbound_url}"
           end
+          puts ""
+          puts "Under 'Voice & Fax' set 'CALL STATUS CHANGES' to following URL:"
+          puts "  #{ ::Twilio::Rails.config.host }#{ ::Twilio::Rails::Engine.routes.url_helpers.phone_status_path(format: :xml) }"
         end
 
         puts ""

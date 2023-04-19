@@ -91,4 +91,8 @@ class ToneRatingTree < Twilio::Rails::Phone::BaseTree
   unanswered_call ->(phone_call) {
     phone_call.touch # This is a placeholder action to test with
   }
+
+  finished_call ->(phone_call) {
+    phone_call.touch # This is a placeholder action to test with
+  }
 end

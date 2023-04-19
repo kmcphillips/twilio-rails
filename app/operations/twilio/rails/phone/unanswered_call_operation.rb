@@ -2,7 +2,7 @@
 module Twilio
   module Rails
     module Phone
-      class UnansweredOperation < ::Twilio::Rails::Phone::BaseOperation
+      class UnansweredCallOperation < ::Twilio::Rails::Phone::BaseOperation
         def execute
           if !phone_call.outbound?
             Twilio::Rails.config.logger.tagged(self.class) { |l| l.error("Should never be called on inbound call") }
