@@ -199,6 +199,7 @@ RSpec.describe PhoneCall, type: :model do
 
     it "is not completed with another status" do
       expect(PhoneCall.new(call_status: "busy")).to_not be_completed
+      expect(PhoneCall.new(call_status: "no-answer")).to_not be_completed
     end
   end
 
@@ -218,6 +219,10 @@ RSpec.describe PhoneCall, type: :model do
 
     it "is in progress when in-progress" do
       expect(PhoneCall.new(call_status: "in-progress")).to be_in_progress
+    end
+
+    it "is in progress when initiated" do
+      expect(PhoneCall.new(call_status: "initiated")).to be_in_progress
     end
 
     it "is not in progress when another status" do

@@ -28,7 +28,7 @@ module Twilio
         end
 
         # All possible call statuses:
-        # "queued", "ringing", "in-progress", "canceled", "completed", "busy", "no-answer", "failed"
+        # "queued", "initiated", "ringing", "in-progress", "completed", "canceled", "busy", "no-answer", "failed"
 
         class_methods do
           # Returns the number of unique callers for a given tree.
@@ -56,14 +56,20 @@ module Twilio
           outbound? && call_status.in?(["busy", "failed", "no-answer"])
         end
 
-        # @return [true, false] true if the call was completed.
+        # Checks if the call is in the completed state. This does not cover all possible states for a call that is not
+        # in progress. See {#in_progress?} to check if a call is finished or not.
+        #
+        # @return [true, false] true if the call is in the completed state.
         def completed?
           call_status.in?(["completed"])
         end
 
+        # Checks if that call is in a state where it is currently in progress with the caller. This includes ringing,
+        # queued, initiated, or in progress. Use this method to check if the call has finished or not.
+        #
         # @return [true, false] true if the call is currently ringing, queued, or in progress.
         def in_progress?
-          call_status.blank? || call_status.in?(["queued", "ringing", "in-progress"])
+          call_status.blank? || call_status.in?(["queued", "initiated", "ringing", "in-progress"])
         end
 
         # A formatted string for the location data of the caller provided by Twilio, if any is available.
