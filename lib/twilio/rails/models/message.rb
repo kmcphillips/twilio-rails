@@ -13,7 +13,7 @@ module Twilio
 
           belongs_to :sms_conversation, class_name: Twilio::Rails.config.sms_conversation_class_name
 
-          scope :in_order, -> { order(created_at: :asc) }
+          scope :in_order, -> { reorder(created_at: :asc) }
         end
       end
     end

@@ -125,7 +125,8 @@ module Twilio
 
         # Expose a {Twilio::TwiML::Say} node to be used in a `message:` block. This can be used to form Speech Synthesis
         # Markup Language (SSML) to be used with Amazon Polly. Note that SSML is only available with some Polly voices,
-        # and Twilio will return server errors if used incorrectly. See the Twilio docs for more information:
+        # and only some tags are supported. Twilio will return server errors if used incorrectly. See the Twilio
+        # documentation for more information:
         # https://www.twilio.com/docs/voice/twiml/say/text-speech#ssml-with-amazon-polly
         #
         # @example

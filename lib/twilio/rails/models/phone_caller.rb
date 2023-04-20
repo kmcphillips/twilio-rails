@@ -11,8 +11,8 @@ module Twilio
         included do
           include Twilio::Rails::HasPhoneNumber
 
-          has_many :phone_calls, class_name: Twilio::Rails.config.phone_call_class_name
-          has_many :responses, through: :phone_calls, class_name: Twilio::Rails.config.response_class_name
+          has_many :phone_calls, -> { order(created_at: :asc) }, class_name: Twilio::Rails.config.phone_call_class_name
+          has_many :responses, -> { order(created_at: :asc) }, through: :phone_calls, class_name: Twilio::Rails.config.response_class_name
         end
 
         class_methods do

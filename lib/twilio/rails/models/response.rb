@@ -25,7 +25,7 @@ module Twilio
           }
           scope :tree, ->(name) { joins(:phone_call).where(phone_calls: { tree_name: name }) }
           scope :prompt, ->(prompt_handle) { where(prompt_handle: prompt_handle) }
-          scope :in_order, -> { order(created_at: :asc) }
+          scope :in_order, -> { reorder(created_at: :asc) }
           scope :transcribed, -> { where(transcribed: true) }
 
           after_commit :recalculate_phone_call_length, on: :create

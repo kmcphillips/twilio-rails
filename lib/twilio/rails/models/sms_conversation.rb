@@ -8,9 +8,9 @@ module Twilio
         extend ActiveSupport::Concern
 
         included do
-          has_many :messages, dependent: :destroy, class_name: Twilio::Rails.config.message_class_name
+          has_many :messages, -> { order(created_at: :asc) }, dependent: :destroy, class_name: Twilio::Rails.config.message_class_name
 
-          scope :recent, -> { order(created_at: :desc).limit(10) }
+          scope :recent, -> { reorder(created_at: :desc).limit(10) }
           scope :phone_number, ->(number) { where(from_number: number) }
         end
 

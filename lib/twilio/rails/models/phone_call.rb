@@ -16,10 +16,10 @@ module Twilio
 
           belongs_to :phone_caller, class_name: Twilio::Rails.config.phone_caller_class_name
 
-          has_many :responses, dependent: :destroy, class_name: Twilio::Rails.config.response_class_name
-          has_many :recordings, dependent: :destroy, class_name: Twilio::Rails.config.recording_class_name
+          has_many :responses, -> { order(created_at: :asc) }, dependent: :destroy, class_name: Twilio::Rails.config.response_class_name
+          has_many :recordings, -> { order(created_at: :asc) }, dependent: :destroy, class_name: Twilio::Rails.config.recording_class_name
 
-          scope :recent, -> { order(created_at: :desc).limit(10) }
+          scope :recent, -> { reorder(created_at: :desc).limit(10) }
           scope :tree, ->(name) { where(tree_name: name) }
           scope :called_today, -> { where("created_at > ?", Time.now - 1.day).includes(:phone_caller).order(created_at: :asc) }
           scope :in_progress, -> { where(call_status: "in-progress") }
