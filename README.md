@@ -13,7 +13,7 @@ What does this mean in practice? **Call and find out!**
 
 ## Quick start TL;DR
 
-
+TODO
 
 
 
@@ -303,12 +303,13 @@ This framework was extracted from a larger project. There are some assumptions b
 * Some North American assumptions of "day" are hidden in a couple places.
 * Only production tested with MySQL and SQLite, but should work with Postgres. Assumes `utf8mb4` encoding in MySQL, but the migration does not specify it in order to support other DBs.
 * Only production tested with Sidekiq, but any ActiveJob provider should work.
-* SMS handling is pretty simple and pattern matching based. This is not an implementation of a full chat bot. Other better frameworks exist for that.
+* There is no support for domain level events or observers. This means hooks need to be implemented using active record model callbacks, which is opaque, fragile, and confusing. In future the framework could define and trigger named events based on lifecycle.
+* SMS handling is pretty simple and pattern matching based. This is not an implementation of a full chat bot. Other better frameworks exist for that. This could probably be completely rebuilt to work in a similar way where a phone number is bound to a responder by name, rather than each one implementing `handle?`.
 * Generators do not generate tests, but should look at the generator `test_framework` config and produce tests or specs for the created classes.
 * Not all Twilio TwiML features are supported. Many though are easy to add flags that are just passed through, and are easy to add.
   * The `gather:` should support `hints:` and some other config options.
-* Some documentation is missing.
-  * The controller actions.
+* Some documentation is missing in:
+  * Controller actions.
 
 
 ## Contributing
