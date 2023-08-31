@@ -11,17 +11,13 @@ What does this mean in practice? **Call and find out!**
 * In the US: 📞 **(631) 800-7772**
 
 
-## Quick start TL;DR
-
-TODO
-
-
-
 ## Getting started
 
 ### Installation
 
-Add this line to your Rails application's Gemfile:
+This Engine assumes it is running in a Rails app with a configured database, an ActiveJob provider, a configured ActiveStorage store, and controller sessions enabled.
+
+Begin by adding this line to your Rails application's Gemfile:
 
 ```ruby
 gem "twilio-rails"
@@ -33,34 +29,71 @@ After running `bundle`, run the installer:
 bin/rails generate twilio:rails:install
 ```
 
-There is now a pending migration to create the tables needed for the framework. But before running `bin/rails db:migrate` the initializer needs to be configured with values from your Twilio account.
-
-
-### Twilio configuration
-
-Twilio will provide the phone number(s) you will use for your phone trees and SMS responders. Begin by creating an account and logging in at [https://console.twilio.com](https://console.twilio.com).
-
-You can get instructions on configuring Twilio for your app by running:
-
-```sh
-bin/rails twilio:rails:config
-```
-
-From the dashboard, find the "Account SID" and "Auth token" and copy them into the `config/initializers/twilio_rails.rb` file. Or better yet, use an environment variable or a secrets file to store them.
-
-Next, go to "Phone Numbers -> Manage -> Buy a Number" and buy a phone number. Enter this number into the `config/initializers/twilio_rails.rb` file as well as the `default_phone_number` option.
+There is now a pending migration to create the tables needed for the framework. But before running `bin/rails db:migrate` a development domain needs to be setup and the initializer needs to be configured with values from your Twilio account.
 
 
 ### Local development
 
 Twilio requires a publicly accessible URL to make requests to. When developing locally a tool such as [ngrok](https://ngrok.com/) can expose a local dev server via a publicly available SSL URL. Ngrok has a free tier and is easy to use. [See the install instructions for more information](https://ngrok.com/download). Other forwarding services exist and will work fine as well.
 
-Whatever service, the public URL must be set in the `config/initializers/twilio_rails.rb` file as the `config.host` value. If this value is not set it will be inferred from `action_controller.default_url_options` if possible. Rails also requires the host to be added to the `config.hosts` list in `application.rb` or `development.rb`.
+Whatever service, the public URL must be set in the `config/initializers/twilio_rails.rb` file as the `host` value. If this value is not set it will be inferred from `action_controller.default_url_options` if possible. Rails also requires the host to be added to the `config.hosts` list in `application.rb` or `development.rb`:
 
 ```ruby
 # config/application.rb
 config.hosts << "my-ngrok-url.ngrok.io"
 ```
+
+
+### Twilio configuration
+
+Twilio will provide the phone number(s) you will use for your phone trees and SMS responders. Begin by creating an account and logging in at [https://console.twilio.com](https://console.twilio.com).
+
+From the dashboard, find the "Account SID" and "Auth token" and copy them into the `config/initializers/twilio_rails.rb` file. Or better yet, use an environment variable or a secrets file to store them.
+
+Next, go to "Phone Numbers -> Manage -> Buy a Number" and buy a phone number. Enter this number into the `config/initializers/twilio_rails.rb` file as well as the `default_phone_number` option.
+
+You can get instructions on configuring the Twilio dashboard for your app by running:
+
+```sh
+bin/rails twilio:rails:config
+```
+
+This command will give you output tailored to the configuration and handlers in your app.
+
+Phone call handerls should be configured something like:
+![Twilio phone tree config](https://user-images.githubusercontent.com/84159/233141680-78fde504-583c-44d1-bf42-bb4058e0e523.png)
+
+And SMS handlers something like:
+![Twilio sms config](https://user-images.githubusercontent.com/84159/217126828-9c77ab34-9826-4e7c-bac3-2b893b08d39d.png)
+
+
+### `twilio-rails` configuration
+
+The install generator will create a `config/initializers/twilio_rails.rb` file with reasonable default values and good documentation of each value and its use. Some are required for the engine to function and are provided by Twilio (`account_sid`, `auth_token`, and `default_outgoing_phone_number`).
+
+The config options are documented inline and can be found:
+* [In the initializer `lib/generators/twilio/rails/install/templates/twilio_rails.rb`](lib/generators/twilio/rails/install/templates/twilio_rails.rb)
+* [In the `Configuration` class](lib/twilio/rails/configuration.rb)
+
+
+### Generators
+
+There are generators to produce any required boilerplate. As described in the install steps, there is the installation generator:
+
+```sh
+bin/rails generate twilio:rails:install
+```
+
+And then there are generators to create phone trees and SMS responders:
+
+```sh
+bin/rails generate twilio:rails:phone_tree
+```
+```sh
+bin/rails generate twilio:rails:sms_responder
+```
+
+Both are explained in detail below.
 
 
 ### Example app
@@ -69,18 +102,6 @@ An example Rails app demonstrating the framework is available at [`twilio-rails-
 
 * In Canada: 📞 **(204) 800-7772**
 * In the US: 📞 **(631) 800-7772**
-
-## TODO write this documentation
-
-* TODO generators
-* TODO models/tables
-* TODO twilio configuration
-* TODO sessions enabled for SMS
-* TODO start an outbound call via operation
-* TODO send an SMS
-* TODO configuration examples:
-![Twilio phone tree config](https://user-images.githubusercontent.com/84159/233141680-78fde504-583c-44d1-bf42-bb4058e0e523.png)
-![Twilio sms config](https://user-images.githubusercontent.com/84159/217126828-9c77ab34-9826-4e7c-bac3-2b893b08d39d.png)
 
 
 ## How it works
@@ -100,6 +121,8 @@ The `PhoneCall` is the record of a single phone call, either inbound or outbound
 A phone call has many `Response` records. Each interaction with the caller is a response, which is also mutable and lifecycle managed. Responses are stored in order and are the log of every step of the phone call. Responses contain user input, if any was asked for, such as digit presses, voice input, and transcriptions.
 
 An `SMSConversation` is the record of a series of SMS messages exchanged with a phone caller. Each conversation has many `Message` records, flagged as either inbound or outbound. The full contents of the messages are stored in in the DB. Messages are handled based on responders, discussed in detail below.
+
+Any and all of these models can be extended with extra fields and any logic required by the implementing application. They can also be named differently and configured in the initializer.
 
 
 ### Phone trees
@@ -245,7 +268,7 @@ prompt :record_your_feedback,
   }
 ```
 
-The above `gather:` with `type: :voice` example will finish reading the message, play a beep, and then record the phone caller's speech for 30 seconds or until they press the `#` pound key. The phone tree will then immediately execute the `after:`, while the framework continues to handle the audio recording asynchronously. When Twilio makes it available, the audio file of the recording will be downloaded and stored as an Active Storage attachment in a `Recording` model as `response.recording`. If the `transcribe:` option is set to `true`, the voice in the recording will also attempt to be transcribed as text and stored as `response.transcription`. Importantly though, **neither are guaranteed to arrive or will arrive immediately**. In practice they both usually arrive within a few seconds, but can sometimes be blank or missing if the caller is silent or garbled. There is a cost to transcription so it can be disabled, and the `profanity_filter:` defaults to false and will just *** out any profanity in the transcription.
+The above `gather:` with `type: :voice` example will finish reading the message, play a beep, and then record the phone caller's speech for 30 seconds or until they press the `#` pound key. The phone tree will then immediately execute the `after:`, while the framework continues to handle the audio recording asynchronously. When Twilio makes it available, the audio file of the recording will be downloaded and stored as an ActiveStorage attachment in a `Recording` model as `response.recording`. If the `transcribe:` option is set to `true`, the voice in the recording will also attempt to be transcribed as text and stored as `response.transcription`. Importantly though, **neither are guaranteed to arrive or will arrive immediately**. In practice they both usually arrive within a few seconds, but can sometimes be blank or missing if the caller is silent or garbled. There is a cost to transcription so it can be disabled, and the `profanity_filter:` defaults to false and will just *** out any profanity in the transcription.
 
 Finally, the `gather:` can also accept `type: :speech` which is a specialzed model designed to identify voice in realtime. It will provide the `response.transcription` field immediately, making it available in the `after:` proc or in the next prompt. But the tradeoffs are that it does not provide a recording, there is a time gap of a few seconds between prompts, and it is more expensive. See the [Twilio documentation for specifics](https://www.twilio.com/docs/voice/twiml/gather#speechmodel). The keys it expects match the documentation, `speech_model:`, `speech_timeout:`, `language:` (defaults to "en-US"), and `encanced:` (defaults to false).
 
@@ -284,15 +307,74 @@ prompt :what_direction_should_we_go,
 To inspect the implementation and get further detail, most of the magic happens in [`Twilio::Rails::Phone::Tree`](lib/twilio/rails/phone/tree.rb) and the operations under [`Twilio::Rails::Phone::Twiml`](app/operations/twilio/rails/phone/twiml/) where the DSL is defined and then converted inbot [TwiML](https://www.twilio.com/docs/voice/twiml).
 
 
+### Make an outgoing phone call
+
+An outgoing phone call may be started from any valid phone tree and any configured Twilio phone number via the [`Twilio::Rails::Phone::StartCallOperation`](app/operations/twilio/rails/phone/start_call_operation.rb). This starts the asynchronous process of making the call. It will return the DB phone call instance which will be updated with the status of the call.
+
+```ruby
+Twilio::Phone::StartCallOperation.call(
+  tree: Twilio::Rails.config.phone_trees.for("your_tree_name"),
+  to: "+155566677777", # or an instance of Twilio::Rails::PhoneNumber
+  from: Twilio::Rails.config.default_outgoing_phone_number # optional and defaults to this value
+)
+```
+
+
 ### SMS responders
 
-TODO
+> **Warning**
+> Due to how Twilio makes API calls into the application for SMS messages, SMS responders require Rails sessions to be enabled and setup in order to handle SMS messages.
 
+Twilio provides a hook for incoming SMS messages and can send SMS messages to any phone number. This gem provides a simple method for handling SMS conversations, though it does not provide a full stateful tree structure.
+
+An SMS responder is a subclass of [`Twilio::Rails::SMS::DelegatedResponder`](lib/twilio/rails/sms/delegated_responder.rb). Any number of responders may be added to the app provided they are registered in the initializer with `config.sms_responders.register { MyResponderClass }`.
+
+The responder class will be initialized with the `message` and `sms_conversation` local variables set, and must implement two methods:
+* `handle?`: Return true if this handler handles the given message, false if it does not.
+* `reply`: A string to reply to the message with, or `nil` if the message is handled and no response should be sent.
+
+All registered responders will be visited in order and the first one to return a truthy value from `#handle?` will handle the message and no further responders will be called. If all `#handle?` methods return false than the incoming message is ignored.
+
+The `sms_conversation` variable is an instance of the implementor of `Twilio::Rails::Models::SMSConversation` and contains the full history of the conversation with this phone caller, and can be used to determine the next step in the conversation. These models can also be extended to add any required application level fields and logic.
+
+
+### Send an outgoing SMS message
+
+An out going SMS message may be sent via the [`Twilio::Rails::SMS::SendOperation`](app/operations/twilio/rails/sms/send_operation.rb). This will send the message and start a conversation, storing all messages and replies in the DB:
+
+```ruby
+Twilio::Rails::SMS::SendOperation.call(
+  phone_caller_id: phone_caller.id,
+  messages: ["Hello world!"], # an array of strings, each one will be sent as a separate message in sequence
+  from_number: Twilio::Rails.config.default_outgoing_phone_number # optional and defaults to this value
+)
+```
+
+Since the operation assumes a phone caller, it can first be created and/or retrieved by calling:
+
+```ruby
+phone_caller = Twilio::Rails::FindOrCreatePhoneCallerOperation.call(phone_number: "+155566677777")
+```
 
 
 ### Errors
 
 All errors are subclasses of [`Twilio::Rails::Error`](lib/twilio/rails.rb). They are grouped under [`Twilio::Rails::Phone::Error`](lib/twilio/rails/phone.rb) and [`Twilio::Rails::SMS::Error`](lib/twilio/rails/sms.rb), and then further specialized from there.
+
+There is a configuration option to add an exception notifier in some important places in the framework. It will never catch or handle exceptions.
+
+```ruby
+config.exception_notifier = ->(exception, message, context, exception_binding) {
+  # Send an email or use some kind of service etc.
+}
+```
+
+### The rest of the documentation
+
+Anything not covered in this documentation is probably documented on the classes and method calls in the application. Probably the most interesting and useful places to look are:
+
+* [lib/twilio/rails/models](lib/twilio/rails/models)
+* [app/operations](app/operations)
 
 
 ## Limitations and known issues
@@ -305,6 +387,7 @@ This framework was extracted from a larger project. There are some assumptions b
 * Only production tested with Sidekiq, but any ActiveJob provider should work.
 * There is no support for domain level events or observers. This means hooks need to be implemented using active record model callbacks, which is opaque, fragile, and confusing. In future the framework could define and trigger named events based on lifecycle.
 * SMS handling is pretty simple and pattern matching based. This is not an implementation of a full chat bot. Other better frameworks exist for that. This could probably be completely rebuilt to work in a similar way where a phone number is bound to a responder by name, rather than each one implementing `handle?`.
+  * The `DelegatedResponder#reply` method assumes a single `String` message, but probably should also or by default support an array of strings.
 * Generators do not generate tests, but should look at the generator `test_framework` config and produce tests or specs for the created classes.
 * Not all Twilio TwiML features are supported. Many though are easy to add flags that are just passed through, and are easy to add.
   * The `gather:` should support `hints:` and some other config options.

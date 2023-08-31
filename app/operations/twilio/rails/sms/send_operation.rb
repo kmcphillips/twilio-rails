@@ -10,7 +10,8 @@ module Twilio
       #   Twilio::Rails::SMS::SendOperation.call(
       #     phone_caller_id: a_phone_caller.id,
       #     messages: ["Hello world!"],
-      #     from_number: "+1234567890",
+      #     from_number: "+1234567890"
+      #   )
       #
       # *Note:* Operations should be called with `call(params)` and not by calling `new(params).execute` directly.
       class SendOperation < ApplicationOperation
@@ -21,7 +22,7 @@ module Twilio
         TWILIO_UNSUBSCRIBED_ERROR_CODES = [ 21610 ].freeze
 
         # @param phone_caller_id [Integer] the id of the phone caller to send the message to.
-        # @param messages [Array<String>] the messages to send to the phone caller.
+        # @param messages [Array<String>] the messages to send to the phone caller. It may be empty.
         # @param from_number [String, Twilio::Rails::PhoneNumber] the phone number to send the message from. If the
         # number is `nil` then it will attempt to extract the phone number from the last phone call. If that is not found
         # then it will raise {Twilio::Rails::SMS::Error}.
