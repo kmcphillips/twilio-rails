@@ -21,10 +21,27 @@ module Twilio
 
           phone_caller = Twilio::Rails::FindOrCreatePhoneCallerOperation.call(phone_number: phone_call.from_number)
 
+          if !phone_caller
+            error_message = if !Twilio::Rails::Formatter.valid_north_american_phone_number?(phone_call.from_number)
+              "The phone number is invalid."
+            else
+              "The phone caller could not be persisted or retrieved."
+            end
+
+            raise Twilio::Rails::Phone::Error, "Failed to handle incoming Twilio phone call. #{ error_message } phone_number=#{ phone_call.from_number } call_sid=#{ params["CallSid"] }"
+          end
+
           phone_call.phone_caller = phone_caller
           phone_call.save!
 
           phone_call
+        rescue => e
+          Twilio::Rails.notify_exception(e,
+            message: "Failed to handle incoming Twilio phone call.",
+            context: { params: params, tree: tree },
+            exception_binding: binding
+          )
+          raise
         end
       end
     end

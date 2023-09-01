@@ -382,7 +382,8 @@ Anything not covered in this documentation is probably documented on the classes
 This framework was extracted from a larger project. There are some assumptions built in that are limitations of the current implementation. Please feel free to PR improvements! But for now, known limitations are:
 
 * Only North American phone numbers are supported, 1 plus 10 digits (`+155566677777`).
-* Some North American assumptions of "day" are hidden in a couple places.
+  * If a phone call whose number is not of the above format is received it is not even persisted or handled.
+* Some North American assumptions of "day" are probably hidden in a couple places.
 * Only production tested with MySQL and SQLite, but should work with Postgres. Assumes `utf8mb4` encoding in MySQL, but the migration does not specify it in order to support other DBs.
 * Only production tested with Sidekiq, but any ActiveJob provider should work.
 * There is no support for domain level events or observers. This means hooks need to be implemented using active record model callbacks, which is opaque, fragile, and confusing. In future the framework could define and trigger named events based on lifecycle.

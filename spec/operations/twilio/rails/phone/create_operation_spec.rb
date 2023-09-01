@@ -69,5 +69,16 @@ RSpec.describe Twilio::Rails::Phone::CreateOperation, type: :operation do
       phone_call = PhoneCall.last
       expect(phone_call.phone_caller).to eq(phone_caller)
     end
+
+    context "with an invalid phone number" do
+      let(:from_number) { "+222333444" }
+
+      it "raises if the phone caller cannot be created" do
+        expect(Twilio::Rails).to receive(:notify_exception)
+        expect {
+          described_class.call(params: params, tree: tree)
+        }.to raise_error(Twilio::Rails::Phone::Error)
+      end
+    end
   end
 end
