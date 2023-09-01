@@ -23,6 +23,8 @@ module Twilio
           scope :tree, ->(name) { where(tree_name: name) }
           scope :called_today, -> { where("created_at > ?", Time.now - 1.day).includes(:phone_caller).order(created_at: :asc) }
           scope :in_progress, -> { where(call_status: "in-progress") }
+          scope :finished, -> { where(finished: true) }
+          scope :unfinished, -> { where(finished: false) }
 
           after_save :status_callback
         end
