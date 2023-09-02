@@ -1,6 +1,7 @@
 # Twilio Rails
 
 [![RSpec Tests](https://github.com/kmcphillips/twilio-rails/actions/workflows/ci.yml/badge.svg?branch=main)](https://github.com/kmcphillips/twilio-rails/actions/workflows/ci.yml)
+[![Gem Version](https://badge.fury.io/rb/twilio-rails.svg)](https://badge.fury.io/rb/twilio-rails)
 
 The `twilio-rails` gem is an opinionated Rails engine and a framework for building complex, realtime, stateful phone interactions in Rails without needing to directly interact with the Twilio API or use TwiML. It is not a replacement for the [`twilio-ruby` gem](https://github.com/twilio/twilio-ruby), but is rather built on top of it.
 
@@ -12,7 +13,7 @@ What does this mean in practice? **Call and find out!**
 
 ## Documentation
 
-On [RubyDoc](https://rubydoc.info/github/kmcphillips/twilio-rails/main) or [Github pages](https://twilio-rails.kev.cool/).
+On [RubyDoc](https://rubydoc.info/gems/twilio-rails) or [Github pages](https://twilio-rails.kev.cool/).
 
 
 ## Getting started
