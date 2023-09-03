@@ -90,12 +90,31 @@ module Twilio
           Twilio::Rails.config.yes_responses
         end
 
+        # Matches if the entire passed in string is included in the {Twilio::Rails::Configuration#yes_responses} and is
+        # considered a "yes".
+        #
+        # @param filename [String] the string to match against.
+        # @return [true, false] if the passed in string matches.
+        def answer_yes?(string)
+          answers_yes.include?((string || "").downcase.strip.gsub(/[.,!?]/, ""))
+        end
+
         # The list of configured answers that are considered "no" from {Twilio::Rails::Configuration#no_responses}.
         #
         # @return [Array<String>] the list of configured answers that are considered "no".
         def answers_no
           Twilio::Rails.config.no_responses
         end
+
+        # Matches if the entire passed in string is included in the {Twilio::Rails::Configuration#no_responses} and is
+        # considered a "no".
+        #
+        # @param filename [String] the string to match against.
+        # @return [true, false] if the passed in string matches.
+        def answer_no?(string)
+          answers_no.include?((string || "").downcase.strip.gsub(/[.,!?]/, ""))
+        end
+
 
         # Finds and validates the existence of a file in the `public` folder. Formats that link to include the
         # configured hose from {Twilio::Rails::Configuration#host}, and returns a fully qualified URL to the file. This

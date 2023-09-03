@@ -84,9 +84,34 @@ RSpec.describe Twilio::Rails::Phone::TreeMacros do
     end
   end
 
+  describe "#answer_yes?" do
+    it "is true if the response is in the yes responses" do
+      expect(macros.answer_yes?("Yes please!")).to eq(true)
+      expect(macros.answer_yes?("Yes, please!")).to eq(true)
+      expect(macros.answer_yes?("YES")).to eq(true)
+      expect(macros.answer_yes?(" true ")).to eq(true)
+      expect(macros.answer_yes?("yup")).to eq(true)
+    end
+  end
+
   describe "#answers_no" do
     it "is mapped to the config" do
       expect(macros.answers_no).to eq(Twilio::Rails.config.no_responses)
+    end
+  end
+
+  describe "#answer_no?" do
+    it "is false if the response is in the no responses" do
+      expect(macros.answer_no?("No thank you!")).to eq(true)
+      expect(macros.answer_no?("No, thank you!")).to eq(true)
+      expect(macros.answer_no?("NO")).to eq(true)
+      expect(macros.answer_no?(" false ")).to eq(true)
+      expect(macros.answer_no?("nope")).to eq(true)
+    end
+
+    it "is false if blank" do
+      expect(macros.answer_no?("")).to eq(false)
+      expect(macros.answer_no?(nil)).to eq(false)
     end
   end
 

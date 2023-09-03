@@ -16,8 +16,8 @@ module Twilio
         @spam_filter = nil
         @exception_notifier = nil
         @attach_recordings = true
-        @yes_responses = [ "yes", "accept", "ya", "yeah", "true", "ok", "okay" ]
-        @no_responses = [ "no", "naw", "nah", "reject", "decline", "negative", "not", "false" ]
+        @yes_responses = [ "yes", "accept", "ya", "yeah", "true", "ok", "okay", "yep", "yup", "yes please" ]
+        @no_responses = [ "no", "naw", "nah", "reject", "decline", "negative", "not", "false", "nope", "no thank you", "know" ]
         @message_class_name = "Message"
         @message_class = nil
         @phone_call_class_name = "PhoneCall"
@@ -95,12 +95,14 @@ module Twilio
       # @return [true, false, Proc] a boolean or a proc that will be called to return a boolean to determine if reordings will be downloaded.
       attr_accessor :attach_recordings
 
-      # A list of strings to be interpreted as yes or acceptance to a question.
+      # A list of strings to be interpreted as yes or acceptance to a question. Pairs with the
+      # {Twilio::Rails::Phone::TreeMacros#answer_yes?} method.
       #
       # @return [Array<String>] a list of strings to be interpreted as yes or acceptance to a question.
       attr_accessor :yes_responses
 
-      # A list of strings to be interpreted as no or rejection to a question.
+      # A list of strings to be interpreted as no or rejection to a question. Pairs with the
+      # {Twilio::Rails::Phone::TreeMacros#answer_no?} method.
       #
       # @return [Array<String>] a list of strings to be interpreted as no or rejection to a question.
       attr_accessor :no_responses
