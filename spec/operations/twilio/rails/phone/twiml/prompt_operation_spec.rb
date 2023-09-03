@@ -28,7 +28,7 @@ RSpec.describe Twilio::Rails::Phone::Twiml::PromptOperation, type: :operation do
         <?xml version="1.0" encoding="UTF-8"?>
         <Response>
         <Say voice="male">Now, please state after the tone your reason for picking those numbers as your favourites.</Say>
-        <Record action="/twilio_mount_location/phone/favourite_number/prompt_response/#{ response.id }.xml" maxLength="4" playBeep="true" recordingStatusCallback="/twilio_mount_location/phone/receive_recording/#{ response.id }" transcribe="true" transcribeCallback="/twilio_mount_location/phone/transcribe/#{ response.id }"/>
+        <Record action="/twilio_mount_location/phone/favourite_number/prompt_response/#{ response.id }.xml" maxLength="4" recordingStatusCallback="/twilio_mount_location/phone/receive_recording/#{ response.id }" transcribe="true" transcribeCallback="/twilio_mount_location/phone/transcribe/#{ response.id }"/>
         </Response>
       EXPECTED
       expect(described_class.call(phone_call_id: phone_call.id, tree: tree, response_id: response.id)).to eq(expected)

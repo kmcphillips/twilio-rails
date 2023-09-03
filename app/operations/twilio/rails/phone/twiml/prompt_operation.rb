@@ -48,7 +48,6 @@ module Twilio
               when :voice
                 args = {
                   max_length: prompt.gather.args[:length],
-                  play_beep: prompt.gather.args[:beep],
                   # trim: "trim-silence",
                   timeout: prompt.gather.args[:timeout],
                   action: ::Twilio::Rails::Engine.routes.url_helpers.phone_prompt_response_path(

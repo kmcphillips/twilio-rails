@@ -102,7 +102,6 @@ module Twilio
                 @args[:number] ||= 1
               elsif voice?
                 @args[:length] ||= 10
-                @args[:beep] = true unless @args.key?(:beep)
                 @args[:transcribe] = false unless @args.key?(:transcribe)
                 @args[:profanity_filter] = false unless @args.key?(:profanity_filter)
               elsif speech?

@@ -67,7 +67,7 @@ RSpec.describe Twilio::Rails::Phone::BaseTree, type: :model do
 
       expect(prompt.messages.call(nil)).to eq("Now, please state after the tone your reason for picking those numbers as your favourites.")
       expect(prompt.gather.type).to eq(:voice)
-      expect(prompt.gather.args).to eq({ "beep" => true, "length" => 4, "profanity_filter" => false, "transcribe" => true })
+      expect(prompt.gather.args).to eq({ "length" => 4, "profanity_filter" => false, "transcribe" => true })
       expect(prompt.after.hangup?).to be(true)
       expect(prompt.after.messages.first.value).to start_with("Thank you for your input!")
     end

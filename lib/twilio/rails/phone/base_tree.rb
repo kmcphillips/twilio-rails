@@ -122,7 +122,6 @@ module Twilio
           #   response instance. However, this all happens asynchronously with no guarantee of time or success. Voice
           #   accepts the following configuration keys:
           #   * `:length`: The number of seconds to record. The default is 10.
-          #   * `:beep`: A boolean if the gather is preceeded by a beep. The default is `true`.
           #   * `:transcribe`: A boolean if Twilio should attempt to transcribe the audio and send it back as text. The
           #     framework handles this all asynchronously and will update the `transcription` field. Default is `false`.
           #   * `:profanity_filter`: Replaces any profanity in the transcription with ***. Default is `false`.

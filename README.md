@@ -263,7 +263,6 @@ prompt :record_your_feedback,
   gather: {
     type: :voice,
     length: 30,
-    beep: true,
     transcribe: true,
     profanity_filter: true
   },
@@ -273,7 +272,7 @@ prompt :record_your_feedback,
   }
 ```
 
-The above `gather:` with `type: :voice` example will finish reading the message, play a beep, and then record the phone caller's speech for 30 seconds or until they press the `#` pound key. The phone tree will then immediately execute the `after:`, while the framework continues to handle the audio recording asynchronously. When Twilio makes it available, the audio file of the recording will be downloaded and stored as an ActiveStorage attachment in a `Recording` model as `response.recording`. If the `transcribe:` option is set to `true`, the voice in the recording will also attempt to be transcribed as text and stored as `response.transcription`. Importantly though, **neither are guaranteed to arrive or will arrive immediately**. In practice they both usually arrive within a few seconds, but can sometimes be blank or missing if the caller is silent or garbled. There is a cost to transcription so it can be disabled, and the `profanity_filter:` defaults to false and will just *** out any profanity in the transcription.
+The above `gather:` with `type: :voice` example will finish reading the message and then record the phone caller's speech for 30 seconds or until they press the `#` pound key. The phone tree will then immediately execute the `after:`, while the framework continues to handle the audio recording asynchronously. When Twilio makes it available, the audio file of the recording will be downloaded and stored as an ActiveStorage attachment in a `Recording` model as `response.recording`. If the `transcribe:` option is set to `true`, the voice in the recording will also attempt to be transcribed as text and stored as `response.transcription`. Importantly though, **neither are guaranteed to arrive or will arrive immediately**. In practice they both usually arrive within a few seconds, but can sometimes be blank or missing if the caller is silent or garbled. There is a cost to transcription so it can be disabled, and the `profanity_filter:` defaults to false and will just *** out any profanity in the transcription.
 
 Finally, the `gather:` can also accept `type: :speech` which is a specialzed model designed to identify voice in realtime. It will provide the `response.transcription` field immediately, making it available in the `after:` proc or in the next prompt. But the tradeoffs are that it does not provide a recording, there is a time gap of a few seconds between prompts, and it is more expensive. See the [Twilio documentation for specifics](https://www.twilio.com/docs/voice/twiml/gather#speechmodel). The keys it expects match the documentation, `speech_model:`, `speech_timeout:`, `language:` (defaults to "en-US"), and `encanced:` (defaults to false).
 
