@@ -8,8 +8,18 @@ The `twilio-rails` gem is an opinionated Rails engine and a framework for buildi
 The most powerful ability of this engine is to build phone trees (think of calling customer service and pressing 2 for account information or whatever) using a simple Ruby DSL.
 
 What does this mean in practice? **Call and find out!**
-* In Canada: 📞 **(204) 800-7772**
-* In the US: 📞 **(631) 800-7772**
+
+The [`twilio-rails-example`](https://github.com/kmcphillips/twilio-rails-example) app is running here:
+
+* **🇨🇦 Calling from Canada:** 📞 (204) 800-7772
+* **🇺🇸 Calling from the US:** 📞 (631) 800-7772
+* **Internationally:** [Sorry, not yet supported](https://github.com/kmcphillips/twilio-rails#limitations-and-known-issues)
+
+There is also a more fun but less cleanly organized [`dial-a-haiku`](https://github.com/kmcphillips/dial-a-haiku) running here:
+* **🇨🇦 Calling from Canada:** 📞 (249) 444-2458 / (249)44-HAIKU
+* **🇺🇸 Calling from the US:** 📞 (341) 444-2458 / (341)44-HAIKU
+* **Internationally:** [Sorry, not yet supported](https://github.com/kmcphillips/twilio-rails#limitations-and-known-issues)
+
 
 ## Documentation
 
@@ -103,10 +113,11 @@ Both are explained in detail below.
 
 ### Example app
 
-An example Rails app demonstrating the framework is available at [`twilio-rails-example`](https://github.com/kmcphillips/twilio-rails-example). It can be run locally with some minimal configuration, or can be reached as a working Twilio app by calling:
+An example Rails app demonstrating the framework is available at [`twilio-rails-example`](https://github.com/kmcphillips/twilio-rails-example). The seteps to go from new Rails app to running Twilio application are broken down into well documented commits. It's a great place to learn and experiment. It can be run locally with some minimal configuration, or can be reached as a working Twilio app by calling:
 
-* In Canada: 📞 **(204) 800-7772**
-* In the US: 📞 **(631) 800-7772**
+* **🇨🇦 Calling from Canada:** 📞 (204) 800-7772
+* **🇺🇸 Calling from the US:** 📞 (631) 800-7772
+* **Internationally:** [Sorry, not yet supported](https://github.com/kmcphillips/twilio-rails#limitations-and-known-issues)
 
 
 ## How it works
