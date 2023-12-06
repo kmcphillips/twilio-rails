@@ -34,7 +34,8 @@ RSpec.describe Twilio::Rails::SMS::Responder, type: :model do
     it "raises if there is no known project handler" do
       conversation.update!(number: "+14443337777")
       message.update!(body: "test")
-      expect { subject.respond }.to raise_error(Twilio::Rails::SMS::InvalidResponderError)
+      error_message = "No responder found for SMS. message_id=#{ message.id } phone_caller_id= from_number=\"+16135551234\" body=\"test\""
+      expect { subject.respond }.to raise_error(Twilio::Rails::SMS::InvalidResponderError, error_message)
     end
   end
 end
