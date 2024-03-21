@@ -305,7 +305,7 @@ module Twilio
         # @param [String, Symbol] name of the phone tree or SMS responder to find.
         # @return [Class] the phone tree or SMS responder class.
         def for(name)
-          @registry[name.to_s] || raise(error_class, "No responder registered for '#{ name }'")
+          @registry[name.to_s] || raise(error_class, "Name '#{ name }' has not been registered and cannot be found.")
         end
 
         # Returns all the phone trees or SMS responders as a read-only hash, keyed by name.
