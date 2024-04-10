@@ -43,22 +43,22 @@ module Twilio
           @sms_conversation = message.sms_conversation
         end
 
-        # Must be implemented by the subclass otherwise will raise a `NotImplementedError`. Returns true if this
+        # Must be implemented by the subclass otherwise will raise a `NoMethodError`. Returns true if this
         # responder should handle the given message. If true then the {#reply} method will be called to generate the
         # body of the response. It has access to the message and the conversation.
         #
         # @return [true, false] true if this responder should handle the given message.
         def handle?
-          raise NotImplementedError
+          raise NoMethodError, "#{ self.class }#handle? must be implemented."
         end
 
-        # Must be implemented by the subclass otherwise will raise a `NotImplementedError`. Returns the body of the
+        # Must be implemented by the subclass otherwise will raise a `NoMethodError`. Returns the body of the
         # message to be sent in response. Will only be called if {#handle?} returns true. It has access to the message
         # and the conversation.
         #
         # @return [String, nil] the body of the response to be sent as SMS, or `nil` if no message should be sent.
         def reply
-          raise NotImplementedError
+          raise NoMethodError, "#{ self.class }#reply must be implemented."
         end
 
         protected

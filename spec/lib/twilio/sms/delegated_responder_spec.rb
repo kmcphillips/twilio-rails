@@ -21,13 +21,13 @@ RSpec.describe Twilio::Rails::SMS::DelegatedResponder, type: :model do
 
   describe "#reply" do
     it "raises" do
-      expect { subject.reply }.to raise_error(NotImplementedError)
+      expect { subject.reply }.to raise_error(NoMethodError)
     end
   end
 
   describe "#handle?" do
     it "raises" do
-      expect { subject.handle? }.to raise_error(NotImplementedError)
+      expect { subject.handle? }.to raise_error(NoMethodError)
     end
   end
 

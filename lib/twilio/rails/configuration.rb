@@ -318,7 +318,7 @@ module Twilio
         private
 
         def add_to_registry(value)
-          raise NotImplementedError
+          raise NoMethodError
         end
 
         def error_class
