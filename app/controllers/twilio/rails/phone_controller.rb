@@ -9,8 +9,13 @@ module Twilio
       def inbound
         respond_to do |format|
           format.xml do
-            phone_call = Twilio::Rails::Phone::CreateOperation.call(params: params_hash, tree: tree)
-            render xml: Twilio::Rails::Phone::Twiml::GreetingOperation.call(phone_call_id: phone_call.id, tree: tree)
+            begin
+              phone_call = Twilio::Rails::Phone::CreateOperation.call(params: params_hash, tree: tree)
+            rescue
+              render xml: Twilio::Rails::Phone::Twiml::InvalidPhoneNumberOperation.call(tree: tree)
+            else
+              render xml: Twilio::Rails::Phone::Twiml::GreetingOperation.call(phone_call_id: phone_call.id, tree: tree)
+            end
           end
         end
       end
@@ -39,7 +44,7 @@ module Twilio
           format.xml do
             phone_call = Twilio::Rails::Phone::FindOperation.call(params: params_hash)
             phone_call = Twilio::Rails::Phone::UpdateOperation.call(phone_call_id: phone_call.id, params: params_hash)
-            response = Twilio::Rails::Phone::UpdateResponseOperation.call(phone_call_id: phone_call.id, response_id: params[:response_id].to_i, params: params_hash)
+            Twilio::Rails::Phone::UpdateResponseOperation.call(phone_call_id: phone_call.id, response_id: params[:response_id].to_i, params: params_hash)
             render xml: Twilio::Rails::Phone::Twiml::PromptResponseOperation.call(phone_call_id: phone_call.id, tree: tree, response_id: params[:response_id].to_i, params: params_hash)
           end
         end

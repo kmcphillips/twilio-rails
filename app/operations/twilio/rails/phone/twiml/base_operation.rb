@@ -20,7 +20,7 @@ module Twilio
               message = message.call(response) if message.is_a?(Proc)
               message = Twilio::Rails::Phone::Tree::Message.new(**message) if message.is_a?(Hash)
               next if message.blank?
-              message = Twilio::Rails::Phone::Tree::Message.new(say: message, voice: tree.config[:voice]) if message.is_a?(String)
+              message = Twilio::Rails::Phone::Tree::Message.new(say: message, voice: voice) if message.is_a?(String)
 
               raise Twilio::Rails::Phone::InvalidTreeError "unknown message #{ message } is a #{ message.class }" unless message.is_a?(Twilio::Rails::Phone::Tree::Message)
 
@@ -29,7 +29,7 @@ module Twilio
               if message.say?
                 value = message.value
                 value = message.value.call(response) if message.value.is_a?(Proc)
-                twiml.say(voice: message.voice || tree.config[:voice], message: value) do |say|
+                twiml.say(voice: message.voice || voice, message: value) do |say|
                   message.block.call(say) if message.block
                 end
               elsif message.play?
@@ -42,6 +42,11 @@ module Twilio
                 raise Twilio::Rails::Phone::InvalidTreeError, "unknown message #{ message }"
               end
             end
+          end
+
+          # @return [String] the voice to use for the TwiML response if configured on the tree.
+          def voice
+            tree.config[:voice] if tree
           end
         end
       end

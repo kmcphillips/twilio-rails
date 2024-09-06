@@ -184,10 +184,10 @@ module Twilio
             nil
           end
 
-          # The `message:` object that played to the caller if a call from an invalid phone number is received. The
-          # important case here is a number from outside of North America. This is currently a limitation of the
-          # framework. The default is `nil` and no action is taken. See the documentation for {.prompt} for what a
-          # message object can contain.
+          # The `message:` object that played to the caller if a call from an invalid phone number is received. This can
+          # be an empty or "Unknown" number, but the important case here is a number from outside of North America. This
+          # is currently a limitation of theframework. The default is `nil` and no action is taken. See the
+          # documentation for {.prompt} for what a message object can contain.
           #
           # @param message [String, Hash, Array, Proc] The message to play to the caller.
           def invalid_phone_number(message)

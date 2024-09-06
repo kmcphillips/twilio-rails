@@ -18,6 +18,16 @@ RSpec.describe Twilio::Rails::PhoneController, type: :controller do
       </Response>
     EXPECTED
   }
+  let(:invalid_phone_number_twiml) {
+    <<~EXPECTED
+      <?xml version="1.0" encoding="UTF-8"?>
+      <Response>
+      <Say voice="male">Thank you for calling.</Say>
+      <Say voice="male">But you are calling from outside North America.</Say>
+      <Hangup/>
+      </Response>
+    EXPECTED
+  }
 
   describe "POST#inbound" do
     let(:params) {
@@ -34,6 +44,11 @@ RSpec.describe Twilio::Rails::PhoneController, type: :controller do
       expect(Twilio::Rails::Phone::Twiml::GreetingOperation).to receive(:call).with(phone_call_id: phone_call.id + 1, tree: tree).and_return(twiml)
       post :inbound, format: :xml, params: params
       expect(response.body).to eq(twiml)
+    end
+
+    it "renders an error message when there is an error" do
+      post :inbound, format: :xml, params: params.merge("Called" => "Unknown", "From" => "Unknown")
+      expect(response.body).to eq(invalid_phone_number_twiml)
     end
 
     it "renders error without valid account" do
