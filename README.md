@@ -376,13 +376,8 @@ phone_caller = Twilio::Rails::FindOrCreatePhoneCallerOperation.call(phone_number
 
 All errors are subclasses of [`Twilio::Rails::Error`](lib/twilio/rails.rb). They are grouped under [`Twilio::Rails::Phone::Error`](lib/twilio/rails/phone.rb) and [`Twilio::Rails::SMS::Error`](lib/twilio/rails/sms.rb), and then further specialized from there.
 
-There is a configuration option to add an exception notifier in some important places in the framework. It will never catch or handle exceptions.
+There are a few places where exceptions are notified from inside the framework using `::Rails.error.report`. They are never rescued or handled. See the [Rails documentation](https://api.rubyonrails.org/classes/ActiveSupport/ErrorReporter.html) for how to use the error reporter.
 
-```ruby
-config.exception_notifier = ->(exception, message, context, exception_binding) {
-  # Send an email or use some kind of service etc.
-}
-```
 
 ### The rest of the documentation
 

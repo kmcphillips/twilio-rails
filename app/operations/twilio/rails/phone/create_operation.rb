@@ -36,10 +36,13 @@ module Twilio
 
           phone_call
         rescue => e
-          Twilio::Rails.notify_exception(e,
-            message: "Failed to handle incoming Twilio phone call.",
-            context: { params: params, tree: tree },
-            exception_binding: binding
+          ::Rails.error.report(e,
+            handled: false,
+            context: {
+              message: "Failed to handle incoming Twilio phone call.",
+              params: params,
+              tree: tree
+            }
           )
           raise
         end

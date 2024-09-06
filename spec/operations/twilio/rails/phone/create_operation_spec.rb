@@ -74,7 +74,7 @@ RSpec.describe Twilio::Rails::Phone::CreateOperation, type: :operation do
       let(:from_number) { "+222333444" }
 
       it "raises if the phone caller cannot be created" do
-        expect(Twilio::Rails).to receive(:notify_exception)
+        expect(::Rails.error).to receive(:report)
         expect {
           described_class.call(params: params, tree: tree)
         }.to raise_error(Twilio::Rails::Phone::Error)

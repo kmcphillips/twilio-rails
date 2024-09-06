@@ -45,14 +45,6 @@ Twilio::Rails.setup do |config|
   #   [ "Bad text" ].any? { |regex| regex.match?(params["Body"]) }
   # }
 
-  # A proc that will be called when an exception is raised in certain key points in the framework. This will never
-  # capture the exception, it will raise regardless, but it is a good spot to send an email or notify in chat
-  # if desired. The proc needs to accept `(exception, message, context, exception_binding)` as arguments. The
-  # default is `nil`, which means no action will be taken.
-  # config.exception_notifier = ->(exception, message, context, exception_binding) {
-  #   MyChatClient.send_message("Error: #{ message } #{ exception.message } #{ context }")
-  # }
-
   # Controls if recordings will be downloaded and attached to the `Recording` model in an ActiveStorage attachment.
   # This is `true` by default, but can be set to `false` to disable all downloads. It can also be set to a `Proc` or
   # callable that will receive the `Recording` instance and return a boolean for this specific instance. if reordings will be downloaded.

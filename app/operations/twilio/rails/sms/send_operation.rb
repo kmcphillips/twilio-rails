@@ -52,14 +52,14 @@ module Twilio
               if TWILIO_UNSUBSCRIBED_ERROR_CODES.include?(e.code)
                 Twilio::Rails.config.logger.tagged(self.class) { |l| l.warn("tried to send to unsubscribed and got Twilio::REST::RestError code=21610 phone_caller_id=#{ phone_caller.id } phone_number=#{ calculated_to_number } message=#{ body }") }
               else
-                Twilio::Rails.notify_exception(e,
-                  message: "Failed to send Twilio message. Got REST error response.",
+                ::Rails.error.report(e,
+                  handled: false,
                   context: {
+                    message: "Failed to send Twilio message. Got REST error response.",
                     to: calculated_to_number,
                     from: calculated_from_number,
                     phone_call_id: phone_call&.id,
-                  },
-                  exception_binding: binding
+                  }
                 )
                 raise
               end

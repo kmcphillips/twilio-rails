@@ -132,15 +132,6 @@ RSpec.describe Twilio::Rails::Configuration do
       end
     end
 
-    context "exception_notifier" do
-      it "sets the value" do
-        expect(config.exception_notifier).to be_nil
-        exception_notifier = ->(exception, message, context, exception_binding) { "noop" }
-        config.exception_notifier = exception_notifier
-        expect(config.exception_notifier).to eq(exception_notifier)
-      end
-    end
-
     context "attach_recordings" do
       it "sets the value" do
         expect(config.attach_recordings).to eq(true)
@@ -244,25 +235,6 @@ RSpec.describe Twilio::Rails::Configuration do
       expect { config.finalize! }.to raise_error(Twilio::Rails::Configuration::Error)
 
       config.spam_filter = ->(params) { false }
-      expect { config.finalize! }.to_not raise_error
-    end
-
-    it "exception_notifier" do
-      config.exception_notifier = nil
-      expect { config.finalize! }.to_not raise_error
-
-      config.exception_notifier = "something"
-      expect { config.finalize! }.to raise_error(Twilio::Rails::Configuration::Error)
-
-      config.exception_notifier = ->(exception, message, context, exception_binding) { "noop" }
-      expect { config.finalize! }.to_not raise_error
-
-      notifier_handler_class = Class.new do
-        def self.call(*)
-        end
-      end
-
-      config.exception_notifier = notifier_handler_class
       expect { config.finalize! }.to_not raise_error
     end
 

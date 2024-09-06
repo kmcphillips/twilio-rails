@@ -60,30 +60,6 @@ module Twilio
         config.validate!
         nil
       end
-
-      # Abstraction for the framework to notify of an important exception that has occurred. This safely calls the
-      # configured `config.exception_notifier` or does nothing if it is set to `nil`. This does not catch, handle, or
-      # prevent the exception from raising.
-      #
-      # @param exception [Exception] the exception that has occurred.
-      # @param message [String] a description of the exception, defaults to `exception.message` if blank.
-      # @param context [Hash] a hash of arbitrary additional context to include in the notification.
-      # @param exception_binding [Binding] the binding of where the exception is being notified.
-      # @return [true, false] if an exception has been successfully notified.
-      def notify_exception(exception, message: nil, context: {}, exception_binding: nil)
-        if config.exception_notifier
-          begin
-            message = message.presence || exception.message
-            config.exception_notifier.call(exception, message, context, exception_binding)
-            true
-          rescue => e
-            config.logger.tagged(self.class) { |l| l.error("ExceptionNotifier failed to notify of exception=#{ exception.inspect } message=#{ message.inspect } context=#{ context.inspect }") }
-            false
-          end
-        else
-          false
-        end
-      end
     end
   end
 end

@@ -14,7 +14,6 @@ module Twilio
         @account_sid = nil
         @auth_token = nil
         @spam_filter = nil
-        @exception_notifier = nil
         @attach_recordings = true
         @yes_responses = [ "yes", "accept", "ya", "yeah", "true", "ok", "okay", "yep", "yup", "yes please" ]
         @no_responses = [ "no", "naw", "nah", "reject", "decline", "negative", "not", "false", "nope", "no thank you", "know" ]
@@ -74,14 +73,6 @@ module Twilio
       #
       # @return [Proc] a proc that will be called to filter messages, or `nil` if no filter is set.
       attr_accessor :spam_filter
-
-      # A proc that will be called when an exception is raised in certain key points in the framework. This will never
-      # capture the exception, it will raise regardless, but it is a good spot to send an email or notify in chat
-      # if desired. The proc needs to accept `(exception, message, context, exception_binding)` as arguments. The
-      # default is `nil`, which means no action will be taken.
-      #
-      # @return [Proc] a proc that will be called when an exception is raised in certain key points in the framework.
-      attr_accessor :exception_notifier
 
       # Controls if recordings will be downloaded and attached to the `Recording` model in an ActiveStorage attachment.
       # This is `true` by default, but can be set to `false` to disable all downloads. It can also be set to a `Proc` or
@@ -217,7 +208,6 @@ module Twilio
         raise Error, "`auth_token` must be set" if @auth_token.blank?
         raise Error, "`logger` must be set" if @logger.blank?
         raise Error, "`spam_filter` must be callable" if @spam_filter && !@spam_filter.respond_to?(:call)
-        raise Error, "`exception_notifier` must be callable" if @exception_notifier && !@exception_notifier.respond_to?(:call)
         raise Error, '`yes_responses` must be an array' unless @yes_responses.is_a?(Array)
         raise Error, '`no_responses` must be an array' unless @no_responses.is_a?(Array)
         raise Error, "`host` #{ @host.inspect } is not a valid URL of the format https://example.com without the trailing slash" unless @host =~ /\Ahttps?:\/\/[a-z0-9\-\.:]+\Z/i

@@ -28,17 +28,21 @@ module Twilio
             sid = Twilio::Rails::Client.start_call(url: tree.outbound_url, to: to, from: from, answering_machine_detection: answering_machine_detection)
             params["CallSid"] = sid
           rescue Twilio::REST::TwilioError => e
-            Twilio::Rails.notify_exception(e,
-              message: "Failed to start Twilio phone call. Got REST error response.",
-              context: { params: params },
-              exception_binding: binding
+            ::Rails.error.report(e,
+              handled: false,
+              context: {
+                message: "Failed to start Twilio phone call. Got REST error response.",
+                params: params,
+              }
             )
             raise
           rescue => e
-            Twilio::Rails.notify_exception(e,
-              message: "Failed to start Twilio phone call. Got unknown error.",
-              context: { params: params },
-              exception_binding: binding
+            ::Rails.error.report(e,
+              handled: false,
+              context: {
+                message: "Failed to start Twilio phone call. Got unknown error.",
+                params: params,
+          }
             )
             raise
           end

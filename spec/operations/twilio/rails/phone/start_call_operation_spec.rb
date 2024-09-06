@@ -61,7 +61,7 @@ RSpec.describe Twilio::Rails::Phone::StartCallOperation, type: :operation do
       end
 
       it "handles an error response from Twilio" do
-        expect(Twilio::Rails).to receive(:notify_exception)
+        expect(::Rails.error).to receive(:report)
         expect {
           described_class.call(to: "+15555555555", tree: tree)
         }.to raise_error(Twilio::REST::TwilioError)
