@@ -1,5 +1,6 @@
 # frozen_string_literal: true
-require 'rails_helper'
+
+require "rails_helper"
 
 RSpec.describe Twilio::Rails::SMSController, type: :controller do
   include_examples "twilio SMS API call"
@@ -43,7 +44,7 @@ RSpec.describe Twilio::Rails::SMSController, type: :controller do
 
     it "loads the session and calls the operation" do
       expect(Twilio::Rails::SMS::Twiml::MessageOperation).to receive(:call).with(sms_conversation_id: conversation.id, params: params).and_return(twiml)
-      post :message, format: :xml, params: params, session: { sms_conversation_id: conversation.id }
+      post :message, format: :xml, params: params, session: {sms_conversation_id: conversation.id}
       expect(response.body).to eq(twiml)
     end
 
@@ -53,7 +54,7 @@ RSpec.describe Twilio::Rails::SMSController, type: :controller do
         <Response/>
       EXPECTED
       expect(Twilio::Rails::SMS::Twiml::MessageOperation).to_not receive(:call)
-      post :message, format: :xml, params: { "AccountSid" => "invalid" }, session: { sms_conversation_id: conversation.id }
+      post :message, format: :xml, params: {"AccountSid" => "invalid"}, session: {sms_conversation_id: conversation.id}
       expect(response.body).to eq(expected_body)
     end
 
@@ -71,13 +72,13 @@ RSpec.describe Twilio::Rails::SMSController, type: :controller do
           <Response/>
         EXPECTED
         expect(Twilio::Rails::SMS::Twiml::MessageOperation).to_not receive(:call)
-        post :message, format: :xml, params: params.merge("Body" => "bad"), session: { sms_conversation_id: conversation.id }
+        post :message, format: :xml, params: params.merge("Body" => "bad"), session: {sms_conversation_id: conversation.id}
         expect(response.body).to eq(expected_body)
       end
 
       it "renders when spam not detected" do
         expect(Twilio::Rails::SMS::Twiml::MessageOperation).to receive(:call).with(sms_conversation_id: conversation.id, params: params).and_return(twiml)
-        post :message, format: :xml, params: params, session: { sms_conversation_id: conversation.id }
+        post :message, format: :xml, params: params, session: {sms_conversation_id: conversation.id}
         expect(response.body).to eq(twiml)
       end
     end
@@ -87,7 +88,7 @@ RSpec.describe Twilio::Rails::SMSController, type: :controller do
     let(:params) {
       {
         "AccountSid" => account_sid,
-        "SmsSid" => sms_sid,
+        "SmsSid" => sms_sid
       }
     }
 

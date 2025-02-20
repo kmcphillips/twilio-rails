@@ -1,4 +1,5 @@
 # frozen_string_literal: true
+
 module Twilio
   module Rails
     module Phone
@@ -12,7 +13,7 @@ module Twilio
 
             response = phone_call.responses.find(response_id)
             prompt = tree.prompts[response.prompt_handle]
-            raise Twilio::Rails::Phone::InvalidTreeError, "cannot find #{ response.prompt_handle } in #{ tree.name }" unless prompt
+            raise Twilio::Rails::Phone::InvalidTreeError, "cannot find #{response.prompt_handle} in #{tree.name}" unless prompt
 
             twiml_response = Twilio::TwiML::VoiceResponse.new do |twiml|
               unless prompt.gather&.interrupt?
@@ -30,7 +31,7 @@ module Twilio
                   input: "dtmf",
                   num_digits: prompt.gather.args[:number],
                   timeout: prompt.gather.args[:timeout],
-                  action_on_empty_result: false,
+                  action_on_empty_result: false
                 }
 
                 args[:finish_on_key] = prompt.gather.args[:finish_on_key] if prompt.gather.args[:finish_on_key]
@@ -57,7 +58,7 @@ module Twilio
                   ),
                   recording_status_callback: ::Twilio::Rails::Engine.routes.url_helpers.phone_receive_recording_path(
                     response_id: response.id
-                  ),
+                  )
                 }
 
                 if prompt.gather.args[:transcribe]
@@ -79,7 +80,7 @@ module Twilio
                   timeout: prompt.gather.args[:timeout],
                   action_on_empty_result: true,
                   language: prompt.gather.args[:language].presence || "en-US",
-                  enhanced: !!prompt.gather.args[:enhanced],
+                  enhanced: !!prompt.gather.args[:enhanced]
                 }
 
                 args[:speech_timeout] = prompt.gather.args[:speech_timeout] if prompt.gather.args[:speech_timeout]
@@ -98,7 +99,7 @@ module Twilio
               end
             end
 
-            Twilio::Rails.config.logger.info("prompt_twiml: #{twiml_response.to_s}")
+            Twilio::Rails.config.logger.info("prompt_twiml: #{twiml_response}")
             twiml_response.to_s
           end
         end

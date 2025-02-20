@@ -1,4 +1,5 @@
 # frozen_string_literal: true
+
 module Twilio
   module Rails
     module Phone
@@ -15,7 +16,7 @@ module Twilio
             response = Twilio::Rails::Phone::UpdateResponseOperation.call(params: params, response_id: response.id, phone_call_id: phone_call.id)
 
             prompt = tree.prompts[response.prompt_handle]
-            raise Twilio::Rails::Phone::InvalidTreeError, "cannot find #{ response.prompt_handle } in #{ tree.name }" unless prompt
+            raise Twilio::Rails::Phone::InvalidTreeError, "cannot find #{response.prompt_handle} in #{tree.name}" unless prompt
 
             after = prompt.after
             after = Twilio::Rails::Phone::Tree::After.new(after.proc.call(response)) if after.proc

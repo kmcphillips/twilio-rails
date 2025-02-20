@@ -1,5 +1,6 @@
 # frozen_string_literal: true
-require 'rails_helper'
+
+require "rails_helper"
 
 RSpec.describe Twilio::Rails::SMS::SendOperation, type: :operation do
   let(:phone_caller) { create(:phone_caller) }
@@ -16,7 +17,7 @@ RSpec.describe Twilio::Rails::SMS::SendOperation, type: :operation do
         .and_return("a_sid")
       expect {
         described_class.call(phone_caller_id: phone_caller.id, messages: ["a", "b"])
-      }.to change{ sms_conversation_class.count }.by(1)
+      }.to change { sms_conversation_class.count }.by(1)
 
       sms_conversation = sms_conversation_class.last
       expect(sms_conversation.number).to eq(phone_call.number)
@@ -33,7 +34,7 @@ RSpec.describe Twilio::Rails::SMS::SendOperation, type: :operation do
         .and_return("a_sid")
       expect {
         described_class.call(phone_caller_id: phone_caller.id, from_number: phone_number, messages: ["a"])
-      }.to change{ sms_conversation_class.count }.by(1)
+      }.to change { sms_conversation_class.count }.by(1)
 
       sms_conversation = sms_conversation_class.last
       expect(sms_conversation.number).to eq(phone_number.number)
@@ -49,7 +50,7 @@ RSpec.describe Twilio::Rails::SMS::SendOperation, type: :operation do
         .and_return("a_sid")
       expect {
         described_class.call(phone_caller_id: phone_caller.id, from_number: from_number, messages: ["test test"])
-      }.to change{ sms_conversation_class.count }.by(1)
+      }.to change { sms_conversation_class.count }.by(1)
 
       sms_conversation = sms_conversation_class.last
       expect(sms_conversation.number).to eq(from_number)
@@ -71,7 +72,7 @@ RSpec.describe Twilio::Rails::SMS::SendOperation, type: :operation do
       expect(Twilio::Rails::Client).to receive(:send_message).never
       expect {
         described_class.call(phone_caller_id: phone_caller.id, messages: [])
-      }.to_not change{ sms_conversation_class.count }
+      }.to_not change { sms_conversation_class.count }
     end
 
     it "raises with unknown error" do
@@ -81,7 +82,7 @@ RSpec.describe Twilio::Rails::SMS::SendOperation, type: :operation do
         .and_raise("some error")
       expect {
         described_class.call(phone_caller_id: phone_caller.id, messages: ["a"])
-      }.to raise_error(StandardError).and change{ sms_conversation_class.count }.by(1).and change { Message.count }.by(0)
+      }.to raise_error(StandardError).and change { sms_conversation_class.count }.by(1).and change { Message.count }.by(0)
     end
 
     context "twilio response error" do
@@ -95,7 +96,7 @@ RSpec.describe Twilio::Rails::SMS::SendOperation, type: :operation do
           .and_raise(exception)
         expect {
           described_class.call(phone_caller_id: phone_caller.id, messages: ["a"])
-        }.to change{ sms_conversation_class.count }.by(1).and change { Message.count }.by(1)
+        }.to change { sms_conversation_class.count }.by(1).and change { Message.count }.by(1)
         expect(Message.last.sid).to be_nil
       end
     end

@@ -1,5 +1,6 @@
 # frozen_string_literal: true
-require 'rails_helper'
+
+require "rails_helper"
 
 RSpec.describe Twilio::Rails::Phone::Twiml::PromptOperation, type: :operation do
   let(:phone_call) { create(:phone_call, tree_name: tree.name) }
@@ -28,7 +29,7 @@ RSpec.describe Twilio::Rails::Phone::Twiml::PromptOperation, type: :operation do
         <?xml version="1.0" encoding="UTF-8"?>
         <Response>
         <Say voice="male">Now, please state after the tone your reason for picking those numbers as your favourites.</Say>
-        <Record action="/twilio_mount_location/phone/favourite_number/prompt_response/#{ response.id }.xml" maxLength="4" recordingStatusCallback="/twilio_mount_location/phone/receive_recording/#{ response.id }" transcribe="true" transcribeCallback="/twilio_mount_location/phone/transcribe/#{ response.id }"/>
+        <Record action="/twilio_mount_location/phone/favourite_number/prompt_response/#{response.id}.xml" maxLength="4" recordingStatusCallback="/twilio_mount_location/phone/receive_recording/#{response.id}" transcribe="true" transcribeCallback="/twilio_mount_location/phone/transcribe/#{response.id}"/>
         </Response>
       EXPECTED
       expect(described_class.call(phone_call_id: phone_call.id, tree: tree, response_id: response.id)).to eq(expected)
@@ -40,7 +41,7 @@ RSpec.describe Twilio::Rails::Phone::Twiml::PromptOperation, type: :operation do
         <?xml version="1.0" encoding="UTF-8"?>
         <Response>
         <Say voice="male">Can you please state your favourite number after the tone?</Say>
-        <Gather action="/twilio_mount_location/phone/favourite_number/prompt_response/#{ response.id }.xml" actionOnEmptyResult="true" enhanced="true" input="speech" language="en-CA" profanityFilter="true" speechModel="phone_call" speechTimeout="auto" timeout="5"/>
+        <Gather action="/twilio_mount_location/phone/favourite_number/prompt_response/#{response.id}.xml" actionOnEmptyResult="true" enhanced="true" input="speech" language="en-CA" profanityFilter="true" speechModel="phone_call" speechTimeout="auto" timeout="5"/>
         </Response>
       EXPECTED
       expect(described_class.call(phone_call_id: phone_call.id, tree: tree, response_id: response.id)).to eq(expected)
@@ -70,7 +71,7 @@ RSpec.describe Twilio::Rails::Phone::Twiml::PromptOperation, type: :operation do
         <?xml version="1.0" encoding="UTF-8"?>
         <Response>
         <Play>https://example.com/A440.wav</Play>
-        <Redirect>/twilio_mount_location/phone/tone_rating/prompt_response/#{ response.id }.xml</Redirect>
+        <Redirect>/twilio_mount_location/phone/tone_rating/prompt_response/#{response.id}.xml</Redirect>
         </Response>
       EXPECTED
       expect(described_class.call(phone_call_id: phone_call.id, tree: tree, response_id: response.id)).to eq(expected)
@@ -82,7 +83,7 @@ RSpec.describe Twilio::Rails::Phone::Twiml::PromptOperation, type: :operation do
         <?xml version="1.0" encoding="UTF-8"?>
         <Response>
         <Say voice="female">Please say something</Say>
-        <Gather action="/twilio_mount_location/phone/tone_rating/prompt_response/#{ response.id }.xml" actionOnEmptyResult="true" enhanced="false" input="speech" language="en-US"/>
+        <Gather action="/twilio_mount_location/phone/tone_rating/prompt_response/#{response.id}.xml" actionOnEmptyResult="true" enhanced="false" input="speech" language="en-US"/>
         </Response>
       EXPECTED
       expect(described_class.call(phone_call_id: phone_call.id, tree: tree, response_id: response.id)).to eq(expected)
@@ -96,8 +97,8 @@ RSpec.describe Twilio::Rails::Phone::Twiml::PromptOperation, type: :operation do
         <Say voice="female">In remembering this tone:</Say>
         <Play>https://example.com/A440.wav</Play>
         <Say voice="female">On a scale from zero to six, please rate how much you enjoyed this tone</Say>
-        <Gather action="/twilio_mount_location/phone/tone_rating/prompt_response/#{ response.id }.xml" actionOnEmptyResult="false" finishOnKey="" input="dtmf" numDigits="1" timeout="10"/>
-        <Redirect>/twilio_mount_location/phone/tone_rating/timeout/#{ response.id }.xml</Redirect>
+        <Gather action="/twilio_mount_location/phone/tone_rating/prompt_response/#{response.id}.xml" actionOnEmptyResult="false" finishOnKey="" input="dtmf" numDigits="1" timeout="10"/>
+        <Redirect>/twilio_mount_location/phone/tone_rating/timeout/#{response.id}.xml</Redirect>
         </Response>
       EXPECTED
       expect(described_class.call(phone_call_id: phone_call.id, tree: tree, response_id: response.id)).to eq(expected)
@@ -108,13 +109,13 @@ RSpec.describe Twilio::Rails::Phone::Twiml::PromptOperation, type: :operation do
       expected = <<~EXPECTED
         <?xml version="1.0" encoding="UTF-8"?>
         <Response>
-        <Gather action="/twilio_mount_location/phone/tone_rating/prompt_response/#{ response.id }.xml" actionOnEmptyResult="false" input="dtmf" numDigits="2" timeout="20">
+        <Gather action="/twilio_mount_location/phone/tone_rating/prompt_response/#{response.id}.xml" actionOnEmptyResult="false" input="dtmf" numDigits="2" timeout="20">
         <Say voice="female">first say</Say>
         <Say voice="female">second say</Say>
         <Play>https://example.com/wav.mp3</Play>
         <Say voice="female">third say</Say>
         </Gather>
-        <Redirect>/twilio_mount_location/phone/tone_rating/timeout/#{ response.id }.xml</Redirect>
+        <Redirect>/twilio_mount_location/phone/tone_rating/timeout/#{response.id}.xml</Redirect>
         </Response>
       EXPECTED
       expect(described_class.call(phone_call_id: phone_call.id, tree: tree, response_id: response.id)).to eq(expected)
@@ -126,7 +127,7 @@ RSpec.describe Twilio::Rails::Phone::Twiml::PromptOperation, type: :operation do
         <?xml version="1.0" encoding="UTF-8"?>
         <Response>
         <Say voice="female"><break strength="x-weak" time="100ms"/><emphasis level="moderate">Words to emphasize</emphasis><p>Words to speak</p>aaaaaa<phoneme alphabet="x-sampa" ph="pɪˈkɑːn">Words to speak</phoneme>bbbbbbb<prosody pitch="-10%" rate="85%" volume="-6dB">Words to speak</prosody><s>Words to speak</s><say-as interpret-as="spell-out">Words to speak</say-as><sub alias="alias">Words to be substituted</sub><w>Words to speak</w></Say>
-        <Redirect>/twilio_mount_location/phone/tone_rating/prompt_response/#{ response.id }.xml</Redirect>
+        <Redirect>/twilio_mount_location/phone/tone_rating/prompt_response/#{response.id}.xml</Redirect>
         </Response>
       EXPECTED
       expect(described_class.call(phone_call_id: phone_call.id, tree: tree, response_id: response.id)).to eq(expected)

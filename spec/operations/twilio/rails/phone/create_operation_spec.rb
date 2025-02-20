@@ -1,5 +1,6 @@
 # frozen_string_literal: true
-require 'rails_helper'
+
+require "rails_helper"
 
 RSpec.describe Twilio::Rails::Phone::CreateOperation, type: :operation do
   include_examples "twilio phone API call"
@@ -30,7 +31,7 @@ RSpec.describe Twilio::Rails::Phone::CreateOperation, type: :operation do
       "FromCity" => "OTTAWA",
       "CalledState" => "MB",
       "FromZip" => "",
-      "FromState" => "ON",
+      "FromState" => "ON"
     }
   }
 
@@ -44,7 +45,7 @@ RSpec.describe Twilio::Rails::Phone::CreateOperation, type: :operation do
     end
 
     it "creates a call record" do
-      expect{ described_class.call(params: params.except("direction"), tree: tree) }.to change{ PhoneCall.count }.by(1)
+      expect { described_class.call(params: params.except("direction"), tree: tree) }.to change { PhoneCall.count }.by(1)
       phone_call = PhoneCall.last
       expect(phone_call.sid).to eq(call_sid)
       expect(phone_call.number).to eq(to_number)

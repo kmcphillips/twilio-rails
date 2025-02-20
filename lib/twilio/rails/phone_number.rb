@@ -1,4 +1,5 @@
 # frozen_string_literal: true
+
 module Twilio
   module Rails
     # A phone number object that includes the country and some optional metadata.
@@ -11,7 +12,7 @@ module Twilio
       # @param project [String, nil] an optional project identifier for grouping phone numbers.
       def initialize(number:, country:, label: nil, project: nil)
         @number = Twilio::Rails::Formatter.coerce_to_valid_phone_number(number)
-        raise Twilio::Rails::Phone::Error, "Invalid phone number '#{ number }'" unless @number
+        raise Twilio::Rails::Phone::Error, "Invalid phone number '#{number}'" unless @number
         @country = country&.upcase
         @label = label
         @project = project.presence&.to_s
@@ -19,9 +20,9 @@ module Twilio
 
       # @return [String] a human readable string representation of the phone number and its metadata.
       def to_s
-        s = "Phone number #{ number } (#{ country })"
-        s = "#{ s } #{ label }" if label.present?
-        s = "#{ s } for #{ project }" if project.present?
+        s = "Phone number #{number} (#{country})"
+        s = "#{s} #{label}" if label.present?
+        s = "#{s} for #{project}" if project.present?
         s
       end
     end

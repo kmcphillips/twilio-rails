@@ -1,5 +1,6 @@
 # frozen_string_literal: true
-require 'rails_helper'
+
+require "rails_helper"
 
 RSpec.describe PhoneCall, type: :model do
   let(:phone_call) { create(:phone_call, tree_name: "favourite_number") }
@@ -131,13 +132,12 @@ RSpec.describe PhoneCall, type: :model do
       expect(phone_call.length_seconds).to eq(5)
     end
 
-
     it "handles many responses" do
       time = time_seconds
-      responses = 5.times.map do |t|
+      5.times.map do |t|
         response = create(:response, phone_call: phone_call)
         response.update!(created_at: Time.at(time))
-        time = time + 10
+        time += 10
       end
 
       phone_call.reload

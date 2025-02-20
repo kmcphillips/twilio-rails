@@ -1,4 +1,5 @@
 # frozen_string_literal: true
+
 module Twilio
   module Rails
     module Phone
@@ -22,7 +23,7 @@ module Twilio
               next if message.blank?
               message = Twilio::Rails::Phone::Tree::Message.new(say: message, voice: voice) if message.is_a?(String)
 
-              raise Twilio::Rails::Phone::InvalidTreeError "unknown message #{ message } is a #{ message.class }" unless message.is_a?(Twilio::Rails::Phone::Tree::Message)
+              raise Twilio::Rails::Phone::InvalidTreeError "unknown message #{message} is a #{message.class}" unless message.is_a?(Twilio::Rails::Phone::Tree::Message)
 
               # TODO: if we want to make a transcript of sent messages this is where we would record outgoing messages
 
@@ -39,7 +40,7 @@ module Twilio
               elsif message.pause?
                 twiml.pause(length: message.value)
               else
-                raise Twilio::Rails::Phone::InvalidTreeError, "unknown message #{ message }"
+                raise Twilio::Rails::Phone::InvalidTreeError, "unknown message #{message}"
               end
             end
           end

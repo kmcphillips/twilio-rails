@@ -1,4 +1,5 @@
 # frozen_string_literal: true
+
 module Twilio
   module Rails
     module SMS
@@ -12,7 +13,7 @@ module Twilio
             from_number: params["From"].presence,
             from_city: params["FromCity"].presence,
             from_province: params["FromState"].presence,
-            from_country: params["FromCountry"].presence,
+            from_country: params["FromCountry"].presence
           )
           conversation.save!
           conversation

@@ -1,4 +1,5 @@
 # frozen_string_literal: true
+
 namespace :twilio do
   namespace :rails do
     desc "Show the available values to config in Twilio"
@@ -9,7 +10,7 @@ namespace :twilio do
         puts "Twilio::Rails.config.host is set to a test value. Set it in the `config/initializers/twilio_rails.rb` file."
       else
         http_methods = if Twilio::Rails.config.controller_http_methods.length == 1
-          "HTTP #{ Twilio::Rails.config.controller_http_methods.first.to_s.upcase }"
+          "HTTP #{Twilio::Rails.config.controller_http_methods.first.to_s.upcase}"
         else
           "HTTP POST or HTTP GET"
         end
@@ -22,18 +23,18 @@ namespace :twilio do
           puts "You cannot yet configure `Voice & Fax' because There are no phone trees registered in this application."
           puts "Register them in the `config/initializers/twilio_rails.rb` file if you want to handle phone calls, and run this task again to help configure Twilio."
         else
-          puts "Under 'Voice & Fax' set 'A CALL COMES IN' to 'Webhook' with #{ http_methods } and one of the following URLs:"
+          puts "Under 'Voice & Fax' set 'A CALL COMES IN' to 'Webhook' with #{http_methods} and one of the following URLs:"
           Twilio::Rails.config.phone_trees.all.each do |name, tree|
             puts "  #{tree.inbound_url}"
           end
           puts ""
           puts "Under 'Voice & Fax' set 'CALL STATUS CHANGES' to following URL:"
-          puts "  #{ ::Twilio::Rails.config.host }#{ ::Twilio::Rails::Engine.routes.url_helpers.phone_status_path(format: :xml) }"
+          puts "  #{::Twilio::Rails.config.host}#{::Twilio::Rails::Engine.routes.url_helpers.phone_status_path(format: :xml)}"
         end
 
         puts ""
-        puts "Under 'Messaging' set 'A MESSAGE COMES IN' to 'Webhook' with #{ http_methods } and the following URL:"
-        puts "  #{ ::Twilio::Rails.config.host }#{ ::Twilio::Rails::Engine.routes.url_helpers.sms_message_path(format: :xml) }"
+        puts "Under 'Messaging' set 'A MESSAGE COMES IN' to 'Webhook' with #{http_methods} and the following URL:"
+        puts "  #{::Twilio::Rails.config.host}#{::Twilio::Rails::Engine.routes.url_helpers.sms_message_path(format: :xml)}"
 
         if Twilio::Rails.config.sms_responders.all.length == 0
           puts "There are no SMS responders registered so they will not be handled."

@@ -1,5 +1,6 @@
 # frozen_string_literal: true
-require 'rails_helper'
+
+require "rails_helper"
 
 RSpec.describe Twilio::Rails::Phone::UpdateOperation, type: :operation do
   include_examples "twilio phone API call"
@@ -32,7 +33,7 @@ RSpec.describe Twilio::Rails::Phone::UpdateOperation, type: :operation do
       "FromCity" => "OTTAWA",
       "CalledState" => "MB",
       "FromZip" => "",
-      "FromState" => "ON",
+      "FromState" => "ON"
     }
   }
 

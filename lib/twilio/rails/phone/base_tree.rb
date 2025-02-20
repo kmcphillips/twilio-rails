@@ -1,4 +1,5 @@
 # frozen_string_literal: true
+
 module Twilio
   module Rails
     module Phone
@@ -85,7 +86,7 @@ module Twilio
           # @param message [String, Hash, Array, Proc] The message to play to the caller.
           # @param prompt [Symbol, Hash, Proc] The name of the next prompt.
           # @return [nil]
-          def greeting(message: nil, prompt:)
+          def greeting(prompt:, message: nil)
             tree.greeting = Twilio::Rails::Phone::Tree::After.new(message: message, prompt: prompt)
             nil
           end
@@ -153,7 +154,7 @@ module Twilio
           # * `Proc`: A proc that will be called after the message and gather have been called. The proc will receive
           #   the current {Twilio::Rails::Models::Response} instance as an argument. The proc must return one of the
           #   above.
-          def prompt(prompt_name, message: nil, gather: nil, after:)
+          def prompt(prompt_name, after:, message: nil, gather: nil)
             tree.prompts[prompt_name] = Twilio::Rails::Phone::Tree::Prompt.new(name: prompt_name, message: message, gather: gather, after: after)
             nil
           end
@@ -200,7 +201,7 @@ module Twilio
           #
           # @return [String] the name of the tree.
           def tree_name
-            self.name.demodulize.underscore.sub(/_tree\z/, "")
+            name.demodulize.underscore.sub(/_tree\z/, "")
           end
 
           # The instance of {Twilio::Rails::Phone::Tree} built from the DSL. Should be treated as read-only. Used

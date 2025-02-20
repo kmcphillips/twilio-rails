@@ -1,5 +1,6 @@
 # frozen_string_literal: true
-require 'rails_helper'
+
+require "rails_helper"
 
 RSpec.describe Twilio::Rails::Phone::AttachRecordingJob, type: :job do
   let(:recording) { create(:recording) }

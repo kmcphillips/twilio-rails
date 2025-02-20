@@ -1,4 +1,5 @@
 # frozen_string_literal: true
+
 module Twilio
   module Rails
     # Finds and returns a {Twilio::Rails::Models::PhoneCaller} by phone number, or creates a new one if it does not

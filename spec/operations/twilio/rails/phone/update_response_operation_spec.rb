@@ -1,5 +1,6 @@
 # frozen_string_literal: true
-require 'rails_helper'
+
+require "rails_helper"
 
 RSpec.describe Twilio::Rails::Phone::UpdateResponseOperation, type: :operation do
   include_examples "twilio phone API call"
@@ -34,7 +35,7 @@ RSpec.describe Twilio::Rails::Phone::UpdateResponseOperation, type: :operation d
       "FromCity" => "OTTAWA",
       "CalledState" => "MB",
       "FromZip" => "",
-      "FromState" => "ON",
+      "FromState" => "ON"
     }
   }
   let(:digit_params) { base_params.merge("Digits" => "3") }

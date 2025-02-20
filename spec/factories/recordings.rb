@@ -1,4 +1,5 @@
 # frozen_string_literal: true
+
 FactoryBot.define do
   factory :recording, class: ::Twilio::Rails.config.recording_class do
     recording_sid { "REdddddddddddddddddddddddddddddddd" }

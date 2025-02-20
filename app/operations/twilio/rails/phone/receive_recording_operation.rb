@@ -1,4 +1,5 @@
 # frozen_string_literal: true
+
 module Twilio
   module Rails
     module Phone
@@ -10,12 +11,12 @@ module Twilio
           response = phone_call.responses.find(response_id)
 
           if phone_call.recordings.sid(params["RecordingSid"]).any?
-            Twilio::Rails.config.logger.tagged(self.class) { |l| l.warn("duplicate recording for response_id=#{ response.id } recording_sid=#{ params["RecordingSid"] }") }
+            Twilio::Rails.config.logger.tagged(self.class) { |l| l.warn("duplicate recording for response_id=#{response.id} recording_sid=#{params["RecordingSid"]}") }
           else
             recording = phone_call.recordings.build(
               recording_sid: params["RecordingSid"],
               url: params["RecordingUrl"],
-              duration: params["RecordingDuration"].presence,
+              duration: params["RecordingDuration"].presence
             )
             recording.save!
 

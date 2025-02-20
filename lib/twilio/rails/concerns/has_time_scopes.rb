@@ -1,4 +1,5 @@
 # frozen_string_literal: true
+
 module Twilio
   module Rails
     # Provides convenience scopes for a model that has a `created_at` attribute.

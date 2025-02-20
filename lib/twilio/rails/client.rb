@@ -1,4 +1,5 @@
 # frozen_string_literal: true
+
 module Twilio
   module Rails
     # An abstraction over top of the `Twilio::REST` API client. Used to send SMS messages and start calls, as well as
@@ -10,7 +11,7 @@ module Twilio
       def client
         @twilio_client ||= Twilio::REST::Client.new(
           Twilio::Rails.config.account_sid,
-          Twilio::Rails.config.auth_token,
+          Twilio::Rails.config.auth_token
         )
       end
 
@@ -23,12 +24,12 @@ module Twilio
       # @param from [String] the phone number to send the message from.
       # @return [String] the SID returned from Twilio for the sent SMS message.
       def send_message(message:, to:, from:)
-        Twilio::Rails.config.logger.tagged(self) { |l| l.info("[send_message] to=#{ to } from=#{ from } body='#{ message }'") }
+        Twilio::Rails.config.logger.tagged(self) { |l| l.info("[send_message] to=#{to} from=#{from} body='#{message}'") }
         client.messages.create(
           from: from,
           to: to,
           body: message,
-          status_callback: "#{ Twilio::Rails.config.host }#{ ::Twilio::Rails::Engine.routes.url_helpers.sms_status_path(format: :xml) }",
+          status_callback: "#{Twilio::Rails.config.host}#{::Twilio::Rails::Engine.routes.url_helpers.sms_status_path(format: :xml)}"
         ).sid
       end
 
@@ -55,18 +56,18 @@ module Twilio
       # @param answering_machine_detection [true, false] whether or not to enable answering machine detection.
       # @return [String] the SID returned from Twilio for the started call.
       def start_call(url:, to:, from:, answering_machine_detection: true)
-        Twilio::Rails.config.logger.tagged(self) { |l| l.info("[start_call] to=#{ to } from=#{ from } url=#{ url } answering_machine_detection=#{ !!answering_machine_detection }") }
+        Twilio::Rails.config.logger.tagged(self) { |l| l.info("[start_call] to=#{to} from=#{from} url=#{url} answering_machine_detection=#{!!answering_machine_detection}") }
         client.calls.create(
           from: from,
           to: to,
           url: url,
-          machine_detection: ( answering_machine_detection ? "Enable" : "Disable" ),
+          machine_detection: (answering_machine_detection ? "Enable" : "Disable"),
           async_amd: true,
-          async_amd_status_callback: "#{ Twilio::Rails.config.host }#{ ::Twilio::Rails::Engine.routes.url_helpers.phone_status_path(format: :xml, async_amd: "true") }",
+          async_amd_status_callback: "#{Twilio::Rails.config.host}#{::Twilio::Rails::Engine.routes.url_helpers.phone_status_path(format: :xml, async_amd: "true")}",
           async_amd_status_callback_method: "POST",
-          status_callback: "#{ Twilio::Rails.config.host }#{ ::Twilio::Rails::Engine.routes.url_helpers.phone_status_path(format: :xml) }",
+          status_callback: "#{Twilio::Rails.config.host}#{::Twilio::Rails::Engine.routes.url_helpers.phone_status_path(format: :xml)}",
           status_callback_method: "POST",
-          status_callback_event: ["completed", "no-answer"],
+          status_callback_event: ["completed", "no-answer"]
           # timeout: 30,
         ).sid
       end

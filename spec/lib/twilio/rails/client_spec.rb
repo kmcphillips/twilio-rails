@@ -1,5 +1,6 @@
 # frozen_string_literal: true
-require 'rails_helper'
+
+require "rails_helper"
 
 RSpec.describe Twilio::Rails::Client, type: :model do
   let(:message) { "Oh, hello" }
@@ -22,7 +23,7 @@ RSpec.describe Twilio::Rails::Client, type: :model do
           from: from_number,
           body: message,
           to: to_number,
-          status_callback: "https://example.com/twilio_mount_location/sms/status.xml",
+          status_callback: "https://example.com/twilio_mount_location/sms/status.xml"
         ).and_return(response)
       expect(described_class.send_message(message: message, to: to_number, from: from_number)).to eq(sid)
     end
@@ -44,7 +45,7 @@ RSpec.describe Twilio::Rails::Client, type: :model do
           async_amd_status_callback_method: "POST",
           status_callback: "https://example.com/twilio_mount_location/phone/status.xml",
           status_callback_event: ["completed", "no-answer"],
-          status_callback_method: "POST",
+          status_callback_method: "POST"
         ).and_return(response)
       expect(described_class.start_call(url: tree.outbound_url, to: to_number, from: from_number)).to eq(sid)
     end
@@ -62,7 +63,7 @@ RSpec.describe Twilio::Rails::Client, type: :model do
           async_amd_status_callback_method: "POST",
           status_callback: "https://example.com/twilio_mount_location/phone/status.xml",
           status_callback_event: ["completed", "no-answer"],
-          status_callback_method: "POST",
+          status_callback_method: "POST"
         ).and_return(response)
       expect(described_class.start_call(url: tree.outbound_url, to: to_number, from: from_number, answering_machine_detection: false)).to eq(sid)
     end

@@ -1,4 +1,5 @@
 # frozen_string_literal: true
+
 module Twilio
   module Rails
     class SMSController < ::Twilio::Rails::ApplicationController
@@ -10,7 +11,7 @@ module Twilio
         respond_to do |format|
           format.xml do
             if spam?
-              render xml: Twilio::Rails::SMS::Twiml::ErrorOperation.call()
+              render xml: Twilio::Rails::SMS::Twiml::ErrorOperation.call
             else
               if session[:sms_conversation_id].present?
                 conversation = Twilio::Rails::SMS::FindOperation.call(sms_conversation_id: session[:sms_conversation_id])
@@ -29,10 +30,10 @@ module Twilio
         respond_to do |format|
           format.xml do
             if params[:message_id].present?
-              message = Twilio::Rails::SMS::UpdateMessageOperation.call(message_id: params[:message_id].to_i, params: params_hash)
+              Twilio::Rails::SMS::UpdateMessageOperation.call(message_id: params[:message_id].to_i, params: params_hash)
             else
               message = Twilio::Rails::SMS::FindMessageOperation.call(params: params_hash)
-              message = Twilio::Rails::SMS::UpdateMessageOperation.call(message_id: message.id, params: params_hash)
+              Twilio::Rails::SMS::UpdateMessageOperation.call(message_id: message.id, params: params_hash)
             end
 
             head :ok
@@ -46,7 +47,7 @@ module Twilio
         if params["AccountSid"] != Twilio::Rails.config.account_sid
           respond_to do |format|
             format.xml do
-              render xml: Twilio::Rails::SMS::Twiml::ErrorOperation.call()
+              render xml: Twilio::Rails::SMS::Twiml::ErrorOperation.call
             end
           end
         end

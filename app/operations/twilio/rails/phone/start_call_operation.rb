@@ -1,4 +1,5 @@
 # frozen_string_literal: true
+
 module Twilio
   module Rails
     module Phone
@@ -21,7 +22,7 @@ module Twilio
             "CallSid" => nil,
             "direction" => "outbound",
             "To" => from,
-            "From" => to,
+            "From" => to
           }
 
           begin
@@ -32,24 +33,21 @@ module Twilio
               handled: false,
               context: {
                 message: "Failed to start Twilio phone call. Got REST error response.",
-                params: params,
-              }
-            )
+                params: params
+              })
             raise
           rescue => e
             ::Rails.error.report(e,
               handled: false,
               context: {
                 message: "Failed to start Twilio phone call. Got unknown error.",
-                params: params,
-          }
-            )
+                params: params
+              })
             raise
           end
 
           # TODO: I think this may be a race condition
-          phone_call = Twilio::Rails::Phone::CreateOperation.call(params: params, tree: tree)
-          phone_call
+          Twilio::Rails::Phone::CreateOperation.call(params: params, tree: tree)
         end
       end
     end

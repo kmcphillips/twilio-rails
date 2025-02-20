@@ -1,9 +1,10 @@
 # frozen_string_literal: true
+
 module Twilio
   module Rails
     class Configuration
       # Raised in initialization if the configuration is invalid.
-      class Error < StandardError ; end
+      class Error < StandardError; end
 
       def initialize
         @finalized = false
@@ -15,8 +16,8 @@ module Twilio
         @auth_token = nil
         @spam_filter = nil
         @attach_recordings = true
-        @yes_responses = [ "yes", "accept", "ya", "yeah", "true", "ok", "okay", "yep", "yup", "yes please" ]
-        @no_responses = [ "no", "naw", "nah", "reject", "decline", "negative", "not", "false", "nope", "no thank you", "know" ]
+        @yes_responses = ["yes", "accept", "ya", "yeah", "true", "ok", "okay", "yep", "yup", "yes please"]
+        @no_responses = ["no", "naw", "nah", "reject", "decline", "negative", "not", "false", "nope", "no thank you", "know"]
         @message_class_name = "Message"
         @message_class = nil
         @phone_call_class_name = "PhoneCall"
@@ -32,9 +33,7 @@ module Twilio
         @phone_trees = PhoneTreeRegistry.new
         @sms_responders = SMSResponderRegistry.new
         @host = if ::Rails.configuration&.action_controller&.default_url_options
-          "#{ ::Rails.configuration.action_controller.default_url_options[:protocol] }://#{ ::Rails.configuration.action_controller.default_url_options[:host] }"
-        else
-          nil
+          "#{::Rails.configuration.action_controller.default_url_options[:protocol]}://#{::Rails.configuration.action_controller.default_url_options[:host]}"
         end
         @controller_http_methods = [:get, :post]
         @include_phone_macros = []
@@ -146,8 +145,7 @@ module Twilio
       def host_domain
         return nil unless host.present?
         value = host.gsub(/\Ahttps?:\/\//, "")
-        value = value.gsub(/:\d+\z/, "")
-        value
+        value.gsub(/:\d+\z/, "")
       end
 
       # The HTTP methods that Twilio will use to call into the app. Defaults to `[:get, :post]` but can be restricted
@@ -208,11 +206,11 @@ module Twilio
         raise Error, "`auth_token` must be set" if @auth_token.blank?
         raise Error, "`logger` must be set" if @logger.blank?
         raise Error, "`spam_filter` must be callable" if @spam_filter && !@spam_filter.respond_to?(:call)
-        raise Error, '`yes_responses` must be an array' unless @yes_responses.is_a?(Array)
-        raise Error, '`no_responses` must be an array' unless @no_responses.is_a?(Array)
-        raise Error, "`host` #{ @host.inspect } is not a valid URL of the format https://example.com without the trailing slash" unless @host =~ /\Ahttps?:\/\/[a-z0-9\-\.:]+\Z/i
-        raise Error, "`controller_http_methods` must be an array containing one or both of `:get` and `:post` but was #{ @controller_http_methods.inspect }" unless @controller_http_methods.is_a?(Array) && @controller_http_methods.sort == [:get, :post].sort || @controller_http_methods == [:get] || @controller_http_methods == [:post]
-        raise Error, "`include_phone_macros` must be a module, but received #{ @include_phone_macros.inspect }" unless @include_phone_macros.all? { |mod| mod.is_a?(Module) }
+        raise Error, "`yes_responses` must be an array" unless @yes_responses.is_a?(Array)
+        raise Error, "`no_responses` must be an array" unless @no_responses.is_a?(Array)
+        raise Error, "`host` #{@host.inspect} is not a valid URL of the format https://example.com without the trailing slash" unless /\Ahttps?:\/\/[a-z0-9\-\.:]+\Z/i.match?(@host)
+        raise Error, "`controller_http_methods` must be an array containing one or both of `:get` and `:post` but was #{@controller_http_methods.inspect}" unless @controller_http_methods.is_a?(Array) && @controller_http_methods.sort == [:get, :post].sort || @controller_http_methods == [:get] || @controller_http_methods == [:post]
+        raise Error, "`include_phone_macros` must be a module, but received #{@include_phone_macros.inspect}" unless @include_phone_macros.all? { |mod| mod.is_a?(Module) }
         nil
       end
 
@@ -231,13 +229,13 @@ module Twilio
           :response_class_name,
           :sms_conversation_class_name,
           :message_class_name,
-          :recording_class_name,
+          :recording_class_name
         ].each do |attribute|
-          value = self.send(attribute)
+          value = send(attribute)
           raise Error, "`#{attribute}` must be set to a string name" if value.blank? || !value.is_a?(String)
           begin
             klass = value.constantize
-            instance_variable_set("@#{ attribute.to_s.gsub("_name", "") }", klass)
+            instance_variable_set("@#{attribute.to_s.gsub("_name", "")}", klass)
           rescue NameError
             raise Error, "`#{attribute}` must be a valid class name but could not be found or constantized"
           end
@@ -280,7 +278,7 @@ module Twilio
         # @yield [nil] if a block is passed, it will be called and the result will be used as the value.
         # @yieldreturn [Class, String, Proc] containing the Class to be lazily initialized when {#finalize!} is called.
         # @return [nil]
-        def register(klass_or_proc=nil, &block)
+        def register(klass_or_proc = nil, &block)
           raise Error, "Must pass either a param or a block" unless klass_or_proc.present? ^ block.present?
           value = klass_or_proc || block
 
@@ -295,7 +293,7 @@ module Twilio
         # @param [String, Symbol] name of the phone tree or SMS responder to find.
         # @return [Class] the phone tree or SMS responder class.
         def for(name)
-          @registry[name.to_s] || raise(error_class, "Name '#{ name }' has not been registered and cannot be found.")
+          @registry[name.to_s] || raise(error_class, "Name '#{name}' has not been registered and cannot be found.")
         end
 
         # Returns all the phone trees or SMS responders as a read-only hash, keyed by name.
@@ -325,14 +323,14 @@ module Twilio
           value = value.call if value.respond_to?(:call)
           begin
             value = value.constantize if value.is_a?(String)
-          rescue NameError => e
-            raise(error_class, "Responder class '#{ value }' could not be constantized")
+          rescue NameError
+            raise(error_class, "Responder class '#{value}' could not be constantized")
           end
           raise(error_class, "Responder cannot be blank") unless value.present?
-          raise(error_class, "Responder must be a class but got #{ value.inspect }") unless value.is_a?(Class)
+          raise(error_class, "Responder must be a class but got #{value.inspect}") unless value.is_a?(Class)
           name = value.responder_name
           raise(error_class, "Responder name cannot be blank") unless name.present?
-          raise(error_class, "Responder name '#{ name }' is already registered") if @registry[name]
+          raise(error_class, "Responder name '#{name}' is already registered") if @registry[name]
           @registry[name] = value
         end
 
@@ -350,15 +348,15 @@ module Twilio
           value = value.call if value.respond_to?(:call)
           begin
             value = value.constantize if value.is_a?(String)
-          rescue NameError => e
-            raise(error_class, "Tree class '#{ value }' could not be constantized")
+          rescue NameError
+            raise(error_class, "Tree class '#{value}' could not be constantized")
           end
-          raise(error_class, "Tree cannot be blank #{ value }") unless value.present?
-          raise(error_class, "Tree is not a Twilio::Rails::Phone::BaseTree class #{ value }") unless value.is_a?(Class)
-          raise(error_class, "Tree is not a Twilio::Rails::Phone::BaseTree #{ value }") unless value.ancestors.include?(Twilio::Rails::Phone::BaseTree)
+          raise(error_class, "Tree cannot be blank #{value}") unless value.present?
+          raise(error_class, "Tree is not a Twilio::Rails::Phone::BaseTree class #{value}") unless value.is_a?(Class)
+          raise(error_class, "Tree is not a Twilio::Rails::Phone::BaseTree #{value}") unless value.ancestors.include?(Twilio::Rails::Phone::BaseTree)
           name = value.tree_name
           raise(error_class, "Tree name cannot be blank") unless name.present?
-          raise(error_class, "Tree name '#{ name }' is already registered") if @registry[name]
+          raise(error_class, "Tree name '#{name}' is already registered") if @registry[name]
           @registry[name] = value.tree
         end
 

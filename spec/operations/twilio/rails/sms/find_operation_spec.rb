@@ -1,5 +1,6 @@
 # frozen_string_literal: true
-require 'rails_helper'
+
+require "rails_helper"
 
 RSpec.describe Twilio::Rails::SMS::FindOperation, type: :operation do
   include_examples "twilio SMS API call"

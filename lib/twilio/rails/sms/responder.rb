@@ -1,5 +1,5 @@
-
 # frozen_string_literal: true
+
 module Twilio
   module Rails
     module SMS
@@ -25,8 +25,8 @@ module Twilio
             return responder.reply if responder.handle?
           end
 
-          raise Twilio::Rails::SMS::InvalidResponderError, "No responder found for SMS. message_id=#{ message.id } "\
-            "phone_caller_id=#{ sms_conversation.phone_caller&.id } from_number=\"#{ sms_conversation.from_number }\" body=\"#{ message.body }\""
+          raise Twilio::Rails::SMS::InvalidResponderError, "No responder found for SMS. message_id=#{message.id} " \
+            "phone_caller_id=#{sms_conversation.phone_caller&.id} from_number=\"#{sms_conversation.from_number}\" body=\"#{message.body}\""
         end
       end
     end

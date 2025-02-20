@@ -1,5 +1,5 @@
 ## frozen_string_literal: true
-require 'rails_helper'
+require "rails_helper"
 
 RSpec.describe Response, type: :model do
   let(:response) { create(:response, phone_call: phone_call, prompt_handle: prompt) }
@@ -192,7 +192,7 @@ RSpec.describe Response, type: :model do
 
     it "unboxes and handles if an array is passed in" do
       response.update!(transcription: "aa bbbbb cc")
-      expect(response.transcription_matches?([ "aaa", "bbb" ])).to be(true)
+      expect(response.transcription_matches?(["aaa", "bbb"])).to be(true)
     end
 
     it "raises if arguments are blank" do

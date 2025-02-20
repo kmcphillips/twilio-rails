@@ -1,4 +1,5 @@
 # frozen_string_literal: true
+
 module Twilio
   module Rails
     module SMS
@@ -34,7 +35,7 @@ module Twilio
           #
           # @return [String] the name of the responder.
           def responder_name
-            self.name.demodulize.underscore.gsub(/_responder\Z/, "")
+            name.demodulize.underscore.gsub(/_responder\Z/, "")
           end
         end
 
@@ -49,7 +50,7 @@ module Twilio
         #
         # @return [true, false] true if this responder should handle the given message.
         def handle?
-          raise NoMethodError, "#{ self.class }#handle? must be implemented."
+          raise NoMethodError, "#{self.class}#handle? must be implemented."
         end
 
         # Must be implemented by the subclass otherwise will raise a `NoMethodError`. Returns the body of the
@@ -58,7 +59,7 @@ module Twilio
         #
         # @return [String, nil] the body of the response to be sent as SMS, or `nil` if no message should be sent.
         def reply
-          raise NoMethodError, "#{ self.class }#reply must be implemented."
+          raise NoMethodError, "#{self.class}#reply must be implemented."
         end
 
         protected

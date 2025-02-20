@@ -1,5 +1,6 @@
 # frozen_string_literal: true
-require 'rails_helper'
+
+require "rails_helper"
 
 RSpec.describe Twilio::Rails::Formatter do
   let(:time) { Time.at(1583683053) } # 2020-03-08 11:57:31 -0400

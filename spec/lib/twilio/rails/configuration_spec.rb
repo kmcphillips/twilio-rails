@@ -1,5 +1,6 @@
 # frozen_string_literal: true
-require 'rails_helper'
+
+require "rails_helper"
 
 RSpec.describe Twilio::Rails::Configuration do
   subject(:config) { described_class.new }
@@ -64,7 +65,7 @@ RSpec.describe Twilio::Rails::Configuration do
 
     context "yes_responses" do
       it "sets the value" do
-        yes_responses = [ "YES" ]
+        yes_responses = ["YES"]
         config.yes_responses = yes_responses
         expect(config.yes_responses).to eq(yes_responses)
       end
@@ -72,7 +73,7 @@ RSpec.describe Twilio::Rails::Configuration do
 
     context "no_responses" do
       it "sets the value" do
-        no_responses = [ "NO" ]
+        no_responses = ["NO"]
         config.no_responses = no_responses
         expect(config.no_responses).to eq(no_responses)
       end
@@ -245,7 +246,7 @@ RSpec.describe Twilio::Rails::Configuration do
       config.yes_responses = "something"
       expect { config.finalize! }.to raise_error(Twilio::Rails::Configuration::Error)
 
-      config.yes_responses = [ "YES" ]
+      config.yes_responses = ["YES"]
       expect { config.finalize! }.to_not raise_error
     end
 
@@ -256,7 +257,7 @@ RSpec.describe Twilio::Rails::Configuration do
       config.no_responses = "something"
       expect { config.finalize! }.to raise_error(Twilio::Rails::Configuration::Error)
 
-      config.no_responses = [ "NO" ]
+      config.no_responses = ["NO"]
       expect { config.finalize! }.to_not raise_error
     end
 
@@ -345,25 +346,25 @@ RSpec.describe Twilio::Rails::Configuration do
       config.controller_http_methods = "POST"
       expect { config.finalize! }.to raise_error(Twilio::Rails::Configuration::Error)
 
-      config.controller_http_methods = [ "POST" ]
+      config.controller_http_methods = ["POST"]
       expect { config.finalize! }.to raise_error(Twilio::Rails::Configuration::Error)
 
-      config.controller_http_methods = [ :get, :get, :post ]
+      config.controller_http_methods = [:get, :get, :post]
       expect { config.finalize! }.to raise_error(Twilio::Rails::Configuration::Error)
 
-      config.controller_http_methods = [ :post, :put ]
+      config.controller_http_methods = [:post, :put]
       expect { config.finalize! }.to raise_error(Twilio::Rails::Configuration::Error)
 
-      config.controller_http_methods = [ :post, :get ]
+      config.controller_http_methods = [:post, :get]
       expect { config.finalize! }.to_not raise_error
 
-      config.controller_http_methods = [ :get, :post ]
+      config.controller_http_methods = [:get, :post]
       expect { config.finalize! }.to_not raise_error
 
-      config.controller_http_methods = [ :post ]
+      config.controller_http_methods = [:post]
       expect { config.finalize! }.to_not raise_error
 
-      config.controller_http_methods = [ :get ]
+      config.controller_http_methods = [:get]
       expect { config.finalize! }.to_not raise_error
     end
   end
@@ -408,7 +409,7 @@ RSpec.describe Twilio::Rails::Configuration do
   describe "controller_http_methods" do
     it "defaults to both get and post" do
       config.finalize!
-      expect(config.controller_http_methods).to eq([ :get, :post ])
+      expect(config.controller_http_methods).to eq([:get, :post])
     end
   end
 

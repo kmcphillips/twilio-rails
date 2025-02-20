@@ -1,4 +1,5 @@
 # frozen_string_literal: true
+
 module Twilio
   module Rails
     module SMS
@@ -19,7 +20,7 @@ module Twilio
         input :messages, accepts: Array, type: :keyword, required: true
         input :from_number, accepts: [String, Twilio::Rails::PhoneNumber], type: :keyword, required: false
 
-        TWILIO_UNSUBSCRIBED_ERROR_CODES = [ 21610 ].freeze
+        TWILIO_UNSUBSCRIBED_ERROR_CODES = [21610].freeze
 
         # @param phone_caller_id [Integer] the id of the phone caller to send the message to.
         # @param messages [Array<String>] the messages to send to the phone caller. It may be empty.
@@ -29,14 +30,14 @@ module Twilio
         # @return [Twilio::Rails::Models::SMSConversation] the SMS conversation that was created and sent.
         def execute
           return nil if messages.blank?
-          raise Twilio::Rails::SMS::Error, "from_number=#{ from_number } is not a valid phone number" if from_number.present? && !Twilio::Rails::Formatter.coerce_to_valid_phone_number(from_number)
+          raise Twilio::Rails::SMS::Error, "from_number=#{from_number} is not a valid phone number" if from_number.present? && !Twilio::Rails::Formatter.coerce_to_valid_phone_number(from_number)
 
           conversation = ::Twilio::Rails.config.sms_conversation_class.new(
             number: calculated_from_number,
             from_number: calculated_to_number,
             from_city: phone_call&.from_city,
             from_province: phone_call&.from_province,
-            from_country: phone_call&.from_country,
+            from_country: phone_call&.from_country
           )
           conversation.save!
 
@@ -46,11 +47,11 @@ module Twilio
               sid = Twilio::Rails::Client.send_message(
                 message: body,
                 to: calculated_to_number,
-                from: calculated_from_number,
+                from: calculated_from_number
               )
             rescue Twilio::REST::RestError => e
               if TWILIO_UNSUBSCRIBED_ERROR_CODES.include?(e.code)
-                Twilio::Rails.config.logger.tagged(self.class) { |l| l.warn("tried to send to unsubscribed and got Twilio::REST::RestError code=21610 phone_caller_id=#{ phone_caller.id } phone_number=#{ calculated_to_number } message=#{ body }") }
+                Twilio::Rails.config.logger.tagged(self.class) { |l| l.warn("tried to send to unsubscribed and got Twilio::REST::RestError code=21610 phone_caller_id=#{phone_caller.id} phone_number=#{calculated_to_number} message=#{body}") }
               else
                 ::Rails.error.report(e,
                   handled: false,
@@ -58,9 +59,8 @@ module Twilio
                     message: "Failed to send Twilio message. Got REST error response.",
                     to: calculated_to_number,
                     from: calculated_from_number,
-                    phone_call_id: phone_call&.id,
-                  }
-                )
+                    phone_call_id: phone_call&.id
+                  })
                 raise
               end
             end

@@ -1,4 +1,5 @@
 # frozen_string_literal: true
+
 module Twilio
   module Rails
     module Phone
@@ -21,7 +22,7 @@ module Twilio
             timeout: timeout.to_i.presence || 6,
             number: 1,
             interrupt: true,
-            finish_on_key: "",
+            finish_on_key: ""
           }
         end
 
@@ -41,9 +42,9 @@ module Twilio
         #
         # @param seconds [Integer] the number of seconds to pause for, defaults to 1 second.
         # @return [Hash] formatted to pass to `message:`.
-        def pause(seconds=nil)
+        def pause(seconds = nil)
           {
-            pause: (seconds.presence || 1),
+            pause: seconds.presence || 1
           }
         end
 
@@ -66,7 +67,7 @@ module Twilio
           raise Twilio::Rails::Phone::Error, "`numbered_choices` macro got an empty array" if choices.empty?
           raise Twilio::Rails::Phone::Error, "`numbered_choices` macro cannot be more than 9" if choices.length > 9
           prefix ||= "For"
-          choices.each_with_index.map { |choice, index| "#{ prefix } #{ choice }, press #{ index + 1 }." }.join(" ")
+          choices.each_with_index.map { |choice, index| "#{prefix} #{choice}, press #{index + 1}." }.join(" ")
         end
 
         # Validates if the response object includes a digit that is within the range of the choices array. This pairs
@@ -115,7 +116,6 @@ module Twilio
           answers_no.include?((string || "").downcase.strip.gsub(/[.,!?]/, ""))
         end
 
-
         # Finds and validates the existence of a file in the `public` folder. Formats that link to include the
         # configured hose from {Twilio::Rails::Configuration#host}, and returns a fully qualified URL to the file. This
         # is useful for playing audio files in a `message:` block. If the file is not found
@@ -128,9 +128,9 @@ module Twilio
           local_path = ::Rails.public_path.join(filename)
 
           if File.exist?(local_path)
-            "#{ ::Twilio::Rails.config.host }/#{ filename }"
+            "#{::Twilio::Rails.config.host}/#{filename}"
           else
-            raise Twilio::Rails::Phone::Error, "Cannot find public file '#{ filename }' at #{ local_path }"
+            raise Twilio::Rails::Phone::Error, "Cannot find public file '#{filename}' at #{local_path}"
           end
         end
 
@@ -139,7 +139,7 @@ module Twilio
         # @param filename [String] the filename of the file to play located in the `public` folder.
         # @return [Hash] formatted to pass to `message:`.
         def play_public_file(filename)
-          { play: public_file(filename) }
+          {play: public_file(filename)}
         end
 
         # Expose a {Twilio::TwiML::Say} node to be used in a `message:` block. This can be used to form Speech Synthesis

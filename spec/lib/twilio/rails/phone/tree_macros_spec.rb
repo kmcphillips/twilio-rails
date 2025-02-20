@@ -1,5 +1,6 @@
 # frozen_string_literal: true
-require 'rails_helper'
+
+require "rails_helper"
 
 RSpec.describe Twilio::Rails::Phone::TreeMacros do
   subject(:macros) { described_class }
@@ -28,8 +29,8 @@ RSpec.describe Twilio::Rails::Phone::TreeMacros do
 
   describe "#pause" do
     it "returns a pause hash" do
-      expect(macros.pause).to eq({ pause: 1 })
-      expect(macros.pause(2)).to eq({ pause: 2 })
+      expect(macros.pause).to eq({pause: 1})
+      expect(macros.pause(2)).to eq({pause: 2})
     end
   end
 
@@ -129,7 +130,7 @@ RSpec.describe Twilio::Rails::Phone::TreeMacros do
 
   describe "#play_public_file" do
     it "delegates to #public_file and returns a hash" do
-      expect(macros.play_public_file("A440.wav")).to eq({ play: "https://example.com/A440.wav" })
+      expect(macros.play_public_file("A440.wav")).to eq({play: "https://example.com/A440.wav"})
     end
 
     it "raises if the file doesn't exist" do
@@ -143,17 +144,17 @@ RSpec.describe Twilio::Rails::Phone::TreeMacros do
     it "returns a Twilio::Rails::Phone::Tree::Message node with the block" do
       # This is pulled from the twilio docs, but their docs are out of date so this needed to be changed to match.
       response = macros.say do |say|
-        say.break(strength: 'x-weak', time: '100ms')
-        say.emphasis(words: 'Words to emphasize', level: 'moderate')
-        say.p(words: 'Words to speak')
-        say.add_text('aaaaaa')
-        say.phoneme('Words to speak', alphabet: 'x-sampa', ph: 'pɪˈkɑːn')
-        say.add_text('bbbbbbb')
-        say.prosody(words: 'Words to speak', pitch: '-10%', rate: '85%', volume: '-6dB')
-        say.s(words: 'Words to speak')
-        say.say_as('Words to speak', interpretAs: 'spell-out')
-        say.sub('Words to be substituted', alias: 'alias')
-        say.w(words: 'Words to speak')
+        say.break(strength: "x-weak", time: "100ms")
+        say.emphasis(words: "Words to emphasize", level: "moderate")
+        say.p(words: "Words to speak")
+        say.add_text("aaaaaa")
+        say.phoneme("Words to speak", alphabet: "x-sampa", ph: "pɪˈkɑːn")
+        say.add_text("bbbbbbb")
+        say.prosody(words: "Words to speak", pitch: "-10%", rate: "85%", volume: "-6dB")
+        say.s(words: "Words to speak")
+        say.say_as("Words to speak", interpretAs: "spell-out")
+        say.sub("Words to be substituted", alias: "alias")
+        say.w(words: "Words to speak")
       end
       expect(response).to be_a(Twilio::Rails::Phone::Tree::Message)
       expect(response).to be_say

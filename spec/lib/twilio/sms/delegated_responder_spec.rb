@@ -1,5 +1,6 @@
 # frozen_string_literal: true
-require 'rails_helper'
+
+require "rails_helper"
 
 RSpec.describe Twilio::Rails::SMS::DelegatedResponder, type: :model do
   let(:conversation) { message.sms_conversation }
@@ -59,7 +60,7 @@ RSpec.describe Twilio::Rails::SMS::DelegatedResponder, type: :model do
     end
 
     context "coersed type" do
-      let(:message) { create(:message, :inbound, body: "test_123")}
+      let(:message) { create(:message, :inbound, body: "test_123") }
 
       it "matches a symbol" do
         expect(responder.send(:matches?, :test)).to be(true)

@@ -1,5 +1,6 @@
 # frozen_string_literal: true
-require 'rails_helper'
+
+require "rails_helper"
 
 RSpec.describe Twilio::Rails::Phone::StartCallOperation, type: :operation do
   include_examples "twilio phone API call"
@@ -25,7 +26,7 @@ RSpec.describe Twilio::Rails::Phone::StartCallOperation, type: :operation do
       end
 
       it "creates a call record" do
-        expect{ described_class.call(to: to_number, tree: tree) }.to change{ PhoneCall.count }.by(1)
+        expect { described_class.call(to: to_number, tree: tree) }.to change { PhoneCall.count }.by(1)
         phone_call = PhoneCall.last
         expect(phone_call.sid).to eq(call_sid)
         expect(phone_call.number).to eq(from_number)
@@ -34,7 +35,7 @@ RSpec.describe Twilio::Rails::Phone::StartCallOperation, type: :operation do
       end
 
       it "creates the call with the override from number as a string" do
-        expect{ described_class.call(to: to_number, tree: tree, from: "+12345") }.to change{ PhoneCall.count }.by(1)
+        expect { described_class.call(to: to_number, tree: tree, from: "+12345") }.to change { PhoneCall.count }.by(1)
         phone_call = PhoneCall.last
         expect(phone_call.sid).to eq(call_sid)
         expect(phone_call.number).to eq("+12345")
@@ -43,7 +44,7 @@ RSpec.describe Twilio::Rails::Phone::StartCallOperation, type: :operation do
       end
 
       it "creates the call with the override from number as a Twilio::Rails::PhoneNumber" do
-        expect{ described_class.call(to: to_number, tree: tree, from: phone_number_object) }.to change{ PhoneCall.count }.by(1)
+        expect { described_class.call(to: to_number, tree: tree, from: phone_number_object) }.to change { PhoneCall.count }.by(1)
         phone_call = PhoneCall.last
         expect(phone_call.sid).to eq(call_sid)
         expect(phone_call.number).to eq("+16667778888")

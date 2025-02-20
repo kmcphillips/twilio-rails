@@ -1,12 +1,13 @@
 # frozen_string_literal: true
-require 'rails_helper'
+
+require "rails_helper"
 
 RSpec.describe Twilio::Rails::Phone::Tree, type: :model do
   subject(:tree) { described_class.new(:example) }
 
   describe "#initialize" do
     it "sets a config with defaults" do
-      expect(tree.config).to eq({ "voice" => "male", "final_timeout_message" => "Goodbye.", "final_timeout_attempts" => 3 })
+      expect(tree.config).to eq({"voice" => "male", "final_timeout_message" => "Goodbye.", "final_timeout_attempts" => 3})
     end
   end
 
@@ -24,7 +25,7 @@ RSpec.describe Twilio::Rails::Phone::Tree, type: :model do
 
   describe Twilio::Rails::Phone::Tree::Prompt, type: :model do
     describe "#initialize" do
-      let(:valid_attributes) { { name: "asdf", message: "hello", gather: { type: :digits }, after: :hangup } }
+      let(:valid_attributes) { {name: "asdf", message: "hello", gather: {type: :digits}, after: :hangup} }
 
       it "sets the gather" do
         expect(described_class.new(**valid_attributes).gather).to be_a(Twilio::Rails::Phone::Tree::Gather)
@@ -55,12 +56,12 @@ RSpec.describe Twilio::Rails::Phone::Tree, type: :model do
       end
 
       it "lets message: be a proc" do
-        value = described_class.new(**valid_attributes.merge(message: Proc.new{}))
+        value = described_class.new(**valid_attributes.merge(message: proc {}))
         expect(value.messages).to be_a(Proc)
       end
 
       it "lets message: be a play" do
-        value = described_class.new(**valid_attributes.merge(message: { play: "https://example.com/play.wav" }))
+        value = described_class.new(**valid_attributes.merge(message: {play: "https://example.com/play.wav"}))
         expect(value.messages).to be_a(Twilio::Rails::Phone::Tree::MessageSet)
         expect(value.messages.length).to eq(1)
         expect(value.messages.first.play?).to be_truthy
@@ -68,7 +69,7 @@ RSpec.describe Twilio::Rails::Phone::Tree, type: :model do
       end
 
       it "lets the message: be a say" do
-        value = described_class.new(**valid_attributes.merge(message: { say: "hello" }))
+        value = described_class.new(**valid_attributes.merge(message: {say: "hello"}))
         expect(value.messages).to be_a(Twilio::Rails::Phone::Tree::MessageSet)
         expect(value.messages.length).to eq(1)
         expect(value.messages.first.say?).to be_truthy
@@ -121,7 +122,7 @@ RSpec.describe Twilio::Rails::Phone::Tree, type: :model do
         end
 
         it "sets the play" do
-          value = described_class.new(message: { play: "https://example.com/play.wav" }, hangup: true)
+          value = described_class.new(message: {play: "https://example.com/play.wav"}, hangup: true)
           expect(value.messages).to be_a(Twilio::Rails::Phone::Tree::MessageSet)
           expect(value.messages.length).to eq(1)
           expect(value.messages.first.play?).to be_truthy
@@ -129,7 +130,7 @@ RSpec.describe Twilio::Rails::Phone::Tree, type: :model do
         end
 
         it "sets the say" do
-          value = described_class.new(message: { say: "hello", voice: "julie" }, hangup: true)
+          value = described_class.new(message: {say: "hello", voice: "julie"}, hangup: true)
           expect(value.messages).to be_a(Twilio::Rails::Phone::Tree::MessageSet)
           expect(value.messages.length).to eq(1)
           expect(value.messages.first.say?).to be_truthy
@@ -138,19 +139,19 @@ RSpec.describe Twilio::Rails::Phone::Tree, type: :model do
         end
 
         it "lets say: be a proc" do
-          value = described_class.new(message: { say: Proc.new{} }, hangup: true)
+          value = described_class.new(message: {say: proc {}}, hangup: true)
           expect(value.messages).to be_a(Twilio::Rails::Phone::Tree::MessageSet)
           expect(value.messages.length).to eq(1)
         end
 
         it "lets play: be a proc" do
-          value = described_class.new(message: { play: Proc.new{} }, hangup: true)
+          value = described_class.new(message: {play: proc {}}, hangup: true)
           expect(value.messages).to be_a(Twilio::Rails::Phone::Tree::MessageSet)
           expect(value.messages.length).to eq(1)
         end
 
         it "lets message: be a proc" do
-          value = described_class.new(message: Proc.new{}, hangup: true)
+          value = described_class.new(message: proc {}, hangup: true)
           expect(value.messages).to be_a(Proc)
         end
       end
@@ -227,30 +228,30 @@ RSpec.describe Twilio::Rails::Phone::Tree, type: :model do
 
   describe Twilio::Rails::Phone::Tree::Message, type: :model do
     it "accepts only one of say/play/pause" do
-      expect{ described_class.new(say: "a", play: "a") }.to raise_error(Twilio::Rails::Phone::InvalidTreeError)
-      expect{ described_class.new(say: "a", pause: 1) }.to raise_error(Twilio::Rails::Phone::InvalidTreeError)
-      expect{ described_class.new(pause: 1, play: "a") }.to raise_error(Twilio::Rails::Phone::InvalidTreeError)
-      expect{ described_class.new(say: "a", pause: 1, play: "a") }.to raise_error(Twilio::Rails::Phone::InvalidTreeError)
+      expect { described_class.new(say: "a", play: "a") }.to raise_error(Twilio::Rails::Phone::InvalidTreeError)
+      expect { described_class.new(say: "a", pause: 1) }.to raise_error(Twilio::Rails::Phone::InvalidTreeError)
+      expect { described_class.new(pause: 1, play: "a") }.to raise_error(Twilio::Rails::Phone::InvalidTreeError)
+      expect { described_class.new(say: "a", pause: 1, play: "a") }.to raise_error(Twilio::Rails::Phone::InvalidTreeError)
     end
 
     it "accepts a block for say and no params" do
-      message = described_class.new() { }
+      message = described_class.new {}
       expect(message.value).to be_nil
       expect(message.say?).to be_truthy
     end
 
     it "accepts a block for say and say keyword" do
-      message = described_class.new(say: "hello") { }
+      message = described_class.new(say: "hello") {}
       expect(message.value).to eq("hello")
       expect(message.say?).to be_truthy
     end
 
     it "does not accept a block for play" do
-      expect{ described_class.new(play: "a") { } }.to raise_error(Twilio::Rails::Phone::InvalidTreeError)
+      expect { described_class.new(play: "a") {} }.to raise_error(Twilio::Rails::Phone::InvalidTreeError)
     end
 
     it "does not accept a block for pause" do
-      expect{ described_class.new(pause: 1) { } }.to raise_error(Twilio::Rails::Phone::InvalidTreeError)
+      expect { described_class.new(pause: 1) {} }.to raise_error(Twilio::Rails::Phone::InvalidTreeError)
     end
 
     it "accepts play as a string URL" do
@@ -276,7 +277,7 @@ RSpec.describe Twilio::Rails::Phone::Tree, type: :model do
     end
 
     it "accepts message as an array of hashes" do
-      value = described_class.new(message: [ { say: "hello" }, { say: "there"} ])
+      value = described_class.new(message: [{say: "hello"}, {say: "there"}])
       expect(value.first.value).to eq("hello")
       expect(value.first.say?).to be_truthy
       expect(value.last.value).to eq("there")
@@ -284,7 +285,7 @@ RSpec.describe Twilio::Rails::Phone::Tree, type: :model do
     end
 
     it "accepts message as an array of strings" do
-      value = described_class.new(message: [ "hello", "there" ])
+      value = described_class.new(message: ["hello", "there"])
       expect(value.first.value).to eq("hello")
       expect(value.first.say?).to be_truthy
       expect(value.last.value).to eq("there")
@@ -311,16 +312,16 @@ RSpec.describe Twilio::Rails::Phone::Tree, type: :model do
 
     it "does not accept message as an array of other things" do
       expect {
-        described_class.new(message: [ Object.new ])
+        described_class.new(message: [Object.new])
       }.to raise_error(Twilio::Rails::Phone::InvalidTreeError)
     end
 
     it "accepts message as an array of proc" do
-      expect(described_class.new(message: [Proc.new{}]).length).to eq(1)
+      expect(described_class.new(message: [proc {}]).length).to eq(1)
     end
 
     it "does not accept message as a hash" do
-      value = described_class.new(message: { say: "hello" })
+      value = described_class.new(message: {say: "hello"})
       expect(value.first.value).to eq("hello")
       expect(value.first.say?).to be_truthy
     end
@@ -338,7 +339,7 @@ RSpec.describe Twilio::Rails::Phone::Tree, type: :model do
     end
 
     it "accepts say as a proc" do
-      expect(described_class.new(say: Proc.new{}).length).to eq(1)
+      expect(described_class.new(say: proc {}).length).to eq(1)
     end
 
     it "accepts play as a string URL" do
@@ -354,29 +355,29 @@ RSpec.describe Twilio::Rails::Phone::Tree, type: :model do
     end
 
     it "accepts play as a proc" do
-      expect(described_class.new(play: Proc.new{}).length).to eq(1)
+      expect(described_class.new(play: proc {}).length).to eq(1)
     end
 
     it "accepts pause as a hash" do
-      value = described_class.new(message: { pause: 3 })
+      value = described_class.new(message: {pause: 3})
       expect(value.first.value).to eq(3)
       expect(value.first.pause?).to be(true)
     end
 
     it "accepts pause as a hash with a string" do
-      value = described_class.new(message: { pause: "3" })
+      value = described_class.new(message: {pause: "3"})
       expect(value.first.value).to eq(3)
       expect(value.first.pause?).to be(true)
     end
 
     it "accepts pause as an array" do
-      value = described_class.new(message: [ { pause: "356" } ])
+      value = described_class.new(message: [{pause: "356"}])
       expect(value.first.value).to eq(356)
       expect(value.first.pause?).to be(true)
     end
 
     it "accepts many pauses" do
-      value = described_class.new(message: [ { pause: 2 }, { pause: 3 } ])
+      value = described_class.new(message: [{pause: 2}, {pause: 3}])
       expect(value.first.value).to eq(2)
       expect(value.first.pause?).to be(true)
       expect(value.last.value).to eq(3)
@@ -384,13 +385,13 @@ RSpec.describe Twilio::Rails::Phone::Tree, type: :model do
     end
 
     it "does not accept more than one of message/say/play/pause" do
-      expect{ described_class.new(say: "a", play: "a") }.to raise_error(Twilio::Rails::Phone::InvalidTreeError)
-      expect{ described_class.new(say: "a", message: "a") }.to raise_error(Twilio::Rails::Phone::InvalidTreeError)
-      expect{ described_class.new(message: "a", play: "a") }.to raise_error(Twilio::Rails::Phone::InvalidTreeError)
-      expect{ described_class.new(message: "a", pause: 1) }.to raise_error(Twilio::Rails::Phone::InvalidTreeError)
-      expect{ described_class.new(play: "a", pause: 1) }.to raise_error(Twilio::Rails::Phone::InvalidTreeError)
-      expect{ described_class.new(say: "a", pause: 1) }.to raise_error(Twilio::Rails::Phone::InvalidTreeError)
-      expect{ described_class.new(message: "a",say: "a", play: "a", pause: 1) }.to raise_error(Twilio::Rails::Phone::InvalidTreeError)
+      expect { described_class.new(say: "a", play: "a") }.to raise_error(Twilio::Rails::Phone::InvalidTreeError)
+      expect { described_class.new(say: "a", message: "a") }.to raise_error(Twilio::Rails::Phone::InvalidTreeError)
+      expect { described_class.new(message: "a", play: "a") }.to raise_error(Twilio::Rails::Phone::InvalidTreeError)
+      expect { described_class.new(message: "a", pause: 1) }.to raise_error(Twilio::Rails::Phone::InvalidTreeError)
+      expect { described_class.new(play: "a", pause: 1) }.to raise_error(Twilio::Rails::Phone::InvalidTreeError)
+      expect { described_class.new(say: "a", pause: 1) }.to raise_error(Twilio::Rails::Phone::InvalidTreeError)
+      expect { described_class.new(message: "a", say: "a", play: "a", pause: 1) }.to raise_error(Twilio::Rails::Phone::InvalidTreeError)
     end
   end
 end

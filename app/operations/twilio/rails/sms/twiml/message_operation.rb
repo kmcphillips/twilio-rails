@@ -1,4 +1,5 @@
 # frozen_string_literal: true
+
 module Twilio
   module Rails
     module SMS
@@ -20,7 +21,7 @@ module Twilio
             if body.present?
               message = conversation.messages.build(
                 direction: "outbound",
-                body: body,
+                body: body
               )
 
               message.save!
@@ -32,11 +33,11 @@ module Twilio
                 )
               end
 
-              Twilio::Rails.config.logger.info("message_twiml: #{twiml_response.to_s}")
+              Twilio::Rails.config.logger.info("message_twiml: #{twiml_response}")
               twiml_response.to_s
             else
               Twilio::Rails.config.logger.info("resply is blank, not sending message in response")
-              Twilio::Rails.config.logger.info("message_twiml: #{twiml_response.to_s}")
+              Twilio::Rails.config.logger.info("message_twiml: #{twiml_response}")
 
               twiml = Twilio::TwiML::MessagingResponse.new
               twiml.to_s

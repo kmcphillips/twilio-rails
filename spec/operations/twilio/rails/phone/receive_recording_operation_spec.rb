@@ -1,5 +1,6 @@
 # frozen_string_literal: true
-require 'rails_helper'
+
+require "rails_helper"
 
 RSpec.describe Twilio::Rails::Phone::ReceiveRecordingOperation, type: :operation do
   include_examples "twilio phone API call"
@@ -19,8 +20,8 @@ RSpec.describe Twilio::Rails::Phone::ReceiveRecordingOperation, type: :operation
       "RecordingDuration" => "2",
       "RecordingChannels" => "1",
       "RecordingSource" => "RecordVerb",
-      "RecordingStartTime"=>"Thu, 06 Jun 2019 23:17:34 +0000",
-      "ErrorCode" => "0",
+      "RecordingStartTime" => "Thu, 06 Jun 2019 23:17:34 +0000",
+      "ErrorCode" => "0"
     }
   }
 
@@ -29,7 +30,7 @@ RSpec.describe Twilio::Rails::Phone::ReceiveRecordingOperation, type: :operation
       recording = nil
       expect {
         recording = described_class.call(phone_call_id: phone_call.id, response_id: response.id, params: params)
-      }.to change{ phone_call.reload.recordings.count }.by(1)
+      }.to change { phone_call.reload.recordings.count }.by(1)
       expect(response.reload.recording).to eq(recording)
     end
 
@@ -37,7 +38,7 @@ RSpec.describe Twilio::Rails::Phone::ReceiveRecordingOperation, type: :operation
       recording = nil
       expect {
         recording = described_class.call(phone_call_id: phone_call.id, response_id: response.id, params: params)
-      }.to have_enqueued_job(Twilio::Rails::Phone::AttachRecordingJob).with{ { recording_id: recording.id } }
+      }.to have_enqueued_job(Twilio::Rails::Phone::AttachRecordingJob).with { {recording_id: recording.id} }
     end
 
     context "with attach disabled" do

@@ -1,13 +1,13 @@
 require_relative "lib/twilio/rails/version"
 
 Gem::Specification.new do |spec|
-  spec.name        = "twilio-rails"
-  spec.version     = Twilio::Rails::VERSION
-  spec.licenses    = ["MIT"]
-  spec.authors     = ["Kevin McPhillips"]
-  spec.email       = ["github@kevinmcphillips.ca"]
-  spec.homepage    = "https://github.com/kmcphillips/twilio-rails"
-  spec.summary     = "A framework for building rich phone interactions in Rails using Twilio."
+  spec.name = "twilio-rails"
+  spec.version = Twilio::Rails::VERSION
+  spec.licenses = ["MIT"]
+  spec.authors = ["Kevin McPhillips"]
+  spec.email = ["github@kevinmcphillips.ca"]
+  spec.homepage = "https://github.com/kmcphillips/twilio-rails"
+  spec.summary = "A framework for building rich phone interactions in Rails using Twilio."
   spec.description = "A Rails engine that provides the framework to build complex phone interactions using the Twilio API."
 
   spec.metadata["homepage_uri"] = spec.homepage
@@ -32,4 +32,5 @@ Gem::Specification.new do |spec|
   spec.add_development_dependency "sqlite3"
   spec.add_development_dependency "yard"
   spec.add_development_dependency "redcarpet"
+  spec.add_development_dependency "standardrb"
 end

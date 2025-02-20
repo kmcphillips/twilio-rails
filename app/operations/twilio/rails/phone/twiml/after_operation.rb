@@ -1,4 +1,5 @@
 # frozen_string_literal: true
+
 module Twilio
   module Rails
     module Phone
@@ -27,7 +28,7 @@ module Twilio
               end
             end
 
-            Twilio::Rails.config.logger.info("after_twiml: #{twiml_response.to_s}")
+            Twilio::Rails.config.logger.info("after_twiml: #{twiml_response}")
             twiml_response.to_s
           end
         end

@@ -1,5 +1,6 @@
 # frozen_string_literal: true
-require 'rails_helper'
+
+require "rails_helper"
 
 RSpec.describe Twilio::Rails::Phone::BaseTree, type: :model do
   let(:described_subclass) do
@@ -58,7 +59,7 @@ RSpec.describe Twilio::Rails::Phone::BaseTree, type: :model do
 
       expect(prompt.messages.first.value).to eq("In the case that your favourite number is not available, please enter your second favourite number.")
       expect(prompt.gather.type).to eq(:digits)
-      expect(prompt.gather.args).to eq({ "number" => 1, "timeout" => 10 })
+      expect(prompt.gather.args).to eq({"number" => 1, "timeout" => 10})
       expect(prompt.after.proc).to be_present
     end
 
@@ -67,7 +68,7 @@ RSpec.describe Twilio::Rails::Phone::BaseTree, type: :model do
 
       expect(prompt.messages.call(nil)).to eq("Now, please state after the tone your reason for picking those numbers as your favourites.")
       expect(prompt.gather.type).to eq(:voice)
-      expect(prompt.gather.args).to eq({ "length" => 4, "profanity_filter" => false, "transcribe" => true })
+      expect(prompt.gather.args).to eq({"length" => 4, "profanity_filter" => false, "transcribe" => true})
       expect(prompt.after.hangup?).to be(true)
       expect(prompt.after.messages.first.value).to start_with("Thank you for your input!")
     end

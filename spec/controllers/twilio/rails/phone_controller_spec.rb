@@ -1,5 +1,6 @@
 # frozen_string_literal: true
-require 'rails_helper'
+
+require "rails_helper"
 
 RSpec.describe Twilio::Rails::PhoneController, type: :controller do
   include_examples "twilio phone API call"
@@ -33,10 +34,10 @@ RSpec.describe Twilio::Rails::PhoneController, type: :controller do
     let(:params) {
       {
         "AccountSid" => account_sid,
-        tree_name: :favourite_number,
+        :tree_name => :favourite_number,
         "CallSid" => call_sid,
         "Called" => from_number,
-        "From" => from_number,
+        "From" => from_number
       }
     }
 
@@ -63,9 +64,9 @@ RSpec.describe Twilio::Rails::PhoneController, type: :controller do
     let(:params) {
       {
         "AccountSid" => account_sid,
-        tree_name: :favourite_number,
+        :tree_name => :favourite_number,
         "CallSid" => call_sid,
-        "Called" => from_number,
+        "Called" => from_number
       }
     }
 
@@ -86,14 +87,14 @@ RSpec.describe Twilio::Rails::PhoneController, type: :controller do
     let(:controller_params) {
       params.merge(
         tree_name: :favourite_number,
-        response_id: phone_call_response.id.to_s,
+        response_id: phone_call_response.id.to_s
       )
     }
     let(:params) {
       {
         "AccountSid" => account_sid,
         "CallSid" => call_sid,
-        "Called" => from_number,
+        "Called" => from_number
       }
     }
 
@@ -115,14 +116,14 @@ RSpec.describe Twilio::Rails::PhoneController, type: :controller do
     let(:controller_params) {
       params.merge(
         tree_name: :favourite_number,
-        response_id: phone_call_response.id.to_s,
+        response_id: phone_call_response.id.to_s
       )
     }
     let(:params) {
       {
         "AccountSid" => account_sid,
         "CallSid" => call_sid,
-        "Called" => from_number,
+        "Called" => from_number
       }
     }
 
@@ -131,7 +132,7 @@ RSpec.describe Twilio::Rails::PhoneController, type: :controller do
         phone_call_id: phone_call.id,
         tree: tree,
         response_id: phone_call_response.id,
-        params: params,
+        params: params
       ).and_return(twiml)
       expect(Twilio::Rails::Phone::UpdateOperation).to receive(:call).with(phone_call_id: phone_call.id, params: params).and_return(phone_call)
       post :prompt_response, format: :xml, params: controller_params
@@ -144,7 +145,7 @@ RSpec.describe Twilio::Rails::PhoneController, type: :controller do
           "AccountSid" => account_sid,
           "CallSid" => call_sid,
           "Called" => from_number,
-          "SpeechResult" => "What is your favourite number?",
+          "SpeechResult" => "What is your favourite number?"
         }
       }
 
@@ -153,7 +154,7 @@ RSpec.describe Twilio::Rails::PhoneController, type: :controller do
           phone_call_id: phone_call.id,
           tree: tree,
           response_id: phone_call_response.id,
-          params: params,
+          params: params
         ).and_return(twiml)
         expect(Twilio::Rails::Phone::UpdateOperation).to receive(:call).with(phone_call_id: phone_call.id, params: params).and_return(phone_call)
         post :prompt_response, format: :xml, params: controller_params
@@ -173,14 +174,14 @@ RSpec.describe Twilio::Rails::PhoneController, type: :controller do
     let(:controller_params) {
       params.merge(
         tree_name: :favourite_number,
-        response_id: phone_call_response.id.to_s,
+        response_id: phone_call_response.id.to_s
       )
     }
     let(:params) {
       {
         "AccountSid" => account_sid,
         "CallSid" => call_sid,
-        "Called" => from_number,
+        "Called" => from_number
       }
     }
 
@@ -201,14 +202,14 @@ RSpec.describe Twilio::Rails::PhoneController, type: :controller do
   describe "POST#receive_response_recording" do
     let(:controller_params) {
       params.merge(
-        response_id: phone_call_response.id.to_s,
+        response_id: phone_call_response.id.to_s
       )
     }
     let(:params) {
       {
         "AccountSid" => account_sid,
         "CallSid" => call_sid,
-        "Called" => from_number,
+        "Called" => from_number
       }
     }
 
@@ -230,7 +231,7 @@ RSpec.describe Twilio::Rails::PhoneController, type: :controller do
       {
         "AccountSid" => account_sid,
         "CallSid" => call_sid,
-        "Called" => from_number,
+        "Called" => from_number
       }
     }
 
@@ -250,14 +251,14 @@ RSpec.describe Twilio::Rails::PhoneController, type: :controller do
   describe "POST#transcribe" do
     let(:controller_params) {
       params.merge(
-        response_id: phone_call_response.id.to_s,
+        response_id: phone_call_response.id.to_s
       )
     }
     let(:params) {
       {
         "AccountSid" => account_sid,
         "CallSid" => call_sid,
-        "Called" => from_number,
+        "Called" => from_number
       }
     }
 

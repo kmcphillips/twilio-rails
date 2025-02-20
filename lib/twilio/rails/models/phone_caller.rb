@@ -1,4 +1,5 @@
 # frozen_string_literal: true
+
 module Twilio
   module Rails
     module Models
@@ -45,11 +46,11 @@ module Twilio
 
         # @return [Array<Twilio::Rails::Models::SmsConversation>] All SMS conversations for the phone caller.
         def sms_conversations
-          Twilio::Rails.config.sms_conversation_class.phone_number(self.phone_number)
+          Twilio::Rails.config.sms_conversation_class.phone_number(phone_number)
         end
 
         # Returns the digits as a `String` as entered through the keypad during a phone call as `gather:`. Returns
-        #`nil` if the response is not found, if the response has no digits, or if the response was a timeout. Can
+        # `nil` if the response is not found, if the response has no digits, or if the response was a timeout. Can
         # include both `*` and `#` characters if the caller pressed them.
         #
         # @param prompt [String, Symbol] The prompt handle to query.

@@ -1,4 +1,5 @@
 # frozen_string_literal: true
+
 Twilio::Rails.setup do |config|
   # These are the Twilio account credentials used to access the Twilio API. These should likely be configured in the
   # encrypted Rails credentials or loaded from an ENV variable.

@@ -1,5 +1,6 @@
 # frozen_string_literal: true
-require 'rails_helper'
+
+require "rails_helper"
 
 RSpec.describe Twilio::Rails::SMS::UpdateMessageOperation, type: :operation do
   include_examples "twilio SMS API call"
@@ -15,7 +16,7 @@ RSpec.describe Twilio::Rails::SMS::UpdateMessageOperation, type: :operation do
       "MessageSid" => sms_sid,
       "AccountSid" => account_sid,
       "From" => from_number,
-      "ApiVersion" => "2010-04-01",
+      "ApiVersion" => "2010-04-01"
     }
   }
 

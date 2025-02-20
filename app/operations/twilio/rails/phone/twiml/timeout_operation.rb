@@ -1,4 +1,5 @@
 # frozen_string_literal: true
+
 module Twilio
   module Rails
     module Phone
@@ -20,12 +21,12 @@ module Twilio
                 twiml.hangup
               end
 
-              Twilio::Rails.config.logger.info("final timeout on phone_call##{ phone_call.id }")
-              Twilio::Rails.config.logger.info("timeout_twiml: #{twiml_response.to_s}")
+              Twilio::Rails.config.logger.info("final timeout on phone_call##{phone_call.id}")
+              Twilio::Rails.config.logger.info("timeout_twiml: #{twiml_response}")
               twiml_response.to_s
             else
               prompt = tree.prompts[response.prompt_handle]
-              raise Twilio::Rails::Phone::InvalidTreeError, "cannot find #{ response.prompt_handle } in #{ tree.name }" unless prompt
+              raise Twilio::Rails::Phone::InvalidTreeError, "cannot find #{response.prompt_handle} in #{tree.name}" unless prompt
 
               after = prompt.after
               after = Twilio::Rails::Phone::Tree::After.new(after.proc.call(response)) if after.proc
@@ -36,7 +37,7 @@ module Twilio
 
           private
 
-          def final_timeout?(last_response, count: )
+          def final_timeout?(last_response, count:)
             responses = phone_call.responses.final_timeout_check(count: count, prompt_handle: last_response.prompt_handle)
 
             responses.count == count && responses.all? { |r| r.timeout? }

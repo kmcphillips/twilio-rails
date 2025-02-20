@@ -1,4 +1,5 @@
 # frozen_string_literal: true
+
 module Twilio
   module Rails
     module Models
@@ -19,11 +20,11 @@ module Twilio
           delegate :phone_caller, to: :phone_call
 
           scope :completed, -> { where(timeout: false) }
-          scope :recent_transcriptions, ->(number=5) { completed.order(created_at: :desc).where.not(transcription: nil).limit(number) }
+          scope :recent_transcriptions, ->(number = 5) { completed.order(created_at: :desc).where.not(transcription: nil).limit(number) }
           scope :final_timeout_check, ->(count:, prompt_handle:) {
             prompt(prompt_handle).order(created_at: :desc).limit(count)
           }
-          scope :tree, ->(name) { joins(:phone_call).where(phone_calls: { tree_name: name }) }
+          scope :tree, ->(name) { joins(:phone_call).where(phone_calls: {tree_name: name}) }
           scope :prompt, ->(prompt_handle) { where(prompt_handle: prompt_handle) }
           scope :in_order, -> { reorder(created_at: :asc) }
           scope :transcribed, -> { where(transcribed: true) }
@@ -37,9 +38,9 @@ module Twilio
         # @param prompt [String, Symbol, Array] The prompt handle or an array of them.
         # @return [true, false] true if the response is for the given prompt and tree.
         def is?(tree:, prompt:)
-          trees = Array(tree).map { |t| t.is_a?(Twilio::Rails::Phone::Tree) ? t.name : t.to_s }
+          Array(tree).map { |t| t.is_a?(Twilio::Rails::Phone::Tree) ? t.name : t.to_s }
 
-          from?(tree: tree) && Array(prompt).map(&:to_s).reject(&:blank?).include?(self.prompt_handle)
+          from?(tree: tree) && Array(prompt).map(&:to_s).reject(&:blank?).include?(prompt_handle)
         end
 
         # Checks if the response is for a given tree or trees or tree names.
@@ -49,7 +50,7 @@ module Twilio
         def from?(tree:)
           trees = Array(tree).map { |t| t.is_a?(Twilio::Rails::Phone::Tree) ? t.name : t.to_s }
 
-          trees.include?(self.phone_call.tree_name)
+          trees.include?(phone_call.tree_name)
         end
 
         # Returns the digits as an `Integer` entered through the keypad during a phone call as `gather:`. Returns `nil`
@@ -59,7 +60,7 @@ module Twilio
         # @return [Integer, nil] The digits as entered by the caller or `nil` if not found or not present.
         def integer_digits
           return nil unless digits.present?
-          return nil unless digits =~ /\A[0-9]+\Z/
+          return nil unless /\A[0-9]+\Z/.match?(digits)
           digits.to_i
         end
 

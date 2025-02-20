@@ -1,5 +1,6 @@
 # frozen_string_literal: true
-require 'rails_helper'
+
+require "rails_helper"
 
 RSpec.describe Twilio::Rails::SMS::CreateOperation, type: :operation do
   include_examples "twilio SMS API call"
@@ -26,7 +27,7 @@ RSpec.describe Twilio::Rails::SMS::CreateOperation, type: :operation do
       "MessageSid" => sms_sid,
       "AccountSid" => account_sid,
       "From" => from_number,
-      "ApiVersion" => "2010-04-01",
+      "ApiVersion" => "2010-04-01"
     }
   }
 
@@ -37,9 +38,9 @@ RSpec.describe Twilio::Rails::SMS::CreateOperation, type: :operation do
     end
 
     it "creates a call record" do
-      expect{
+      expect {
         described_class.call(params: params)
-      }.to change{ sms_conversation_class.count }.by(1)
+      }.to change { sms_conversation_class.count }.by(1)
       conversation = sms_conversation_class.last
       expect(conversation.number).to eq(to_number)
       expect(conversation.from_number).to eq(from_number)

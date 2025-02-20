@@ -1,4 +1,4 @@
-require 'rails_helper'
+require "rails_helper"
 
 RSpec.describe Twilio::Rails::Models::PhoneCaller, type: :model do
   let(:phone_caller) { create(:phone_caller) }
@@ -177,7 +177,6 @@ RSpec.describe Twilio::Rails::Models::PhoneCaller, type: :model do
     it "returns empty array of nothing found" do
       expect(phone_caller.outbound_calls_for(:invalid)).to eq([])
     end
-
   end
 
   describe "#response_digits" do

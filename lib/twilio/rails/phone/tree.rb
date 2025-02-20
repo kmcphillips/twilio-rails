@@ -1,4 +1,5 @@
 # frozen_string_literal: true
+
 module Twilio
   module Rails
     module Phone
@@ -24,14 +25,14 @@ module Twilio
         #
         # @return [String] The outbound URL for the phone tree.
         def outbound_url
-          "#{ ::Twilio::Rails.config.host }#{ ::Twilio::Rails::Engine.routes.url_helpers.phone_outbound_path(tree_name: name, format: :xml) }"
+          "#{::Twilio::Rails.config.host}#{::Twilio::Rails::Engine.routes.url_helpers.phone_outbound_path(tree_name: name, format: :xml)}"
         end
 
         # The fully qualified URL for the tree used by Twilio to be configured in the dashboard.
         #
         # @return [String] The inbound URL for the phone tree.
         def inbound_url
-          "#{ ::Twilio::Rails.config.host }#{ ::Twilio::Rails::Engine.routes.url_helpers.phone_inbound_path(tree_name: name, format: :xml) }"
+          "#{::Twilio::Rails.config.host}#{::Twilio::Rails::Engine.routes.url_helpers.phone_inbound_path(tree_name: name, format: :xml)}"
         end
 
         class Prompt
@@ -149,8 +150,8 @@ module Twilio
             raise Twilio::Rails::Phone::InvalidTreeError, "must only have one of say: play: pause:" if (@say && @play) || (@say && @pause) || (@play && @pause)
             raise Twilio::Rails::Phone::InvalidTreeError, "say: must be a string or proc" if @say && !(@say.is_a?(String) || @say.is_a?(Proc))
             raise Twilio::Rails::Phone::InvalidTreeError, "play: must be a string or proc" if @play && !(@play.is_a?(String) || @play.is_a?(Proc))
-            raise Twilio::Rails::Phone::InvalidTreeError, "play: be a valid url but is #{ @play }" if @play && @play.is_a?(String) && !@play.match(/^https?:\/\/.+/)
-            raise Twilio::Rails::Phone::InvalidTreeError, "pause: must be over zero but is #{ @pause }" if @pause && @pause <= 0
+            raise Twilio::Rails::Phone::InvalidTreeError, "play: be a valid url but is #{@play}" if @play && @play.is_a?(String) && !@play.match(/^https?:\/\/.+/)
+            raise Twilio::Rails::Phone::InvalidTreeError, "pause: must be over zero but is #{@pause}" if @pause && @pause <= 0
             raise Twilio::Rails::Phone::InvalidTreeError, "block is only valid for say:" if block_given? && (@play || @pause)
           end
 
@@ -183,7 +184,7 @@ module Twilio
             if set.is_a?(Hash)
               set = set.symbolize_keys
               if set.key?(:message)
-                raise Twilio::Rails::Phone::InvalidTreeError, "MessageSet should never receive a hash with any key other than :message but received #{ set }" if set.keys != [:message]
+                raise Twilio::Rails::Phone::InvalidTreeError, "MessageSet should never receive a hash with any key other than :message but received #{set}" if set.keys != [:message]
                 set = set[:message]
               end
             end
@@ -201,7 +202,7 @@ module Twilio
               elsif message.is_a?(Hash)
                 @messages << Twilio::Rails::Phone::Tree::Message.new(**message.symbolize_keys)
               else
-                raise Twilio::Rails::Phone::InvalidTreeError, "message value #{ message } is not valid"
+                raise Twilio::Rails::Phone::InvalidTreeError, "message value #{message} is not valid"
               end
             end
           end

@@ -1,4 +1,5 @@
 # frozen_string_literal: true
+
 FactoryBot.define do
   factory :phone_caller, class: ::Twilio::Rails.config.phone_caller_class do
     phone_number { "+16135551234" }

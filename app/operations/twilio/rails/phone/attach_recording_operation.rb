@@ -1,4 +1,5 @@
 # frozen_string_literal: true
+
 module Twilio
   module Rails
     module Phone
@@ -12,7 +13,7 @@ module Twilio
 
           if !recording.audio.attached?
             if recording.url.blank?
-              raise Twilio::Rails::Phone::Error, "[AttachRecordingOperation] Has a blank URL and cannot be fetched recording_id=#{ recording.id }"
+              raise Twilio::Rails::Phone::Error, "[AttachRecordingOperation] Has a blank URL and cannot be fetched recording_id=#{recording.id}"
             end
 
             response = Faraday.get(recording.url)
@@ -21,7 +22,7 @@ module Twilio
               recording.audio.attach(io: StringIO.new(response.body), filename: "recording.wav", content_type: "audio/wav")
               recording.save!
             else
-              raise Twilio::Rails::Phone::Error, "[AttachRecordingOperation] Failed to fetch recording recording_id=#{ recording.id } HTTP#{ response.status } from #{ recording.url }"
+              raise Twilio::Rails::Phone::Error, "[AttachRecordingOperation] Failed to fetch recording recording_id=#{recording.id} HTTP#{response.status} from #{recording.url}"
             end
           end
         end

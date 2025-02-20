@@ -1,4 +1,5 @@
 # frozen_string_literal: true
+
 module Twilio
   module Rails
     class PhoneController < ApplicationController
@@ -9,13 +10,11 @@ module Twilio
       def inbound
         respond_to do |format|
           format.xml do
-            begin
-              phone_call = Twilio::Rails::Phone::CreateOperation.call(params: params_hash, tree: tree)
-            rescue
-              render xml: Twilio::Rails::Phone::Twiml::InvalidPhoneNumberOperation.call(tree: tree)
-            else
-              render xml: Twilio::Rails::Phone::Twiml::GreetingOperation.call(phone_call_id: phone_call.id, tree: tree)
-            end
+            phone_call = Twilio::Rails::Phone::CreateOperation.call(params: params_hash, tree: tree)
+          rescue
+            render xml: Twilio::Rails::Phone::Twiml::InvalidPhoneNumberOperation.call(tree: tree)
+          else
+            render xml: Twilio::Rails::Phone::Twiml::GreetingOperation.call(phone_call_id: phone_call.id, tree: tree)
           end
         end
       end
@@ -75,7 +74,7 @@ module Twilio
         respond_to do |format|
           format.xml do
             phone_call = Twilio::Rails::Phone::FindOperation.call(params: params_hash)
-            phone_call = Twilio::Rails::Phone::UpdateOperation.call(phone_call_id: phone_call.id, params: params_hash)
+            Twilio::Rails::Phone::UpdateOperation.call(phone_call_id: phone_call.id, params: params_hash)
 
             head :ok
           end

@@ -1,4 +1,5 @@
 # frozen_string_literal: true
+
 FactoryBot.define do
   factory :response, class: ::Twilio::Rails.config.response_class do
     prompt_handle { "favourite_number" }

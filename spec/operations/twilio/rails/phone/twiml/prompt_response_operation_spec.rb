@@ -1,5 +1,6 @@
 # frozen_string_literal: true
-require 'rails_helper'
+
+require "rails_helper"
 
 RSpec.describe Twilio::Rails::Phone::Twiml::PromptResponseOperation, type: :operation do
   let(:phone_call) { create(:phone_call, tree_name: tree.name) }
@@ -7,7 +8,7 @@ RSpec.describe Twilio::Rails::Phone::Twiml::PromptResponseOperation, type: :oper
 
   context "with FavouriteNumberTree" do
     let(:tree) { Twilio::Rails.config.phone_trees.for(:favourite_number) }
-    let(:params) { { "Digits" => "3" } }
+    let(:params) { {"Digits" => "3"} }
 
     it "outputs twiml" do
       expected = <<~EXPECTED

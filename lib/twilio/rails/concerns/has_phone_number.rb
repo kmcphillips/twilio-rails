@@ -1,4 +1,5 @@
 # frozen_string_literal: true
+
 module Twilio
   module Rails
     # Provides validations and reformatting on validation for a model that has an attribute `phone_number` that is
@@ -7,7 +8,7 @@ module Twilio
       extend ActiveSupport::Concern
 
       included do
-        validates :phone_number, uniqueness: { allow_blank: true, message: "already exists" }
+        validates :phone_number, uniqueness: {allow_blank: true, message: "already exists"}
 
         before_validation :reformat_phone_number
       end

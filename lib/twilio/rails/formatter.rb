@@ -1,4 +1,5 @@
 # frozen_string_literal: true
+
 module Twilio
   module Rails
     module Formatter
@@ -19,8 +20,8 @@ module Twilio
 
         if string
           string = string.gsub(/[^0-9]/, "")
-          string = "1#{ string }" unless string.starts_with?("1")
-          string = "+#{ string }"
+          string = "1#{string}" unless string.starts_with?("1")
+          string = "+#{string}"
           string = nil unless valid_north_american_phone_number?(string)
         end
 
@@ -47,7 +48,7 @@ module Twilio
         phone_number = coerce_to_valid_phone_number(phone_number)
         return "" unless phone_number
         matches = phone_number.match(PHONE_NUMBER_SEGMENTS_REGEX)
-        raise Twilio::Rails::Error, "[to_phone_number_url_param] Phone number marked as valid but could not capture. I made a bad regex: #{ phone_number }" unless matches
+        raise Twilio::Rails::Error, "[to_phone_number_url_param] Phone number marked as valid but could not capture. I made a bad regex: #{phone_number}" unless matches
         matches.captures.join("-")
       end
 
@@ -61,8 +62,8 @@ module Twilio
         coerced_phone_number = coerce_to_valid_phone_number(phone_number)
         if coerced_phone_number
           matches = coerced_phone_number.match(PHONE_NUMBER_SEGMENTS_REGEX)
-          raise Twilio::Rails::Error, "[display_phone_number] Phone number marked as valid but could not capture. I made a bad regex: #{ phone_number }" unless matches
-          "(#{ matches.captures[0] }) #{ matches.captures[1] } #{ matches.captures[2] }"
+          raise Twilio::Rails::Error, "[display_phone_number] Phone number marked as valid but could not capture. I made a bad regex: #{phone_number}" unless matches
+          "(#{matches.captures[0]}) #{matches.captures[1]} #{matches.captures[2]}"
         else
           phone_number
         end
@@ -85,7 +86,7 @@ module Twilio
         [
           city.presence&.titleize,
           province,
-          country_name,
+          country_name
         ].reject(&:blank?).join(", ")
       end
     end

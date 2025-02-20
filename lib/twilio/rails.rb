@@ -8,7 +8,7 @@ require "twilio/rails/engine"
 module Twilio
   module Rails
     # Base error class for all errors raised by the Twilio::Rails gem. Every error is a subclass of this one.
-    class Error < StandardError ; end
+    class Error < StandardError; end
   end
 end
 
@@ -40,7 +40,6 @@ require "twilio/rails/models/message"
 module Twilio
   module Rails
     class << self
-
       # Read and write accessible configuration object. In most cases this should only be read after the app has been
       # initialized. See {Twilio::Rails::Configuration} for more information.
       #

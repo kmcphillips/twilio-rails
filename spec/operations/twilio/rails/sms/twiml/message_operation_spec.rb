@@ -1,5 +1,6 @@
 # frozen_string_literal: true
-require 'rails_helper'
+
+require "rails_helper"
 
 RSpec.describe Twilio::Rails::SMS::Twiml::MessageOperation, type: :operation do
   include_examples "twilio SMS API call"
@@ -26,7 +27,7 @@ RSpec.describe Twilio::Rails::SMS::Twiml::MessageOperation, type: :operation do
       "MessageSid" => sms_sid,
       "AccountSid" => account_sid,
       "From" => from_number,
-      "ApiVersion" => "2010-04-01",
+      "ApiVersion" => "2010-04-01"
     }
   }
   it "outputs twiml" do
@@ -35,7 +36,7 @@ RSpec.describe Twilio::Rails::SMS::Twiml::MessageOperation, type: :operation do
     expected = <<~EXPECTED
       <?xml version="1.0" encoding="UTF-8"?>
       <Response>
-      <Message action=\"/twilio_mount_location/sms/status/#{message.id + 2}\">oh, hello</Message>
+      <Message action="/twilio_mount_location/sms/status/#{message.id + 2}">oh, hello</Message>
       </Response>
     EXPECTED
     expect {

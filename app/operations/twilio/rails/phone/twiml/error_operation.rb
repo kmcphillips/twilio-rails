@@ -1,4 +1,5 @@
 # frozen_string_literal: true
+
 module Twilio
   module Rails
     module Phone
@@ -12,7 +13,7 @@ module Twilio
             add_messages(twiml, message_set: messages, response: phone_call.responses.build) if messages
             twiml.hangup
 
-            Twilio::Rails.config.logger.info("error_twiml: #{twiml.to_s}")
+            Twilio::Rails.config.logger.info("error_twiml: #{twiml}")
             twiml.to_s
           end
         end

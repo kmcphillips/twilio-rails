@@ -1,5 +1,6 @@
 # frozen_string_literal: true
-require 'rails_helper'
+
+require "rails_helper"
 
 RSpec.describe Twilio::Rails::Phone::Twiml::GreetingOperation, type: :operation do
   let(:phone_call) { create(:phone_call, tree_name: tree.name) }

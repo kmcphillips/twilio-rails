@@ -1,4 +1,5 @@
 # frozen_string_literal: true
+
 module Twilio
   module Rails
     class ApplicationOperation < ActiveOperation::Base
@@ -8,7 +9,7 @@ module Twilio
         executable.call
         @operation_runtime_stop = Process.clock_gettime(Process::CLOCK_MONOTONIC)
 
-        ::Twilio::Rails.config.logger.tagged(self.class) { |l| l.info("execution time #{ instance.operation_runtime_seconds } seconds")}
+        ::Twilio::Rails.config.logger.tagged(self.class) { |l| l.info("execution time #{instance.operation_runtime_seconds} seconds") }
       end
 
       protected
