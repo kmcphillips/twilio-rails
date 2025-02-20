@@ -209,7 +209,7 @@ module Twilio
         raise Error, "`yes_responses` must be an array" unless @yes_responses.is_a?(Array)
         raise Error, "`no_responses` must be an array" unless @no_responses.is_a?(Array)
         raise Error, "`host` #{@host.inspect} is not a valid URL of the format https://example.com without the trailing slash" unless /\Ahttps?:\/\/[a-z0-9\-\.:]+\Z/i.match?(@host)
-        raise Error, "`controller_http_methods` must be an array containing one or both of `:get` and `:post` but was #{@controller_http_methods.inspect}" unless @controller_http_methods.is_a?(Array) && @controller_http_methods.sort == [:get, :post].sort || @controller_http_methods == [:get] || @controller_http_methods == [:post]
+        raise Error, "`controller_http_methods` must be an array containing one or both of `:get` and `:post` but was #{@controller_http_methods.inspect}" unless [[:get], [:post], [:get, :post], [:post, :get]].any? { |v| @controller_http_methods == v }
         raise Error, "`include_phone_macros` must be a module, but received #{@include_phone_macros.inspect}" unless @include_phone_macros.all? { |mod| mod.is_a?(Module) }
         nil
       end

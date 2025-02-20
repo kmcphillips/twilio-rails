@@ -137,7 +137,7 @@ module Twilio
         end
 
         class Message
-          attr_reader :value, :voice, :block
+          attr_reader :voice, :block
 
           def initialize(say: nil, play: nil, pause: nil, voice: nil, &block)
             @say = say.presence
