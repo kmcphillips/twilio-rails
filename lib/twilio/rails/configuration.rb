@@ -359,7 +359,6 @@ module Twilio
           name = value.tree_name
           raise(error_class, "Tree name cannot be blank") unless name.present?
           raise(error_class, "Tree name '#{ name }' is already registered") if @registry[name]
-          klass = klass.constantize if klass.is_a?(String)
           @registry[name] = value.tree
         end
 
