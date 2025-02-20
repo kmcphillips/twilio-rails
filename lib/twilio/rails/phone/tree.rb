@@ -150,7 +150,7 @@ module Twilio
             raise Twilio::Rails::Phone::InvalidTreeError, "must only have one of say: play: pause:" if (@say && @play) || (@say && @pause) || (@play && @pause)
             raise Twilio::Rails::Phone::InvalidTreeError, "say: must be a string or proc" if @say && !(@say.is_a?(String) || @say.is_a?(Proc))
             raise Twilio::Rails::Phone::InvalidTreeError, "play: must be a string or proc" if @play && !(@play.is_a?(String) || @play.is_a?(Proc))
-            raise Twilio::Rails::Phone::InvalidTreeError, "play: be a valid url but is #{@play}" if @play && @play.is_a?(String) && !@play.match(/^https?:\/\/.+/)
+            raise Twilio::Rails::Phone::InvalidTreeError, "play: be a valid url but is #{@play}" if @play&.is_a?(String) && !@play.match(/^https?:\/\/.+/)
             raise Twilio::Rails::Phone::InvalidTreeError, "pause: must be over zero but is #{@pause}" if @pause && @pause <= 0
             raise Twilio::Rails::Phone::InvalidTreeError, "block is only valid for say:" if block_given? && (@play || @pause)
           end

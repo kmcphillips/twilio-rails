@@ -35,7 +35,7 @@ module Twilio
         # @return [String] the digits joined with commas.
         def digits(num)
           return "" if num.blank?
-          num.to_s.split("").join(", ")
+          num.to_s.chars.join(", ")
         end
 
         # Pause for a number of seconds, defaults to 1 second. Useful when putting space between segments of speech.

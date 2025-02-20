@@ -54,7 +54,7 @@ module Twilio
       end
 
       def spam?
-        Twilio::Rails.config.spam_filter && Twilio::Rails.config.spam_filter.call(params)
+        Twilio::Rails.config.spam_filter&.call(params)
       end
 
       def params_hash

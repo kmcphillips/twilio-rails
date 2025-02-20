@@ -14,7 +14,7 @@ module Twilio
             Twilio::Rails.config.logger.tagged(self.class) { |l| l.warn("Skipping duplicate unanswered call job") }
           else
             phone_call.update!(unanswered: true)
-            phone_call.tree.unanswered_call.call(phone_call) if phone_call.tree.unanswered_call
+            phone_call.tree.unanswered_call&.call(phone_call)
           end
         end
       end

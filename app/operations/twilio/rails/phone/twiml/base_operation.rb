@@ -31,7 +31,7 @@ module Twilio
                 value = message.value
                 value = message.value.call(response) if message.value.is_a?(Proc)
                 twiml.say(voice: message.voice || voice, message: value) do |say|
-                  message.block.call(say) if message.block
+                  message.block&.call(say)
                 end
               elsif message.play?
                 value = message.value
