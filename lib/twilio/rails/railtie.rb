@@ -13,6 +13,10 @@ module Twilio
         # TODO: This should work but it does not. I think maybe it happens too late? The same line works if you add it directly to the `application.rb` of the app. It is needed for dev mode.
         # application.config.hosts << Twilio::Rails.config.host_domain
       end
+
+      initializer "twilio_rails.deprecator" do |app|
+        app.deprecators[:twilio_rails] = Twilio::Rails.deprecator
+      end
     end
   end
 end

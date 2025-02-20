@@ -9,4 +9,10 @@ RSpec.describe Twilio::Rails do
       expect(described_class.config).to eq(described_class.config)
     end
   end
+
+  describe ".deprecator" do
+    it "returns the deprecator" do
+      expect(described_class.deprecator).to be_a(ActiveSupport::Deprecation)
+    end
+  end
 end

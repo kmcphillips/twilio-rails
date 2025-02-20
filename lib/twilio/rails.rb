@@ -48,6 +48,14 @@ module Twilio
         @config ||= ::Twilio::Rails::Configuration.new
       end
 
+      # See the ActiveSupport::Deprecation documentation:
+      # https://api.rubyonrails.org/classes/ActiveSupport/Deprecation.html
+      #
+      # @return [ActiveSupport::Deprecation] the deprecator for the engine.
+      def deprecator
+        @deprecator ||= ActiveSupport::Deprecation.new("2.0", "Twilio::Rails")
+      end
+
       # Called in the `config/initializers/twilio_rails.rb` file to configure the engine. This yields the {.config}
       # object above and then calls {Twilio::Rails::Configuration#validate!} to ensure the configuration is valid.
       #
