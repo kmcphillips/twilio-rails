@@ -20,14 +20,6 @@ module Twilio
         true
       end
 
-      def valid_north_american_phone_number?
-        Twilio::Rails.deprecator.warn(<<~DEPRECATION.strip)
-          valid_north_american_phone_number? is deprecated and will be removed in the next major version.
-          Use valid_phone_number? instead. The configured phone_number_formatter can manage the region of the phone number.
-        DEPRECATION
-        Twilio::Rails::PhoneNumberFormatter.valid?(phone_number)
-      end
-
       def valid_phone_number?
         Twilio::Rails::PhoneNumberFormatter.valid?(phone_number)
       end

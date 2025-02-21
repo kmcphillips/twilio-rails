@@ -62,24 +62,6 @@ RSpec.describe Twilio::Rails::Models::PhoneCaller, type: :model do
         expect(phone_caller.phone_number).to eq("3334444")
         expect(phone_caller.valid_phone_number?).to be(false)
       end
-
-      context "valid_north_american_phone_number?" do
-        it "is deprecated with valid number" do
-          expect {
-            phone_caller.phone_number = "2223334444"
-            expect(phone_caller).to be_valid
-            expect(phone_caller.valid_north_american_phone_number?).to be(true)
-          }.to output(/DEPRECATION WARNING/).to_stderr
-        end
-
-        it "is deprecated with invalid number" do
-          expect {
-            phone_caller.phone_number = "potato"
-            expect(phone_caller).to be_valid
-            expect(phone_caller.valid_north_american_phone_number?).to be(false)
-          }.to output(/DEPRECATION WARNING/).to_stderr
-        end
-      end
     end
 
     it "is invalid when not unique" do
