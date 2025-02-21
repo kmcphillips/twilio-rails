@@ -13,12 +13,10 @@ The [`twilio-rails-example`](https://github.com/kmcphillips/twilio-rails-example
 
 * **🇨🇦 Calling from Canada:** 📞 (204) 800-7772
 * **🇺🇸 Calling from the US:** 📞 (631) 800-7772
-* **Internationally:** [Sorry, not yet supported](https://github.com/kmcphillips/twilio-rails#limitations-and-known-issues)
 
 There is also a more fun but less cleanly organized [`dial-a-haiku`](https://github.com/kmcphillips/dial-a-haiku) running here:
 * **🇨🇦 Calling from Canada:** 📞 (249) 444-2458 / (249)44-HAIKU
 * **🇺🇸 Calling from the US:** 📞 (341) 444-2458 / (341)44-HAIKU
-* **Internationally:** [Sorry, not yet supported](https://github.com/kmcphillips/twilio-rails#limitations-and-known-issues)
 
 
 ## Documentation
@@ -117,7 +115,26 @@ An example Rails app demonstrating the framework is available at [`twilio-rails-
 
 * **🇨🇦 Calling from Canada:** 📞 (204) 800-7772
 * **🇺🇸 Calling from the US:** 📞 (631) 800-7772
-* **Internationally:** [Sorry, not yet supported](https://github.com/kmcphillips/twilio-rails#limitations-and-known-issues)
+
+
+### Notes on international phone numbers
+
+> **Warning**
+> This change is breaking on 2.0 so you should understand this difference if you are upgrading from 1.x.
+
+Previous to version 2.0 this gem was limited to 10 digit North American phone numbers only. As a result there were some assumptions and limitations that are no longer valid. Most importantly that a phone number with 10 digits was assumed to be valid, but now is required to have the `1` prefix to specify the valid North American country code.
+
+The gem now uses the [`phonelib`](https://github.com/daddyz/phonelib) gem to parse and validate phone numbers which is based on the Google `libphonenumber` library. This should now be valid for any number. (If it is not, open an issue!)
+
+Phone numbers are now formatted and stored in the [E.164 format](https://en.wikipedia.org/wiki/E.164). This is the international standard for phone numbers, and what Twilio uses internally.
+
+You can force the pre 2.0 behavior by setting the initializer to use the legacy formatter:
+
+```ruby
+config.phone_number_formatter = Twilio::Rails::PhoneNumberFormatter::NorthAmerica.new
+```
+
+This can help with upgrading but will be removed eventually. (Because it is objectively wrong in a few ways, but I have learned lots along the way.)
 
 
 ## How it works
@@ -391,9 +408,8 @@ Anything not covered in this documentation is probably documented on the classes
 
 This framework was extracted from a larger project. There are some assumptions built in that are limitations of the current implementation. Please feel free to PR improvements! But for now, known limitations are:
 
-* Only North American phone numbers are supported, 1 plus 10 digits (`+155566677777`).
-  * If a phone call whose number is not of the above format is received it is not even persisted or handled.
-* Some North American assumptions of "day" are probably hidden in a couple places.
+* I don't have any reasonable way to test with many phone numbers from many regions, so there are very probably bugs that affect numbers outside of North America.
+* If a phone call whose phone number is not valid according to the `phone_number_formatter` is received it is not even persisted or handled.
 * Only production tested with MySQL and SQLite, but should work with Postgres. Assumes `utf8mb4` encoding in MySQL, but the migration does not specify it in order to support other DBs.
 * Only production tested with Sidekiq, but any ActiveJob provider should work.
 * There is no support for domain level events or observers. This means hooks need to be implemented using active record model callbacks, which is opaque, fragile, and confusing. In future the framework could define and trigger named events based on lifecycle.
