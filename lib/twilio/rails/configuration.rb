@@ -37,6 +37,7 @@ module Twilio
         end
         @controller_http_methods = [:get, :post]
         @include_phone_macros = []
+        @phone_number_formatter = Twilio::Rails::PhoneNumberFormatter::NorthAmerica.new
       end
 
       # This is the phone number that will be used to send SMS messages or start Phone Calls. It must be first configured
@@ -184,6 +185,19 @@ module Twilio
         end
       end
 
+      # An instance of the class which will validate and format phone numbers. This is used internally to decide what
+      # phone numbers are valid, how to format them, how to parse them, how to display them, and what country assumptions
+      # to make.
+      #
+      # This class must implement four methods:
+      #   * coerce(string)
+      #   * valid?(string)
+      #   * to_param(string)
+      #   * display(string)
+      #
+      # @return [Object]
+      attr_accessor :phone_number_formatter
+
       # Flags that the configuration has been setup and should be validated and finalized.
       # If this is not called, the framework will not work, but the Railtie will not prevent
       # the application from starting.
@@ -211,6 +225,7 @@ module Twilio
         raise Error, "`host` #{@host.inspect} is not a valid URL of the format https://example.com without the trailing slash" unless /\Ahttps?:\/\/[a-z0-9\-\.:]+\Z/i.match?(@host)
         raise Error, "`controller_http_methods` must be an array containing one or both of `:get` and `:post` but was #{@controller_http_methods.inspect}" unless [[:get], [:post], [:get, :post], [:post, :get]].any? { |v| @controller_http_methods == v }
         raise Error, "`include_phone_macros` must be a module, but received #{@include_phone_macros.inspect}" unless @include_phone_macros.all? { |mod| mod.is_a?(Module) }
+        raise Error, "`phone_number_formatter` must be set" unless @phone_number_formatter
         nil
       end
 

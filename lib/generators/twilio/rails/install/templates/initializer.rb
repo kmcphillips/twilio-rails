@@ -59,6 +59,10 @@ Twilio::Rails.setup do |config|
   # the phone macros. Defaults to a list of common responses.
   # config.no_responses = ["no"]
 
+  # An instance of class that will be used to format phone numbers. Defaults to `Twilio::Rails::PhoneNumberFormatter::NorthAmerica`
+  # for now but in the next major version it will be set to a formatter that can handle all countries.
+  # config.phone_number_formatter = Twilio::Rails::PhoneNumberFormatter::NorthAmerica.new
+
   # The name of the model classes, as strings, that this application uses to represent the concepts stored in the DB.
   # The generators will generate the models with the default names below, but they can be changed as the application
   # may need.

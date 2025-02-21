@@ -22,7 +22,7 @@ module Twilio
           # @param phone_number_string [String, Twilio::Rails::PhoneNumber] The phone number to find the record.
           # @return [Twilio::Rails::Models::PhoneCaller, nil] The phone caller record or `nil` if not found.
           def for(phone_number_string)
-            phone_number = Twilio::Rails::Formatter.coerce_to_valid_phone_number(phone_number_string)
+            phone_number = Twilio::Rails::PhoneNumberFormatter.coerce(phone_number_string)
             find_by(phone_number: phone_number) if phone_number.present?
           end
         end

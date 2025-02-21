@@ -17,35 +17,35 @@ RSpec.describe Twilio::Rails::Models::PhoneCaller, type: :model do
       phone_caller.phone_number = "2223334444"
       expect(phone_caller).to be_valid
       expect(phone_caller.phone_number).to eq("+12223334444")
-      expect(phone_caller.valid_north_american_phone_number?).to be(true)
+      expect(phone_caller.valid_phone_number?).to be(true)
     end
 
     it "reformats the phone number before save if valid from 10 digits" do
       phone_caller.phone_number = "12223334444"
       expect(phone_caller).to be_valid
       expect(phone_caller.phone_number).to eq("+12223334444")
-      expect(phone_caller.valid_north_american_phone_number?).to be(true)
+      expect(phone_caller.valid_phone_number?).to be(true)
     end
 
     it "reformats the phone number before save if valid including the plus" do
       phone_caller.phone_number = "+12223334444"
       expect(phone_caller).to be_valid
       expect(phone_caller.phone_number).to eq("+12223334444")
-      expect(phone_caller.valid_north_american_phone_number?).to be(true)
+      expect(phone_caller.valid_phone_number?).to be(true)
     end
 
     it "reformats the phone number before save if valid including special characters" do
       phone_caller.phone_number = "(222) 333-4444"
       expect(phone_caller).to be_valid
       expect(phone_caller.phone_number).to eq("+12223334444")
-      expect(phone_caller.valid_north_american_phone_number?).to be(true)
+      expect(phone_caller.valid_phone_number?).to be(true)
     end
 
     it "handles reformatting number with 1" do
       phone_caller.phone_number = "12223334444"
       expect(phone_caller).to be_valid
       expect(phone_caller.phone_number).to eq("+12223334444")
-      expect(phone_caller.valid_north_american_phone_number?).to be(true)
+      expect(phone_caller.valid_phone_number?).to be(true)
     end
 
     context "with invalid phone number" do
@@ -53,21 +53,39 @@ RSpec.describe Twilio::Rails::Models::PhoneCaller, type: :model do
         phone_caller.phone_number = "abc 123"
         expect(phone_caller).to be_valid
         expect(phone_caller.phone_number).to eq("abc 123")
-        expect(phone_caller.valid_north_american_phone_number?).to be(false)
+        expect(phone_caller.valid_phone_number?).to be(false)
       end
 
       it "does not reformat before save if prefixed by a non-one digit" do
         phone_caller.phone_number = "72223334444"
         expect(phone_caller).to be_valid
         expect(phone_caller.phone_number).to eq("72223334444")
-        expect(phone_caller.valid_north_american_phone_number?).to be(false)
+        expect(phone_caller.valid_phone_number?).to be(false)
       end
 
       it "saves without reformatting 10 digits" do
         phone_caller.phone_number = "3334444"
         expect(phone_caller).to be_valid
         expect(phone_caller.phone_number).to eq("3334444")
-        expect(phone_caller.valid_north_american_phone_number?).to be(false)
+        expect(phone_caller.valid_phone_number?).to be(false)
+      end
+
+      context "valid_north_american_phone_number?" do
+        it "is deprecated with valid number" do
+          expect {
+            phone_caller.phone_number = "2223334444"
+            expect(phone_caller).to be_valid
+            expect(phone_caller.valid_north_american_phone_number?).to be(true)
+          }.to output(/DEPRECATION WARNING/).to_stderr
+        end
+
+        it "is deprecated with invalid number" do
+          expect {
+            phone_caller.phone_number = "potato"
+            expect(phone_caller).to be_valid
+            expect(phone_caller.valid_north_american_phone_number?).to be(false)
+          }.to output(/DEPRECATION WARNING/).to_stderr
+        end
       end
     end
 

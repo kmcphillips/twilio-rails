@@ -30,7 +30,7 @@ module Twilio
         # @return [Twilio::Rails::Models::SMSConversation] the SMS conversation that was created and sent.
         def execute
           return nil if messages.blank?
-          raise Twilio::Rails::SMS::Error, "from_number=#{from_number} is not a valid phone number" if from_number.present? && !Twilio::Rails::Formatter.coerce_to_valid_phone_number(from_number)
+          raise Twilio::Rails::SMS::Error, "from_number=#{from_number} is not a valid phone number" if from_number.present? && !Twilio::Rails::PhoneNumberFormatter.coerce(from_number)
 
           conversation = ::Twilio::Rails.config.sms_conversation_class.new(
             number: calculated_from_number,
@@ -85,7 +85,7 @@ module Twilio
 
         def calculated_from_number
           if from_number.present?
-            Twilio::Rails::Formatter.coerce_to_valid_phone_number(from_number)
+            Twilio::Rails::PhoneNumberFormatter.coerce(from_number)
           elsif phone_call
             phone_call.number
           else

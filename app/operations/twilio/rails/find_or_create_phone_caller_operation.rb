@@ -23,7 +23,7 @@ module Twilio
       private
 
       def valid_phone_number
-        Twilio::Rails::Formatter.coerce_to_valid_phone_number(phone_number)
+        Twilio::Rails::PhoneNumberFormatter.coerce(phone_number)
       end
     end
   end

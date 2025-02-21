@@ -9,6 +9,7 @@ RSpec.describe Twilio::Rails::Configuration do
   let(:account_sid) { "AC123" }
   let(:auth_token) { "auth_token_test" }
   let(:logger) { Logger.new(nil) }
+  let(:phone_number_formatter_class) { Twilio::Rails::PhoneNumberFormatters::NorthAmerica }
 
   before do
     config.setup!
@@ -76,6 +77,24 @@ RSpec.describe Twilio::Rails::Configuration do
         no_responses = ["NO"]
         config.no_responses = no_responses
         expect(config.no_responses).to eq(no_responses)
+      end
+    end
+
+    context "phone_number_formatter" do
+      it "defaults to the NorthAmerica formatter" do
+        expect(config.phone_number_formatter).to be_a(Twilio::Rails::PhoneNumberFormatter::NorthAmerica)
+      end
+
+      it "is invalid if nil" do
+        config.phone_number_formatter = nil
+        expect { config.validate! }.to raise_error(Twilio::Rails::Configuration::Error)
+      end
+
+      it "can be set to a custom formatter" do
+        klass = Class.new
+        config.phone_number_formatter = klass.new
+        config.validate!
+        expect(config.phone_number_formatter).to be_a(klass)
       end
     end
 

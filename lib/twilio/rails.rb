@@ -1,3 +1,4 @@
+require "forwardable"
 require "active_operation"
 require "twilio-ruby"
 require "faraday"
@@ -15,6 +16,8 @@ end
 require "twilio/rails/railtie"
 require "twilio/rails/configuration"
 require "twilio/rails/formatter"
+require "twilio/rails/phone_number_formatter"
+require "twilio/rails/phone_number_formatter/north_america"
 require "twilio/rails/phone_number"
 require "twilio/rails/client"
 

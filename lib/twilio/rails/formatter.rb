@@ -5,9 +5,6 @@ module Twilio
     module Formatter
       extend self
 
-      PHONE_NUMBER_REGEX = /\A\+1[0-9]{10}\Z/
-      PHONE_NUMBER_SEGMENTS_REGEX = /\A\+1([0-9]{3})([0-9]{3})([0-9]{4})\Z/
-
       # Takes in a string or a {Twilio::Rails::PhoneNumber} or something that responds to `to_s` and turns it into a
       # consistently formatted valid north american 10 digit phone number prefixed with 1 and plus. It uses the format
       # Twilio expects which is "+15555555555" or returns `nil` if it cannot be coerced.
@@ -15,17 +12,13 @@ module Twilio
       # @param string [String, Twilio::Rails::PhoneNumber, nil, Object] the input to turn into a phone number string.
       # @return [String, nil] the phone number string or nil.
       def coerce_to_valid_phone_number(string)
-        string = string.number if string.is_a?(Twilio::Rails::PhoneNumber)
-        string = string.to_s.presence
+        Twilio::Rails.deprecator.warn(<<~DEPRECATION.strip)
+          Twilio::Rails::Formatter#coerce_to_valid_phone_number(s) is deprecated and will be removed in the next major version.
 
-        if string
-          string = string.gsub(/[^0-9]/, "")
-          string = "1#{string}" unless string.starts_with?("1")
-          string = "+#{string}"
-          string = nil unless valid_north_american_phone_number?(string)
-        end
-
-        string
+          Set Twilio::Rails.config.phone_number_formatter = Twilio::Rails::PhoneNumberFormatter::NorthAmerica.new
+          and use Twilio::Rails.config.phone_number_formatter.coerce(s) instead.
+        DEPRECATION
+        north_america_formatter.coerce(string)
       end
 
       # Takes in a string or a {Twilio::Rails::PhoneNumber} or something that responds to `to_s` and validates it
@@ -34,8 +27,13 @@ module Twilio
       # @param phone_number [String, Twilio::Rails::PhoneNumber, nil] the input to validate as a phone number.
       # @return [true, false]
       def valid_north_american_phone_number?(phone_number)
-        phone_number = phone_number.number if phone_number.is_a?(Twilio::Rails::PhoneNumber)
-        !!phone_number&.match?(PHONE_NUMBER_REGEX)
+        Twilio::Rails.deprecator.warn(<<~DEPRECATION.strip)
+          Twilio::Rails::Formatter#valid_north_american_phone_number?(s) is deprecated and will be removed in the next major version.
+
+          Set Twilio::Rails.config.phone_number_formatter = Twilio::Rails::PhoneNumberFormatter::NorthAmerica.new
+          and use Twilio::Rails.config.phone_number_formatter.valid?(s) instead.
+        DEPRECATION
+        north_america_formatter.valid?(phone_number)
       end
 
       # Takes in a string or a {Twilio::Rails::PhoneNumber} or something that responds to `to_s` and turns it into
@@ -45,11 +43,13 @@ module Twilio
       # @param phone_number [String, Twilio::Rails::PhoneNumber, nil] the input to turn into a phone number string.
       # @return [String] the phone number string or empty string if invalid.
       def to_phone_number_url_param(phone_number)
-        phone_number = coerce_to_valid_phone_number(phone_number)
-        return "" unless phone_number
-        matches = phone_number.match(PHONE_NUMBER_SEGMENTS_REGEX)
-        raise Twilio::Rails::Error, "[to_phone_number_url_param] Phone number marked as valid but could not capture. I made a bad regex: #{phone_number}" unless matches
-        matches.captures.join("-")
+        Twilio::Rails.deprecator.warn(<<~DEPRECATION.strip)
+          Twilio::Rails::Formatter#to_phone_number_url_param(s) is deprecated and will be removed in the next major version.
+
+          Set Twilio::Rails.config.phone_number_formatter = Twilio::Rails::PhoneNumberFormatter::NorthAmerica.new
+          and use Twilio::Rails.config.phone_number_formatter.to_param(s) instead.
+        DEPRECATION
+        north_america_formatter.to_param(phone_number)
       end
 
       # Takes in a string or a {Twilio::Rails::PhoneNumber} or something that responds to `to_s` and turns it into a
@@ -59,14 +59,13 @@ module Twilio
       # @param phone_number [String, Twilio::Rails::PhoneNumber, nil] the input to turn into a phone number string.
       # @return [String, Object] the phone number string or the original object if invalid.
       def display_phone_number(phone_number)
-        coerced_phone_number = coerce_to_valid_phone_number(phone_number)
-        if coerced_phone_number
-          matches = coerced_phone_number.match(PHONE_NUMBER_SEGMENTS_REGEX)
-          raise Twilio::Rails::Error, "[display_phone_number] Phone number marked as valid but could not capture. I made a bad regex: #{phone_number}" unless matches
-          "(#{matches.captures[0]}) #{matches.captures[1]} #{matches.captures[2]}"
-        else
-          phone_number
-        end
+        Twilio::Rails.deprecator.warn(<<~DEPRECATION.strip)
+          Twilio::Rails::Formatter#display_phone_number(s) is deprecated and will be removed in the next major version.
+
+          Set Twilio::Rails.config.phone_number_formatter = Twilio::Rails::PhoneNumberFormatter::NorthAmerica.new
+          and use Twilio::Rails.config.phone_number_formatter.display(s) instead.
+        DEPRECATION
+        north_america_formatter.display(phone_number)
       end
 
       # Formats a city, province, and country into a single string, correctly handling blanks, and formatting countries.
@@ -88,6 +87,12 @@ module Twilio
           province,
           country_name
         ].reject(&:blank?).join(", ")
+      end
+
+      private
+
+      def north_america_formatter
+        @north_america_formatter ||= Twilio::Rails::PhoneNumberFormatter::NorthAmerica.new
       end
     end
   end

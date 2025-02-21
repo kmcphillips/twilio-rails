@@ -11,7 +11,7 @@ module Twilio
       # @param label [String, nil] an optional label for the phone number, such as its source or purpose.
       # @param project [String, nil] an optional project identifier for grouping phone numbers.
       def initialize(number:, country:, label: nil, project: nil)
-        @number = Twilio::Rails::Formatter.coerce_to_valid_phone_number(number)
+        @number = Twilio::Rails::PhoneNumberFormatter.coerce(number)
         raise Twilio::Rails::Phone::Error, "Invalid phone number '#{number}'" unless @number
         @country = country&.upcase
         @label = label

@@ -23,7 +23,7 @@ module Twilio
           phone_caller = Twilio::Rails::FindOrCreatePhoneCallerOperation.call(phone_number: phone_call.from_number)
 
           if !phone_caller
-            error_message = if !Twilio::Rails::Formatter.valid_north_american_phone_number?(phone_call.from_number)
+            error_message = if !Twilio::Rails::PhoneNumberFormatter.valid?(phone_call.from_number)
               "The phone number is invalid."
             else
               "The phone caller could not be persisted or retrieved."

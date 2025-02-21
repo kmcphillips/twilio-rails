@@ -8,7 +8,7 @@ module Twilio
           input :tree, accepts: Twilio::Rails::Phone::Tree, type: :keyword, required: true
 
           def execute
-            if !phone_caller.valid_north_american_phone_number? && tree.config[:invalid_phone_number]
+            if !phone_caller.valid_phone_number? && tree.config[:invalid_phone_number]
               Twilio::Rails::Phone::Twiml::InvalidPhoneNumberOperation.call(phone_call_id: phone_call.id, tree: tree)
             else
               after = tree.greeting
