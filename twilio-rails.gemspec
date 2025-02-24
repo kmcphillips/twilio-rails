@@ -20,10 +20,20 @@ Gem::Specification.new do |spec|
     Dir["{app,config,db,lib}/**/*", "LICENSE", "Rakefile", "README.md", "CHANGELOG.md"]
   end
 
+  spec.post_install_message = <<~MESSAGE
+    `twilio-rails` 2.0 introduces a breaking change on parsing and formatting phone numbers.
+    This particularly affects you if you are saving or looking up phone numbers by anything other than the E.164 format.
+    You can maintain the old behavior by setting the formatter to the legacy one, but this will go away eventually:
+      config.phone_number_formatter = Twilio::Rails::PhoneNumberFormatter::NorthAmerica.new
+    Please see the README for more details:
+    https://github.com/kmcphillips/twilio-rails/blob/main/README.md#notes-on-international-phone-numbers
+  MESSAGE
+
   spec.add_dependency "rails", ">= 7.0"
   spec.add_dependency "twilio-ruby", ">= 5.0"
   spec.add_dependency "active_operation", ">= 1.0"
   spec.add_dependency "faraday"
+  spec.add_dependency "phonelib"
 
   spec.add_development_dependency "rspec-rails"
   spec.add_development_dependency "factory_bot_rails"

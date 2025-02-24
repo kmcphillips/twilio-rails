@@ -37,7 +37,7 @@ module Twilio
         end
         @controller_http_methods = [:get, :post]
         @include_phone_macros = []
-        @phone_number_formatter = Twilio::Rails::PhoneNumberFormatter::NorthAmerica.new
+        @phone_number_formatter = Twilio::Rails::PhoneNumberFormatter::PhonelibGlobal.new
       end
 
       # This is the phone number that will be used to send SMS messages or start Phone Calls. It must be first configured
