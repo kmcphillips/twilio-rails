@@ -10,9 +10,9 @@ RSpec.describe Twilio::Rails::Phone::StartCallOperation, type: :operation do
     val.greeting = Twilio::Rails::Phone::Tree::After.new(:first_message)
     val
   end
-  let(:to_number) { "+14445556666" }
+  let(:to_number) { "+16135556666" }
   let(:from_number) { Twilio::Rails.config.default_outgoing_phone_number }
-  let(:phone_number_object) { Twilio::Rails::PhoneNumber.new(number: "+16667778888", country: "CA") }
+  let(:phone_number_object) { Twilio::Rails::PhoneNumber.new(number: "+15147778888", country: "CA") }
 
   describe "#execute" do
     context "with twilio client success" do
@@ -47,7 +47,7 @@ RSpec.describe Twilio::Rails::Phone::StartCallOperation, type: :operation do
         expect { described_class.call(to: to_number, tree: tree, from: phone_number_object) }.to change { PhoneCall.count }.by(1)
         phone_call = PhoneCall.last
         expect(phone_call.sid).to eq(call_sid)
-        expect(phone_call.number).to eq("+16667778888")
+        expect(phone_call.number).to eq("+15147778888")
         expect(phone_call.from_number).to eq(to_number)
         expect(phone_call.direction).to eq("outbound")
       end

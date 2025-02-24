@@ -36,8 +36,8 @@ RSpec.describe Twilio::Rails::Phone::Twiml::GreetingOperation, type: :operation 
       end
     end
 
-    context "with international phone number" do
-      let(:phone_call) { create(:phone_call, :inbound, :international_number, tree_name: tree.name) }
+    context "with invalid phone number" do
+      let(:phone_call) { create(:phone_call, :inbound, :invalid_number, tree_name: tree.name) }
 
       it "outputs twiml for error" do
         expected = <<~EXPECTED

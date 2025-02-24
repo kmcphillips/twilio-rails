@@ -13,38 +13,31 @@ RSpec.describe Twilio::Rails::Models::PhoneCaller, type: :model do
       expect(phone_caller).to be_valid
     end
 
-    it "reformats the phone number before save if valid from 9 digits" do
-      phone_caller.phone_number = "2223334444"
-      expect(phone_caller).to be_valid
-      expect(phone_caller.phone_number).to eq("+12223334444")
-      expect(phone_caller.valid_phone_number?).to be(true)
-    end
-
     it "reformats the phone number before save if valid from 10 digits" do
-      phone_caller.phone_number = "12223334444"
+      phone_caller.phone_number = "12043334444"
       expect(phone_caller).to be_valid
-      expect(phone_caller.phone_number).to eq("+12223334444")
+      expect(phone_caller.phone_number).to eq("+12043334444")
       expect(phone_caller.valid_phone_number?).to be(true)
     end
 
     it "reformats the phone number before save if valid including the plus" do
-      phone_caller.phone_number = "+12223334444"
+      phone_caller.phone_number = "+12043334444"
       expect(phone_caller).to be_valid
-      expect(phone_caller.phone_number).to eq("+12223334444")
+      expect(phone_caller.phone_number).to eq("+12043334444")
       expect(phone_caller.valid_phone_number?).to be(true)
     end
 
     it "reformats the phone number before save if valid including special characters" do
-      phone_caller.phone_number = "(222) 333-4444"
+      phone_caller.phone_number = "1 (204) 333-4444"
       expect(phone_caller).to be_valid
-      expect(phone_caller.phone_number).to eq("+12223334444")
+      expect(phone_caller.phone_number).to eq("+12043334444")
       expect(phone_caller.valid_phone_number?).to be(true)
     end
 
     it "handles reformatting number with 1" do
-      phone_caller.phone_number = "12223334444"
+      phone_caller.phone_number = "12043334444"
       expect(phone_caller).to be_valid
-      expect(phone_caller.phone_number).to eq("+12223334444")
+      expect(phone_caller.phone_number).to eq("+12043334444")
       expect(phone_caller.valid_phone_number?).to be(true)
     end
 
@@ -57,9 +50,9 @@ RSpec.describe Twilio::Rails::Models::PhoneCaller, type: :model do
       end
 
       it "does not reformat before save if prefixed by a non-one digit" do
-        phone_caller.phone_number = "72223334444"
+        phone_caller.phone_number = "72043334444"
         expect(phone_caller).to be_valid
-        expect(phone_caller.phone_number).to eq("72223334444")
+        expect(phone_caller.phone_number).to eq("72043334444")
         expect(phone_caller.valid_phone_number?).to be(false)
       end
 
@@ -90,8 +83,8 @@ RSpec.describe Twilio::Rails::Models::PhoneCaller, type: :model do
     end
 
     it "is invalid when not unique" do
-      create(:phone_caller, phone_number: "2223334444")
-      phone_caller.phone_number = "+12223334444"
+      create(:phone_caller, phone_number: "12043334444")
+      phone_caller.phone_number = "+12043334444"
       expect(phone_caller).to_not be_valid
     end
   end
@@ -102,7 +95,7 @@ RSpec.describe Twilio::Rails::Models::PhoneCaller, type: :model do
     end
 
     it "does not find with a valid number" do
-      expect(PhoneCaller.for("2223334444")).to be_nil
+      expect(PhoneCaller.for("2043334444")).to be_nil
     end
 
     it "does not find with an invalid number" do

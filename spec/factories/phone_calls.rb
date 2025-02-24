@@ -31,6 +31,13 @@ FactoryBot.define do
       from_province { nil }
     end
 
+    trait :invalid_number do
+      from_number { "+5555" }
+      from_country { nil }
+      from_city { nil }
+      from_province { nil }
+    end
+
     trait :inbound do
       direction { "inbound" }
     end

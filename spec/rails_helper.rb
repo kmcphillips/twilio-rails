@@ -14,6 +14,9 @@ Dir[Rails.root.join(File.expand_path("../spec/support", __dir__), "**", "*.rb")]
 # Load the schema for the dummy app if it changes, otherwise commit the db file.
 # load "dummy/db/schema.rb"
 
+# Shared examples aren't loaded with the _spec.rb suffix.
+require "lib/twilio/rails/phone_number_formatter/shared_examples"
+
 begin
   ActiveRecord::Migration.maintain_test_schema!
 rescue ActiveRecord::PendingMigrationError => e

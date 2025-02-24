@@ -12,6 +12,10 @@ FactoryBot.define do
       phone_number { "+31618844555" }
     end
 
+    trait :invalid_number do
+      phone_number { "+5555" }
+    end
+
     trait :complete do
       name { "Valued Customer" }
     end
