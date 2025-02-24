@@ -20,6 +20,21 @@ RSpec.describe Twilio::Rails::Phone::Twiml::GreetingOperation, type: :operation 
       expect(described_class.call(phone_call_id: phone_call.id, tree: tree)).to eq(expected)
     end
 
+    context "with international phone number" do
+      let(:phone_call) { create(:phone_call, :inbound, :international_number, tree_name: tree.name) }
+
+      it "outputs twiml and supports an international number" do
+        expected = <<~EXPECTED
+          <?xml version="1.0" encoding="UTF-8"?>
+          <Response>
+          <Say voice="male">Hello, and thank you for calling!</Say>
+          <Redirect>/twilio_mount_location/phone/favourite_number/prompt/#{response.id + 1}.xml</Redirect>
+          </Response>
+        EXPECTED
+        expect(described_class.call(phone_call_id: phone_call.id, tree: tree)).to eq(expected)
+      end
+    end
+
     context "with invalid phone number" do
       let(:phone_call) { create(:phone_call, :inbound, :invalid_number, tree_name: tree.name) }
 
