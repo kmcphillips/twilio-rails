@@ -24,6 +24,24 @@ RSpec.describe Twilio::Rails::PhoneNumberFormatter do
     end
   end
 
+  describe "#coerce!" do
+    it "delegates to the configured formatter" do
+      expect(described_class.coerce!("1234567890")).to eq("coerce:1234567890")
+    end
+
+    context "with nil result" do
+      before do
+        Twilio::Rails.config.phone_number_formatter = Class.new do
+          def coerce(value) = nil
+        end.new
+      end
+
+      it "raises an error if the number is invalid" do
+        expect { described_class.coerce!("5555") }.to raise_error(Twilio::Rails::PhoneNumberFormatter::Error)
+      end
+    end
+  end
+
   describe "#valid?" do
     it "delegates to the configured formatter" do
       expect(described_class.valid?("1234567890")).to eq(true)
