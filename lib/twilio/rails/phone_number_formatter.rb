@@ -8,7 +8,13 @@ module Twilio
       extend self
       extend Forwardable
 
+      class Error < Twilio::Rails::Error; end
+
       def_delegators :formatter, :coerce, :valid?, :to_param, :display
+
+      def coerce!(number)
+        coerce(number) || raise(Error, "Could not coerce valid phone number from: #{number}")
+      end
 
       private
 
