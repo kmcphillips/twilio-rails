@@ -198,6 +198,13 @@ module Twilio
       # @return [Object]
       attr_accessor :phone_number_formatter
 
+      # Checks vaguely if the #{default_outgoing_phone_number} is valid and not the default value.
+      #
+      # @return [true, false] the value looks reasonably valid.
+      def default_outgoing_phone_number_valid?
+        @default_outgoing_phone_number.present? && @default_outgoing_phone_number.is_a?(String) && !@default_outgoing_phone_number.match?(/5555555555/)
+      end
+
       # Flags that the configuration has been setup and should be validated and finalized.
       # If this is not called, the framework will not work, but the Railtie will not prevent
       # the application from starting.
@@ -215,7 +222,6 @@ module Twilio
       def validate!
         return nil unless @setup
         raise Error, "`default_outgoing_phone_number` must be set" if @default_outgoing_phone_number.blank?
-        raise Error, "`default_outgoing_phone_number` must be a String of the format `\"+12223334444\"`" unless @default_outgoing_phone_number.is_a?(String) && @default_outgoing_phone_number.match?(/\A\+1[0-9]{10}\Z/)
         raise Error, "`account_sid` must be set" if @account_sid.blank?
         raise Error, "`auth_token` must be set" if @auth_token.blank?
         raise Error, "`logger` must be set" if @logger.blank?

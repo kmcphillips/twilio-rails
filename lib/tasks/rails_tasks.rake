@@ -15,8 +15,14 @@ namespace :twilio do
           "HTTP POST or HTTP GET"
         end
 
-        puts "Log into the Twilio web console: https://console.twilio.com"
-        puts "Navigate to Phone Numbers -> Manage -> Active Numbers and find the phone number #{Twilio::Rails.config.default_outgoing_phone_number}."
+        if Twilio::Rails.config.default_outgoing_phone_number_valid?
+          puts "Log into the Twilio web console: https://console.twilio.com"
+          puts "Navigate to Phone Numbers -> Manage -> Active Numbers and find the phone number #{Twilio::Rails.config.default_outgoing_phone_number}."
+        else
+          puts "Twilio::Rails.config.default_outgoing_phone_number is not set. Set it in the `config/initializers/twilio_rails.rb` file."
+          puts "Navigate to Phone Numbers -> Manage and purchase a phone number and enter it here."
+        end
+
         puts ""
 
         if Twilio::Rails.config.phone_trees.all.length == 0

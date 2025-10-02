@@ -11,7 +11,7 @@ Twilio::Rails.setup do |config|
   # is probably the only number, but in more complex applications it is the "main" or default number. It is used when
   # the phone number is not specified and the number otherwise cannot be intelligently guessed or inferred. This number
   # should likely be configured in the encrypted Rails credentials or loaded from an ENV variable.
-  config.default_outgoing_phone_number = "TODO: +15556667777"
+  config.default_outgoing_phone_number = "+15555555555" # TODO: This must be your valid Twilio phone number
 
   # All the following configuration options are optional and have reasonable defaults. Though if no phone trees or SMS
   # responders are registered then the app will not be able to do much.

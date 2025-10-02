@@ -32,4 +32,14 @@ class Twilio::Rails::InstallGenerator < Rails::Generators::Base
     copy_file "response.rb", "app/models/response.rb"
     copy_file "sms_conversation.rb", "app/models/sms_conversation.rb"
   end
+
+  def banner
+    say ""
+    say "** twilio-rails installation complete **", :green
+    say ""
+    say "Next steps:"
+    say "You must configure your Twilio credentials in `config/initializers/twilio_rails.rb` to boot the app."
+    say "You can view instructions on configuring the Twilio dashboard for your app by running:"
+    say "bin/rails twilio:rails:config", :yellow
+  end
 end

@@ -207,9 +207,6 @@ RSpec.describe Twilio::Rails::Configuration do
       config.default_outgoing_phone_number = ""
       expect { config.finalize! }.to raise_error(Twilio::Rails::Configuration::Error)
 
-      config.default_outgoing_phone_number = "222-333-4444"
-      expect { config.finalize! }.to raise_error(Twilio::Rails::Configuration::Error)
-
       config.default_outgoing_phone_number = phone_number
       expect { config.finalize! }.to_not raise_error
     end
@@ -452,6 +449,28 @@ RSpec.describe Twilio::Rails::Configuration do
       expect(config.attach_recording?(recording)).to eq(true)
       recording.update!(duration: "20")
       expect(config.attach_recording?(recording)).to eq(false)
+    end
+  end
+
+  describe "default_outgoing_phone_number_valid?" do
+    it "returns true if the value is present and is a string and is not the default value" do
+      config.default_outgoing_phone_number = phone_number
+      expect(config.default_outgoing_phone_number_valid?).to eq(true)
+    end
+
+    it "returns false if the value is not present" do
+      config.default_outgoing_phone_number = nil
+      expect(config.default_outgoing_phone_number_valid?).to eq(false)
+    end
+
+    it "returns false if the value is not a string" do
+      config.default_outgoing_phone_number = 1234567890
+      expect(config.default_outgoing_phone_number_valid?).to eq(false)
+    end
+
+    it "returns false if the value is the default value" do
+      config.default_outgoing_phone_number = "+15555555555"
+      expect(config.default_outgoing_phone_number_valid?).to eq(false)
     end
   end
 
