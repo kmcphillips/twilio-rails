@@ -420,6 +420,30 @@ RSpec.describe Twilio::Rails::Configuration do
       config.host = "http://example.com/some/path"
       expect { config.finalize! }.to raise_error(Twilio::Rails::Configuration::Error)
     end
+
+    it "raises when the host is nil" do
+      config.host = nil
+      expect { config.finalize! }.to raise_error(Twilio::Rails::Configuration::Error)
+    end
+
+    context "with rails config" do
+      around do |example|
+        original_config = Rails.configuration.action_controller.default_url_options
+        Rails.configuration.action_controller.default_url_options = {protocol: "https", host: "test.example.com"}
+        example.run
+        Rails.configuration.action_controller.default_url_options = original_config
+      end
+
+      it "does not raise when it can be inferred from rails config" do
+        config = described_class.new
+        config.setup!
+        config.default_outgoing_phone_number = phone_number
+        config.account_sid = account_sid
+        config.auth_token = auth_token
+        expect { config.finalize! }.to_not raise_error
+        expect(config.host).to eq("https://test.example.com")
+      end
+    end
   end
 
   describe "controller_http_methods" do
