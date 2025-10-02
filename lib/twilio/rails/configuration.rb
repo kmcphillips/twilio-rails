@@ -229,7 +229,7 @@ module Twilio
         raise Error, "`yes_responses` must be an array" unless @yes_responses.is_a?(Array)
         raise Error, "`no_responses` must be an array" unless @no_responses.is_a?(Array)
         raise Error, "`host` is `nil` which means it was not set and a host could not be inferred from `Rails.configuration.action_controller.default_url_options`. One of these two must set the host URL that Twilio will use to call back to the app." unless @host
-        raise Error, "`host` #{@host.inspect} is not a valid URL of the format https://example.com without the trailing slash" unless @host.is_a?(String) && /\Ahttps?:\/\/[a-z0-9\-\.:]+\Z/i.match?(@host)
+        raise Error, "`host` #{@host.inspect} is not a valid URL of the format https://example.com without the trailing slash" unless @host.is_a?(String) && /\Ahttps?:\/\/[a-z0-9\-.:]+\Z/i.match?(@host)
         raise Error, "`controller_http_methods` must be an array containing one or both of `:get` and `:post` but was #{@controller_http_methods.inspect}" unless [[:get], [:post], [:get, :post], [:post, :get]].any? { |v| @controller_http_methods == v }
         raise Error, "`include_phone_macros` must be a module, but received #{@include_phone_macros.inspect}" unless @include_phone_macros.all? { |mod| mod.is_a?(Module) }
         raise Error, "`phone_number_formatter` must be set" unless @phone_number_formatter
