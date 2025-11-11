@@ -68,4 +68,14 @@ RSpec.describe Twilio::Rails::Client, type: :model do
       expect(described_class.start_call(url: tree.outbound_url, to: to_number, from: from_number, answering_machine_detection: false)).to eq(sid)
     end
   end
+
+  describe ".country_code" do
+    it "returns the country code for a phone number" do
+      expect_any_instance_of(Twilio::REST::Lookups::V2)
+        .to receive(:phone_numbers)
+        .with(to_number)
+        .and_return(double(fetch: double(country_code: "US")))
+      expect(described_class.country_code(to_number)).to eq("US")
+    end
+  end
 end

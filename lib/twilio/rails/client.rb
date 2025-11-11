@@ -71,6 +71,15 @@ module Twilio
           # timeout: 30,
         ).sid
       end
+
+      # Uses the Twilio REST API to get the country code for a phone number. This is mostly useful to handle messaging to
+      # US phone numbers with A2P 10DLC messaging.
+      #
+      # @param phone_number [String] the phone number to get the country code for.
+      # @return [String] the country code.
+      def country_code(phone_number)
+        client.lookups.v2.phone_numbers(phone_number).fetch.country_code
+      end
     end
   end
 end

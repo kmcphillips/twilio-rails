@@ -41,6 +41,10 @@ RSpec.describe Twilio::Rails::PhoneController, type: :controller do
       }
     }
 
+    before do
+      mock_phone_number_country_code_lookup(from_number, country_code: "CA")
+    end
+
     it "creates the call and calls the operation" do
       expect(Twilio::Rails::Phone::Twiml::GreetingOperation).to receive(:call).with(phone_call_id: phone_call.id + 1, tree: tree).and_return(twiml)
       post :inbound, format: :xml, params: params

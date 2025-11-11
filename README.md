@@ -372,6 +372,10 @@ The `sms_conversation` variable is an instance of the implementor of `Twilio::Ra
 
 ### Send an outgoing SMS message
 
+> [!IMPORTANT]
+> Twilio has restrictions on sending SMS messages to US phone numbers. Registration of a campaign is required and must be validated
+> by Twilio. See their documentation on [A2P 10DLC](https://help.twilio.com/articles/1260800720410-What-is-A2P-10DLC-).
+
 An out going SMS message may be sent via the [`Twilio::Rails::SMS::SendOperation`](app/operations/twilio/rails/sms/send_operation.rb). This will send the message and start a conversation, storing all messages and replies in the DB:
 
 ```ruby

@@ -15,7 +15,14 @@ module Twilio
         halt nil unless valid_phone_number
 
         phone_caller = ::Twilio::Rails.config.phone_caller_class.find_or_initialize_by(phone_number: valid_phone_number)
-        phone_caller.save! if phone_caller.new_record?
+
+        if phone_caller.new_record?
+          phone_caller.country_code = lookup_country_code
+          phone_caller.save!
+        elsif phone_caller.country_code.blank?
+          country_code = lookup_country_code
+          phone_caller.update!(country_code: country_code) if country_code.present?
+        end
 
         phone_caller
       end
@@ -24,6 +31,35 @@ module Twilio
 
       def valid_phone_number
         Twilio::Rails::PhoneNumberFormatter.coerce(phone_number)
+      end
+
+      def lookup_country_code
+        Twilio::Rails::Client.country_code(valid_phone_number)
+      rescue Twilio::REST::RestError => e
+        if e.code == 20404
+          ::Rails.error.report(e,
+            handled: false,
+            context: {
+              message: "Country code could not be found for phone number and was left blank.",
+              phone_number: valid_phone_number
+            })
+        else
+          ::Rails.error.report(e,
+            handled: false,
+            context: {
+              message: "Failed to get country code for phone number.",
+              phone_number: valid_phone_number
+            })
+        end
+        nil
+      rescue Twilio::REST::TwilioError => e
+        ::Rails.error.report(e,
+          handled: false,
+          context: {
+            message: "Failed to get country code for phone number.",
+            phone_number: valid_phone_number
+          })
+        nil
       end
     end
   end

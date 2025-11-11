@@ -54,6 +54,7 @@ ActiveRecord::Schema[7.0].define(version: 2023_01_30_014442) do
 
   create_table "phone_callers", force: :cascade do |t|
     t.string "phone_number"
+    t.string "country_code"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
     t.index ["phone_number"], name: "index_phone_callers_on_phone_number"
@@ -76,7 +77,6 @@ ActiveRecord::Schema[7.0].define(version: 2023_01_30_014442) do
     t.integer "length_seconds"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
-    t.index "\"product_id\"", name: "index_phone_calls_on_product_id"
     t.index ["created_at"], name: "index_phone_calls_on_created_at"
     t.index ["direction"], name: "index_phone_calls_on_direction"
     t.index ["phone_caller_id"], name: "index_phone_calls_on_phone_caller_id"
@@ -104,7 +104,6 @@ ActiveRecord::Schema[7.0].define(version: 2023_01_30_014442) do
     t.boolean "timeout", default: false
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
-    t.index "\"moderation\"", name: "index_responses_on_moderation"
     t.index ["created_at"], name: "index_responses_on_created_at"
     t.index ["digits"], name: "index_responses_on_digits"
     t.index ["phone_call_id", "prompt_handle"], name: "index_responses_on_phone_call_id_and_prompt_handle"

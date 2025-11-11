@@ -34,6 +34,12 @@ Gem::Specification.new do |spec|
     
     See the README for more details:
     https://github.com/kmcphillips/twilio-rails/blob/main/README.md#notes-on-international-phone-numbers
+
+    This version also introduces a new column on the phone callers table to store the country code which is looked up
+    proactively with the Twilio REST API. New applications will generate this column, but existing applications will need
+    to add the migration when upgrading:
+
+      add_column :phone_callers, :country_code, :string
     
   MESSAGE
 

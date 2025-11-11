@@ -3,6 +3,7 @@
 FactoryBot.define do
   factory :phone_caller, class: ::Twilio::Rails.config.phone_caller_class do
     phone_number { "+16135551234" }
+    country_code { "CA" }
 
     trait :american_number do
       phone_number { "+12135550000" }

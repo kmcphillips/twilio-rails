@@ -15,6 +15,7 @@ class InstallTwilioRails < ActiveRecord::Migration[7.0]
 
     create_table "phone_callers", force: :cascade do |t|
       t.string "phone_number"
+      t.string "country_code"
       t.datetime "created_at", null: false
       t.datetime "updated_at", null: false
       t.index ["phone_number"], name: "index_phone_callers_on_phone_number"

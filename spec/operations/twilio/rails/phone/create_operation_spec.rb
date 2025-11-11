@@ -5,6 +5,10 @@ require "rails_helper"
 RSpec.describe Twilio::Rails::Phone::CreateOperation, type: :operation do
   include_examples "twilio phone API call"
 
+  before do
+    mock_phone_number_country_code_lookup(from_number, country_code: "CA")
+  end
+
   let(:params) {
     {
       "Called" => to_number,

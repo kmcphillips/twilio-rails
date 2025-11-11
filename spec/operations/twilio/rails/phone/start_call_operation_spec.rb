@@ -14,6 +14,11 @@ RSpec.describe Twilio::Rails::Phone::StartCallOperation, type: :operation do
   let(:from_number) { Twilio::Rails.config.default_outgoing_phone_number }
   let(:phone_number_object) { Twilio::Rails::PhoneNumber.new(number: "+15147778888", country: "CA") }
 
+  before do
+    mock_phone_number_country_code_lookup(from_number, country_code: "CA")
+    mock_phone_number_country_code_lookup(to_number, country_code: "CA")
+  end
+
   describe "#execute" do
     context "with twilio client success" do
       before do
