@@ -70,5 +70,13 @@ RSpec.describe Twilio::Rails::FindOrCreatePhoneCallerOperation, type: :operation
       expect(result).to be_a(PhoneCaller)
       expect(result.country_code).to be_blank
     end
+
+    it "reports an error if an unexpected error occurs" do
+      mock_phone_number_lookup_error(phone_number, error: StandardError.new("Unexpected error"))
+      expect(::Rails.error).to receive(:report)
+      result = described_class.call(phone_number: phone_number)
+      expect(result).to be_a(PhoneCaller)
+      expect(result.country_code).to be_blank
+    end
   end
 end

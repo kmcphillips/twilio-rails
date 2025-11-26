@@ -60,6 +60,15 @@ module Twilio
             phone_number: valid_phone_number
           })
         nil
+      rescue => e
+        # This is a pretty bad error, but failing to create a phone caller when asked is worse, so report it and continue. It can always be backfilled.
+        ::Rails.error.report(e,
+          handled: false,
+          context: {
+            message: "Unexpected error when trying to get country code for phone number.",
+            phone_number: valid_phone_number
+          })
+        nil
       end
     end
   end
