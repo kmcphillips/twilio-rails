@@ -78,7 +78,15 @@ module Twilio
       # @param phone_number [String] the phone number to get the country code for.
       # @return [String] the country code.
       def country_code(phone_number)
-        client.lookups.v2.phone_numbers(phone_number).fetch.country_code
+        phone_number(phone_number).country_code
+      end
+
+      # Uses the Twilio REST API to lookup details about a phone number.
+      #
+      # @param phone_number [String].
+      # @return [Twilio::REST::Lookups::V2::PhoneNumberInstance] the phone number object.
+      def phone_number(phone_number)
+        client.lookups.v2.phone_numbers(phone_number).fetch
       end
     end
   end

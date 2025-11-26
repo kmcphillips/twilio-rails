@@ -42,7 +42,7 @@ RSpec.describe Twilio::Rails::PhoneController, type: :controller do
     }
 
     before do
-      mock_phone_number_country_code_lookup(from_number, country_code: "CA")
+      mock_phone_number_lookup(from_number, country_code: "CA")
     end
 
     it "creates the call and calls the operation" do

@@ -16,7 +16,7 @@ RSpec.describe Twilio::Rails::FindOrCreatePhoneCallerOperation, type: :operation
     end
 
     it "creates when phone caller does not exist" do
-      mock_phone_number_country_code_lookup(phone_number, country_code: "CA")
+      mock_phone_number_lookup(phone_number, country_code: "CA")
       expect {
         result = described_class.call(phone_number: phone_number)
         expect(result).to be_a(PhoneCaller)
@@ -27,7 +27,7 @@ RSpec.describe Twilio::Rails::FindOrCreatePhoneCallerOperation, type: :operation
 
     it "updates the country code when the phone caller exists" do
       phone_caller.update!(country_code: nil)
-      mock_phone_number_country_code_lookup(phone_caller.phone_number, country_code: "CA")
+      mock_phone_number_lookup(phone_caller.phone_number, country_code: "CA")
       expect {
         result = described_class.call(phone_number: phone_caller.phone_number)
         expect(result).to be_a(PhoneCaller)
@@ -38,7 +38,7 @@ RSpec.describe Twilio::Rails::FindOrCreatePhoneCallerOperation, type: :operation
     end
 
     it "does not try to update the country code if it is already set" do
-      mock_phone_number_country_code_lookup(phone_caller.phone_number, country_code: "US")
+      mock_phone_number_lookup(phone_caller.phone_number, country_code: "US")
       expect {
         result = described_class.call(phone_number: phone_caller.phone_number)
         expect(result).to be_a(PhoneCaller)
@@ -48,7 +48,7 @@ RSpec.describe Twilio::Rails::FindOrCreatePhoneCallerOperation, type: :operation
 
     it "finds when the phone caller exists" do
       phone_caller
-      mock_phone_number_country_code_lookup(phone_caller.phone_number, country_code: "CA")
+      mock_phone_number_lookup(phone_caller.phone_number, country_code: "CA")
       expect {
         result = described_class.call(phone_number: phone_caller.phone_number)
         expect(result).to be_a(PhoneCaller)
@@ -58,14 +58,14 @@ RSpec.describe Twilio::Rails::FindOrCreatePhoneCallerOperation, type: :operation
     end
 
     it "leaves the country code blank if Twilio REST API returns a 20404 error" do
-      mock_phone_number_country_code_lookup_error(phone_number, error: Twilio::REST::RestError.new("Not Found", double(body: {}, status_code: 20404)))
+      mock_phone_number_lookup_error(phone_number, error: Twilio::REST::RestError.new("Not Found", double(body: {}, status_code: 20404)))
       result = described_class.call(phone_number: phone_number)
       expect(result).to be_a(PhoneCaller)
       expect(result.country_code).to be_blank
     end
 
     it "leaves the country code blank if Twilio REST API returns a non-20404 error" do
-      mock_phone_number_country_code_lookup_error(phone_number)
+      mock_phone_number_lookup_error(phone_number)
       result = described_class.call(phone_number: phone_number)
       expect(result).to be_a(PhoneCaller)
       expect(result.country_code).to be_blank

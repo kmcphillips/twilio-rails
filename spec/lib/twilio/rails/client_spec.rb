@@ -8,6 +8,7 @@ RSpec.describe Twilio::Rails::Client, type: :model do
   let(:to_number) { "+16666666666" }
   let(:sid) { "SIDaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa" }
   let(:response) { double(sid: sid) }
+  let(:phone_number_object) { double(country_code: "US", phone_number: to_number) }
 
   describe ".client" do
     it "returns a client" do
@@ -69,12 +70,22 @@ RSpec.describe Twilio::Rails::Client, type: :model do
     end
   end
 
+  describe ".phone_number" do
+    it "returns the phone number object for a phone number" do
+      expect_any_instance_of(Twilio::REST::Lookups::V2)
+        .to receive(:phone_numbers)
+        .with(phone_number_object.phone_number)
+        .and_return(double(fetch: phone_number_object))
+      expect(described_class.phone_number(to_number)).to eq(phone_number_object)
+    end
+  end
+
   describe ".country_code" do
     it "returns the country code for a phone number" do
       expect_any_instance_of(Twilio::REST::Lookups::V2)
         .to receive(:phone_numbers)
-        .with(to_number)
-        .and_return(double(fetch: double(country_code: "US")))
+        .with(phone_number_object.phone_number)
+        .and_return(double(fetch: phone_number_object))
       expect(described_class.country_code(to_number)).to eq("US")
     end
   end
