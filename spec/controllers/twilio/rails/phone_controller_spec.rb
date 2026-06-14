@@ -61,6 +61,13 @@ RSpec.describe Twilio::Rails::PhoneController, type: :controller do
       post :inbound, format: :xml, params: params.merge("AccountSid" => "invalid")
       expect(response.body).to eq(hangup_twiml)
     end
+
+    it "reports an error if an unexpected error occurs" do
+      expect(::Rails.error).to receive(:report)
+      expect(Twilio::Rails::Phone::CreateOperation).to receive(:call).and_raise(StandardError.new("Unexpected error"))
+      post :inbound, format: :xml, params: params
+      expect(response.body).to eq(invalid_phone_number_twiml)
+    end
   end
 
   describe "POST#outbound" do

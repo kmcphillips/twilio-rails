@@ -11,7 +11,14 @@ module Twilio
         respond_to do |format|
           format.xml do
             phone_call = Twilio::Rails::Phone::CreateOperation.call(params: params_hash, tree: tree)
-          rescue
+          rescue => e
+            ::Rails.error.report(e,
+              handled: false,
+              context: {
+                message: "Failed to process inbound call.",
+                params: params_hash,
+                tree: tree
+              })
             render xml: Twilio::Rails::Phone::Twiml::InvalidPhoneNumberOperation.call(tree: tree)
           else
             render xml: Twilio::Rails::Phone::Twiml::GreetingOperation.call(phone_call_id: phone_call.id, tree: tree)
